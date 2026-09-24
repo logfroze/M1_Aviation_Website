@@ -25,6 +25,7 @@ export interface Article {
   accentColor: string;
   thumbBg: string;
   readTime: string;
+  imageUrl?: string;
 }
 
 export interface ContactFormData {

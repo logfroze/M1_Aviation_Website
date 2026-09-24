@@ -1,6 +1,6 @@
 import { VisionMilestone } from "@/types";
 
-export const VISION_DURATION_MS = 3500;
+export const VISION_DURATION_MS = 3000;
 
 export const VISION_MILESTONES: VisionMilestone[] = [
   {

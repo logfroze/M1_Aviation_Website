@@ -37,41 +37,78 @@ export default function ContactSection() {
     <section
       id="contact"
       aria-label="Contact and Inquiries"
-      className="relative py-28 px-6 md:px-12 max-w-4xl mx-auto scroll-mt-20"
+      className="relative py-32 px-6 md:px-12 max-w-5xl mx-auto scroll-mt-20 overflow-hidden"
     >
-      <div className="text-center mb-12">
+      {/* ── Background Radar Compass & Flight Vector Rings ─────────── */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+        <div className="w-[600px] h-[600px] rounded-full border border-white/20 animate-[spin_60s_linear_infinite]" />
+        <div className="w-[450px] h-[450px] rounded-full border border-dashed border-white/20" />
+        <div className="w-[300px] h-[300px] rounded-full border border-white/10" />
+      </div>
+
+      <div className="text-center mb-14 relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-400">
+            Direct Flight Dispatch Protocol
+          </span>
+        </div>
         <h2 className="text-4xl md:text-5xl font-light tracking-tight text-white">
           Connect with M1
         </h2>
+        <p className="text-xs font-mono text-zinc-400 mt-2 uppercase tracking-widest">
+          Executive Aviation Advisory • Fleet Operators • OEM Integration
+        </p>
       </div>
 
-      {/* White Form Card with Black Text and Silver Input Fields */}
-      <div className="bg-white text-black rounded-3xl p-8 sm:p-12 md:p-14 shadow-2xl border border-zinc-200">
+      {/* ── White Form Card with Black Text and Silver Input Fields ─── */}
+      <div className="relative bg-white text-black rounded-3xl p-8 sm:p-12 md:p-14 shadow-[0_25px_60px_rgba(255,255,255,0.06)] border border-zinc-200 overflow-hidden z-10">
+        {/* Subtle Jet Airframe Vector Blueprint Watermark */}
+        <div className="absolute right-0 bottom-0 w-80 h-80 opacity-[0.045] pointer-events-none translate-x-12 translate-y-12">
+          <svg viewBox="0 0 200 200" fill="none" stroke="#000000" strokeWidth="1.2">
+            <path d="M100 10 L115 50 L180 120 L120 130 L115 185 L100 195 L85 185 L80 130 L20 120 L85 50 Z" />
+            <circle cx="100" cy="100" r="70" strokeDasharray="3 3" />
+            <line x1="100" y1="0" x2="100" y2="200" strokeDasharray="2 2" />
+            <line x1="0" y1="100" x2="200" y2="100" strokeDasharray="2 2" />
+          </svg>
+        </div>
+
+        {/* Top Avionics Dispatch Telemetry Header */}
+        <div className="pb-6 mb-8 border-b border-zinc-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] font-mono text-zinc-500">
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-black" />
+            <span className="font-semibold text-zinc-900 tracking-wider">M1 FLIGHT COMMS // CHANNEL 01</span>
+          </div>
+          <div className="tracking-widest uppercase text-zinc-400">
+            TRANSMISSION SECURE • CYOO / OPPS LINK
+          </div>
+        </div>
+
         {status === "success" ? (
-          <div className="text-center py-12 space-y-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-xl font-bold">
+          <div className="text-center py-16 space-y-4">
+            <div className="w-14 h-14 rounded-full bg-zinc-100 border border-zinc-300 text-zinc-900 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">
               ✓
             </div>
-            <h3 className="text-2xl font-light tracking-tight text-zinc-900">
-              Inquiry Dispatched
+            <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-zinc-950">
+              Flight Advisory Dispatched
             </h3>
-            <p className="text-sm text-zinc-600 max-w-md mx-auto">
-              Thank you, {formData.fullName}. Your request has been logged. An M1 aviation director will reply to <span className="font-semibold">{formData.email}</span> within 24 hours.
+            <p className="text-sm text-zinc-600 max-w-md mx-auto leading-relaxed">
+              Thank you, <span className="font-semibold text-zinc-900">{formData.fullName}</span>. Your dispatch manifest has been transmitted to our flight intelligence team. A senior aviation executive will connect at <span className="font-semibold text-zinc-900">{formData.email}</span> shortly.
             </p>
-            <div className="pt-4">
-              <button
-                type="button"
+            <div className="pt-6">
+              <ParallelogramButton
                 onClick={() => setStatus("idle")}
-                className="text-xs font-mono underline uppercase tracking-wider text-zinc-600 hover:text-black"
+                variant="white"
+                className="text-xs border-zinc-400"
               >
-                Send another message
-              </button>
+                Send Another Dispatch
+              </ParallelogramButton>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
             {errorMessage && (
-              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-mono">
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-mono">
                 {errorMessage}
               </div>
             )}
@@ -79,98 +116,110 @@ export default function ContactSection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Full Name */}
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block">
-                  Full Name <span className="text-red-500">*</span>
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                  Full Name & Title <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  placeholder="e.g. Captain Alexander Vance"
-                  className="w-full px-4 py-3 text-sm bg-zinc-100 border border-zinc-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                />
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">👤</span>
+                  <input
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    placeholder="e.g. Captain Alexander Vance"
+                    className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
+                  />
+                </div>
               </div>
 
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block">
-                  Corporate Email <span className="text-red-500">*</span>
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                  Corporate / Operator Email <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="name@company.com"
-                  className="w-full px-4 py-3 text-sm bg-zinc-100 border border-zinc-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                />
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">✉</span>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="name@aviation-charter.com"
+                    className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
+                  />
+                </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Phone / WhatsApp / Signal */}
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block">
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
                   Phone / WhatsApp / Signal
                 </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+1 (555) 019-2834"
-                  className="w-full px-4 py-3 text-sm bg-zinc-100 border border-zinc-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                />
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">📞</span>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="+1 (555) 019-2834"
+                    className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
+                  />
+                </div>
               </div>
 
               {/* Reason */}
               <div className="space-y-1.5">
-                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block">
-                  Reason for Inquiry
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                  Mission / Inquiry Objective
                 </label>
                 <select
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                  className="w-full px-4 py-3 text-sm bg-zinc-100 border border-zinc-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                  className="w-full px-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all font-normal"
                 >
-                  <option value="partnership">Industry Partner Program</option>
-                  <option value="saios">M1 SAIOS Fleet Integration</option>
-                  <option value="marketplace">Aircraft Marketplace Listings</option>
-                  <option value="press">Press & Media Editorial</option>
-                  <option value="general">Executive Advisory</option>
+                  <option value="partnership">M1 Industry Partner Program</option>
+                  <option value="saios">M1 SAIOS Fleet Integration & Pilot Program</option>
+                  <option value="marketplace">Aircraft Marketplace Verification & Listings</option>
+                  <option value="press">Aviation Times Editorial & Media</option>
+                  <option value="general">Executive Advisory Consultation</option>
                 </select>
               </div>
             </div>
 
             {/* Description */}
             <div className="space-y-1.5">
-              <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block">
-                Description / Fleet Requirements
+              <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                Fleet Profile / Operational Requirements
               </label>
               <textarea
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Detail your fleet profile, aircraft type, or operational collaboration objectives..."
-                className="w-full px-4 py-3 text-sm bg-zinc-100 border border-zinc-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none"
+                placeholder="Specify your aircraft types (e.g. Gulfstream G650, Bombardier Global 7500), base airport, or fleet objectives..."
+                className="w-full px-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none placeholder-zinc-400 font-normal"
               />
             </div>
 
-            {/* Dual CTAs: Submit & Book a Meeting */}
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-zinc-200">
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="w-full sm:w-auto px-8 py-3.5 bg-black text-white hover:bg-zinc-800 rounded-lg text-xs font-mono uppercase tracking-widest transition-colors font-semibold"
+            {/* Dual Iconic Parallelogram CTAs (Submit & Book Meeting) */}
+            <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-5 border-t border-zinc-200">
+              <ParallelogramButton
+                onClick={() => {
+                  const form = document.querySelector("form");
+                  if (form) form.requestSubmit();
+                }}
+                variant="white"
+                className="w-full sm:w-auto text-xs py-4 px-8 border-zinc-400 hover:bg-zinc-100 shadow-md"
               >
                 {status === "submitting" ? "Transmitting..." : "Submit Inquiry"}
-              </button>
+              </ParallelogramButton>
 
               <ParallelogramButton
                 href={CAL_BOOKING_URL}
                 isExternal={true}
                 variant="silver"
-                className="w-full sm:w-auto text-xs py-3.5 px-6"
+                className="w-full sm:w-auto text-xs py-4 px-8 shadow-md"
               >
                 Book a Direct Meeting ↗
               </ParallelogramButton>
