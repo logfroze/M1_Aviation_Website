@@ -75,6 +75,16 @@ body {
   }
 }
 
+/* Right-to-Left Marquee Animation */
+@keyframes marqueeRTL {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* Left-to-Right Scanning Bar Animation */
 @keyframes sweepLTR {
   0% {
@@ -86,7 +96,7 @@ body {
 }
 
 .animate-marquee-ltr {
-  animation: marqueeLTR 26s linear infinite;
+  animation: marqueeLTR 28s linear infinite;
   will-change: transform;
 }
 
@@ -94,7 +104,91 @@ body {
   animation-play-state: paused;
 }
 
+.animate-marquee-rtl {
+  animation: marqueeRTL 28s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-rtl:hover {
+  animation-play-state: paused;
+}
+
 .animate-sweep-ltr {
   animation: sweepLTR 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Footer Jet Flight Animations */
+@keyframes flightBobLeft {
+  0%, 100% {
+    transform: translateY(0px) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-8px) translateX(2px) rotate(13.5deg);
+  }
+}
+
+@keyframes flightBobRight {
+  0%, 100% {
+    transform: scaleX(-1) translateY(0px) rotate(12deg);
+  }
+  50% {
+    transform: scaleX(-1) translateY(-8px) translateX(2px) rotate(13.5deg);
+  }
+}
+
+@keyframes slipstream {
+  0% {
+    transform: translateX(80px) translateY(-18px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-110px) translateY(24px);
+    opacity: 0;
+  }
+}
+
+/* Ecosystem Supersonic Air Streaks (Subtle, parallel to jet angle -15deg, streaming backward and inward) */
+@keyframes jetSlipstreamBackward {
+  0% {
+    transform: rotate(-15deg) translateX(-45px) translateZ(10px) scale(1.05);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  75% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: rotate(-15deg) translateX(130px) translateZ(-50px) scale(0.80);
+    opacity: 0;
+  }
+}
+
+.jet-slipstream-streak {
+  animation: jetSlipstreamBackward var(--dur, 0.52s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
+/* Gentle hovering in/out-of-screen breathing buoyancy (almost negligible) */
+@keyframes jetInAndOutFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1) translateZ(0px);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.012) translateZ(12px);
+  }
+}
+
+.jet-hover-float {
+  animation: jetInAndOutFloat 3.4s ease-in-out infinite;
   will-change: transform;
 }

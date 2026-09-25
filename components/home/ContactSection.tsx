@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import ParallelogramButton from "@/components/ui/ParallelogramButton";
 import { CAL_BOOKING_URL } from "@/data/navigation";
 import { ContactFormData } from "@/types";
@@ -47,12 +48,12 @@ export default function ContactSection() {
       </div>
 
       <div className="text-center mb-14 relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 mb-3">
+        {/* <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 mb-3">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-400">
             Direct Flight Dispatch Protocol
           </span>
-        </div>
+        </div> */}
         <h2 className="text-4xl md:text-5xl font-light tracking-tight text-white">
           Connect with M1
         </h2>
@@ -63,14 +64,20 @@ export default function ContactSection() {
 
       {/* ── White Form Card with Black Text and Silver Input Fields ─── */}
       <div className="relative bg-white text-black rounded-3xl p-8 sm:p-12 md:p-14 shadow-[0_25px_60px_rgba(255,255,255,0.06)] border border-zinc-200 overflow-hidden z-10">
-        {/* Subtle Jet Airframe Vector Blueprint Watermark */}
-        <div className="absolute right-0 bottom-0 w-80 h-80 opacity-[0.045] pointer-events-none translate-x-12 translate-y-12">
-          <svg viewBox="0 0 200 200" fill="none" stroke="#000000" strokeWidth="1.2">
-            <path d="M100 10 L115 50 L180 120 L120 130 L115 185 L100 195 L85 185 L80 130 L20 120 L85 50 Z" />
-            <circle cx="100" cy="100" r="70" strokeDasharray="3 3" />
-            <line x1="100" y1="0" x2="100" y2="200" strokeDasharray="2 2" />
-            <line x1="0" y1="100" x2="200" y2="100" strokeDasharray="2 2" />
-          </svg>
+        {/* Jet image watermark — large, colorful, covers full white card area */}
+        <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden">
+          <div className="absolute -bottom-4 -right-8 sm:right-0 sm:bottom-0 w-full h-full" style={{ opacity: 1 }}>
+            <Image
+              src="/images/footer-jet.jpg"
+              alt=""
+              fill
+              sizes="100%"
+              className="object-cover object-right-bottom"
+              priority={false}
+            />
+          </div>
+          {/* Gradient overlay so left/top of form stays clean and readable */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/50 to-white/0" />
         </div>
 
         {/* Top Avionics Dispatch Telemetry Header */}

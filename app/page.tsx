@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-import dynamic from "next/dynamic";
 import Hero from "@/components/home/Hero";
 import OurLineup from "@/components/home/OurLineup";
 import OneLiner from "@/components/home/OneLiner";
@@ -11,31 +7,13 @@ import ContactSection from "@/components/home/ContactSection";
 import SectionFocusItem from "@/components/home/SectionFocusItem";
 import SectionDivider from "@/components/home/SectionDivider";
 
-// Dynamically import so canvas only runs client-side
-const IntroAnimation = dynamic(
-  () => import("@/components/home/IntroAnimation"),
-  { ssr: false }
-);
-
 export default function Home() {
-  const [introDone, setIntroDone] = useState(false);
-
   return (
     <>
-      {/* Full-screen intro: warp speed + M1 logo fly-in */}
-      {!introDone && <IntroAnimation onDone={() => setIntroDone(true)} />}
-
-      {/* Main site — rendered behind the intro, revealed on finish */}
-      <div
-        className="w-full flex flex-col items-center"
-        style={{
-          opacity: introDone ? 1 : 0,
-          transition: introDone ? "opacity 0.6s ease" : "none",
-          pointerEvents: introDone ? "auto" : "none",
-        }}
-      >
-        {/* 1. Fullscreen Cinematic Hero — video waits for intro to finish */}
-        <Hero paused={!introDone} />
+      {/* Main site */}
+      <div className="w-full flex flex-col items-center">
+        {/* 1. Fullscreen Cinematic Hero */}
+        <Hero />
 
         {/* 2. Stacked Products Lineup with Card Scroll Sound Effects */}
         <SectionFocusItem id="lineup">

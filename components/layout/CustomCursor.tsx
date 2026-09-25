@@ -72,117 +72,242 @@ export default function CustomCursor() {
       <div
         className="relative transition-transform duration-100 ease-out origin-top-left"
         style={{
-          transform: `scale(${isClicking ? 0.88 : isHovered ? 1.15 : 1})`,
+          transform: `scale(${isClicking ? 0.88 : isHovered ? 1.18 : 1})`,
         }}
       >
-        {/* Supersonic Jet Vector Graphic (inspired by image copy.png & Azenis) */}
+        {/* Supersonic Metallic Fighter Jet (Modeled precisely after image copy.png & Azenis chrome) */}
         <svg
-          width="32"
-          height="32"
-          viewBox="0 0 40 40"
+          width="36"
+          height="36"
+          viewBox="0 0 44 44"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] drop-shadow-[0_0_12px_rgba(200,225,255,0.45)]"
+          className="filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] drop-shadow-[0_0_10px_rgba(56,189,248,0.35)]"
         >
           <defs>
-            {/* Metallic fuselage gradient */}
-            <linearGradient id="fuselageGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            {/* Polished Chrome Port Facet (Upper-Right) */}
+            <linearGradient id="chromePort" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="40%" stopColor="#d4d8e0" />
-              <stop offset="80%" stopColor="#7a8290" />
-              <stop offset="100%" stopColor="#353b45" />
+              <stop offset="18%" stopColor="#f1f5f9" />
+              <stop offset="38%" stopColor="#cbd5e1" />
+              <stop offset="55%" stopColor="#ffffff" />
+              <stop offset="72%" stopColor="#64748b" />
+              <stop offset="90%" stopColor="#94a3b8" />
+              <stop offset="100%" stopColor="#334155" />
             </linearGradient>
 
-            {/* Glowing cockpit canopy */}
-            <linearGradient id="canopyGrad" x1="6" y1="6" x2="18" y2="18" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#a8e0ff" />
-              <stop offset="50%" stopColor="#38bdf8" />
-              <stop offset="100%" stopColor="#0284c7" />
+            {/* Brushed Titanium Starboard Facet (Lower-Left) */}
+            <linearGradient id="chromeStarboard" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#e2e8f0" />
+              <stop offset="22%" stopColor="#94a3b8" />
+              <stop offset="42%" stopColor="#475569" />
+              <stop offset="60%" stopColor="#cbd5e1" />
+              <stop offset="78%" stopColor="#1e293b" />
+              <stop offset="100%" stopColor="#0f172a" />
             </linearGradient>
 
-            {/* Afterburner flame gradient */}
-            <linearGradient id="afterburnerGrad" x1="24" y1="24" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+            {/* Specular Razor Spine Gleam */}
+            <linearGradient id="spineHighlight" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="35%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0.5" />
+            </linearGradient>
+
+            {/* Sapphire Avionics Glass Canopy */}
+            <linearGradient id="sapphireCanopy" x1="11" y1="11" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#e0f2fe" />
+              <stop offset="25%" stopColor="#7dd3fc" />
+              <stop offset="60%" stopColor="#0284c7" />
+              <stop offset="100%" stopColor="#082f49" />
+            </linearGradient>
+
+            {/* Supersonic Afterburner Plasma Flame */}
+            <linearGradient id="afterburnerFlame" x1="28" y1="28" x2="44" y2="44" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="30%" stopColor={isHovered ? "#38bdf8" : "#fbbf24"} />
-              <stop offset="70%" stopColor={isHovered ? "#0284c7" : "#f97316"} />
-              <stop offset="100%" stopColor="transparent" />
+              <stop offset="20%" stopColor="#67e8f9" />
+              <stop offset="50%" stopColor={isHovered ? "#38bdf8" : "#0284c7"} />
+              <stop offset="80%" stopColor={isHovered ? "#818cf8" : "#2563eb"} />
+              <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </linearGradient>
 
-            <filter id="jetGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="1.5" result="blur" />
+            {/* Wingtip Missile Rail Accent */}
+            <linearGradient id="missileRail" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#475569" />
+            </linearGradient>
+
+            <filter id="plasmaGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="1.2" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
 
-          {/* Afterburner Thruster Plume */}
+          {/* ── Supersonic Afterburner Exhaust Plume ── */}
           <path
-            d="M26 26L36 36L29 39L23 29Z"
-            fill="url(#afterburnerGrad)"
-            opacity={isHovered ? 0.95 : 0.75}
+            d="M 28 28
+               L 41 41
+               L 36 43
+               L 32 37
+               L 28 39
+               L 30 33
+               L 26 26 Z"
+            fill="url(#afterburnerFlame)"
+            opacity={isHovered ? 0.95 : 0.8}
             className="animate-pulse"
+            filter="url(#plasmaGlow)"
           />
 
-          {/* Fighter Jet Airframe Body (Nose at 0,0, angled -45 deg) */}
-          {/* Main swept delta wings and fuselage */}
+          {/* Core Mach Shock Diamond */}
+          <polygon
+            points="31,31 36,36 34,37 29,32"
+            fill="#ffffff"
+            opacity={isHovered ? 0.9 : 0.7}
+          />
+
+          {/* ── Starboard (Lower-Left) Airframe Half ── */}
+          {/* Exact silhouette from image copy.png: nose -> strake -> wing with tip rail -> waist -> stabilizer -> tail */}
           <path
-            d="M1 1
-               L14 9
-               L29 3
-               L24 16
-               L37 11
-               L26 26
-               L22 23
-               L20 31
-               L17 21
-               L9 26
-               L11 14
-               L1 1Z"
-            fill="url(#fuselageGrad)"
-            stroke="#ffffff"
-            strokeWidth="0.8"
+            d="M 1 1
+               L 9 17
+               L 5 31
+               L 3 33
+               L 7 35
+               L 9 32
+               L 18 25
+               L 22 27
+               L 24 37
+               L 30 34
+               L 28 29
+               L 33 33
+               L 29 29
+               L 1 1 Z"
+            fill="url(#chromeStarboard)"
+            stroke="#64748b"
+            strokeWidth="0.5"
             strokeLinejoin="round"
           />
 
-          {/* Left Winglet */}
+          {/* ── Port (Upper-Right) Airframe Half ── */}
+          {/* Mirror facet for 3D beveled metallic fuselage reflection */}
           <path
-            d="M29 3L32 1L30 6Z"
-            fill="#a1a8b5"
-            stroke="#ffffff"
+            d="M 1 1
+               L 17 9
+               L 31 5
+               L 33 3
+               L 35 7
+               L 32 9
+               L 25 18
+               L 27 22
+               L 37 24
+               L 34 30
+               L 29 28
+               L 33 33
+               L 29 29
+               L 1 1 Z"
+            fill="url(#chromePort)"
+            stroke="#94a3b8"
             strokeWidth="0.5"
+            strokeLinejoin="round"
           />
 
-          {/* Fuselage Spine Shadow & Trim Lines */}
-          <path
-            d="M1 1L24 24"
+          {/* ── Wingtip Missile Rails (Matching image copy.png) ── */}
+          {/* Port Wingtip Launcher */}
+          <polygon
+            points="31,5 33,3 35,7 32,9"
+            fill="url(#missileRail)"
             stroke="#ffffff"
-            strokeWidth="0.75"
-            strokeOpacity="0.8"
+            strokeWidth="0.4"
+          />
+          {/* Starboard Wingtip Launcher */}
+          <polygon
+            points="5,31 3,33 7,35 9,32"
+            fill="url(#missileRail)"
+            stroke="#ffffff"
+            strokeWidth="0.4"
           />
 
-          {/* High-Tech Avionics Glass Canopy */}
+          {/* Tiny Wingtip Navigation Strobes */}
+          <circle cx="34" cy="4" r="0.75" fill="#38bdf8" />
+          <circle cx="4" cy="34" r="0.75" fill="#ef4444" />
+
+          {/* ── Beveled Fuselage Spine & Specular Reflection Edge ── */}
+          <line
+            x1="1"
+            y1="1"
+            x2="28"
+            y2="28"
+            stroke="url(#spineHighlight)"
+            strokeWidth="0.9"
+            strokeLinecap="round"
+          />
+
+          {/* Wing Leading Edge Specular Lines */}
+          <line x1="17" y1="9" x2="31" y2="5" stroke="#ffffff" strokeWidth="0.6" strokeOpacity="0.85" />
+          <line x1="9" y1="17" x2="5" y2="31" stroke="#cbd5e1" strokeWidth="0.5" strokeOpacity="0.7" />
+
+          {/* ── Central Glass Cockpit Canopy (Oval from image copy.png) ── */}
+          {/* Outer Chrome Canopy Rim */}
           <ellipse
-            cx="10"
-            cy="10"
-            rx="4.2"
-            ry="2.2"
-            transform="rotate(45 10 10)"
-            fill="url(#canopyGrad)"
-            stroke="#bae6fd"
-            strokeWidth="0.5"
-            filter="url(#jetGlow)"
+            cx="14"
+            cy="14"
+            rx="5.4"
+            ry="2.6"
+            transform="rotate(45 14 14)"
+            fill="#1e293b"
+            stroke="#f8fafc"
+            strokeWidth="0.6"
+          />
+          {/* Sapphire Polarized Glass */}
+          <ellipse
+            cx="14"
+            cy="14"
+            rx="4.6"
+            ry="2.1"
+            transform="rotate(45 14 14)"
+            fill="url(#sapphireCanopy)"
+          />
+          {/* Canopy Specular Glare Reflection */}
+          <path
+            d="M 12 11 Q 14 12 16 15"
+            stroke="#ffffff"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+            strokeOpacity="0.9"
           />
 
-          {/* Targeting Crosshair / Radar Beacon on Hover */}
+          {/* Titanium Engine Nozzle Ring */}
+          <circle
+            cx="29"
+            cy="29"
+            r="1.8"
+            fill="#0f172a"
+            stroke="#cbd5e1"
+            strokeWidth="0.6"
+          />
+
+          {/* ── Precision HUD Reticle / Targeting Beacon on Hover ── */}
           {isHovered && (
-            <circle
-              cx="1"
-              cy="1"
-              r="2.5"
-              fill="none"
-              stroke="#38bdf8"
-              strokeWidth="0.75"
-              className="animate-ping"
-            />
+            <>
+              <circle
+                cx="1"
+                cy="1"
+                r="3.5"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="0.75"
+                strokeDasharray="2 1.5"
+                className="animate-spin"
+                style={{ animationDuration: "3s" }}
+              />
+              <circle
+                cx="1"
+                cy="1"
+                r="1.2"
+                fill="#38bdf8"
+                className="animate-ping"
+              />
+            </>
           )}
         </svg>
       </div>

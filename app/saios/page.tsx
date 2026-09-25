@@ -224,30 +224,60 @@ export default function SaiosPage() {
         </div>
       </section>
 
-      {/* ── 4. Founder Message Section (SRS: Founder message and picture provided) ── */}
-      <section className="relative py-28 px-6 md:px-12 max-w-4xl mx-auto w-full border-t border-zinc-900">
-        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 shadow-2xl">
-          {/* Founder Portrait */}
-          <div className="shrink-0 w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border border-zinc-700 relative shadow-xl">
-            <Image
-              src="/founder.jpg"
-              alt="Daniyal – Founder, RSI Studio & M1"
-              fill
-              sizes="(max-width: 768px) 144px, 176px"
-              className="object-cover object-top"
-            />
-          </div>
+      {/* ── 4. Founder Directive Section (Re-styled to Founder card style reference) ── */}
+      <section className="relative py-24 sm:py-32 px-6 md:px-12 max-w-5xl mx-auto w-full border-t border-zinc-900">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+          {/* Left Card: Internal Directive Quote */}
+          <div className="md:col-span-7 bg-[#0c0c0e] border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col justify-between relative shadow-2xl overflow-hidden min-h-[420px]">
+            {/* Ambient Watermark Quote Icon */}
+            <div className="absolute -top-6 left-6 text-[120px] font-serif text-white/[0.03] select-none pointer-events-none leading-none">
+              “
+            </div>
 
-          <div className="space-y-4 text-center md:text-left">
-            <blockquote className="text-lg sm:text-xl font-light italic text-zinc-200 leading-relaxed">
-              &ldquo;Our vision with RSI Studio is to lead with a perfection in pixels philosophy, in the international and national market.&rdquo;
+            {/* Directive Pill Tag */}
+            <div className="flex items-center gap-2 mb-8 relative z-10">
+              <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
+              <span className="text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase font-medium">
+                INTERNAL DIRECTIVE
+              </span>
+            </div>
+
+            {/* Main Quote */}
+            <blockquote className="text-2xl sm:text-3xl md:text-[32px] font-light text-white tracking-tight leading-[1.3] relative z-10 my-auto">
+              &ldquo;Our vision with RSI Studio is to lead with a{" "}
+              <span className="text-rose-400 italic font-serif underline decoration-rose-400/50 underline-offset-8">
+                perfection in pixels
+              </span>{" "}
+              philosophy, in the international and national market.&rdquo;
             </blockquote>
-            <div>
-              <div className="text-sm font-semibold text-white">Daniyal</div>
-              <div className="text-xs text-zinc-400 font-mono">
-                Founder, RSI Studio / M1 Aviation Ecosystem
+
+            {/* Founder Footer Row */}
+            <div className="flex items-end justify-between border-t border-white/5 pt-6 mt-8 relative z-10">
+              <div>
+                <div className="text-base sm:text-lg font-bold text-white tracking-wide">Daniyal</div>
+                <div className="text-[10px] sm:text-[11px] font-mono tracking-widest text-rose-400/90 uppercase mt-0.5 font-medium">
+                  CO-FOUNDER, RSI STUDIO
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 pb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
+                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
               </div>
             </div>
+          </div>
+
+          {/* Right Card: Studio Monochrome Founder Portrait */}
+          <div className="md:col-span-5 relative rounded-[32px] overflow-hidden border border-white/10 bg-[#0c0c0e] shadow-2xl min-h-[380px] sm:min-h-[440px] md:min-h-[480px]">
+            <Image
+              src="/founder.jpg"
+              alt="Daniyal – Co-Founder, RSI Studio"
+              fill
+              sizes="(max-width: 768px) 100vw, 420px"
+              className="object-cover object-top filter grayscale contrast-110"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
       </section>

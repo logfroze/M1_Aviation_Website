@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useCallback, useState } from "react";
+import Image from "next/image";
 import ParallelogramButton from "@/components/ui/ParallelogramButton";
 
 interface ProductCard {
@@ -10,6 +11,7 @@ interface ProductCard {
   subtitle: string;
   description: string;
   features: string[];
+  imageSrc: string;
   ctaLabel: string;
   ctaHref: string;
   isExternal?: boolean;
@@ -27,19 +29,19 @@ const PRODUCTS: ProductCard[] = [
     id: "marketplace",
     tag: "Product 01",
     title: "Marketplace",
-    subtitle: "Global Aircraft Trading & Intelligence Platform",
+    subtitle: "Global Aircraft Trading Platform",
     description:
-      "A high-liquidity digital marketplace indexing thousands of commercial and executive jets with verified maintenance records, verified ownership, and seamless transaction settlement.",
+      "High-liquidity digital exchange indexing verified commercial and private aircraft with instant escrow and valuation telemetry.",
     features: [
       "5,000+ Curated Aircraft Profiles",
       "Cryptographic Airframe Verification",
-      "Instant Escrow & Valuation Telemetry",
+      "Instant Escrow & Settlement",
     ],
+    imageSrc: "/images/marketplace-card.jpg",
     ctaLabel: "Sign Up",
     ctaHref: "https://app.m-1.tech",
     isExternal: true,
     ctaVariant: "white",
-    // Solid opaque beige base so text never shows through from behind
     cardStyle:
       "bg-[#f0e4d0] border-[#b59f80] shadow-[0_30px_70px_rgba(0,0,0,0.55)]",
     badgeStyle: "bg-zinc-950 text-[#f1e6d4] border-zinc-800",
@@ -54,16 +56,16 @@ const PRODUCTS: ProductCard[] = [
     title: "SAIOS",
     subtitle: "Super Artificially Intelligent Operating System",
     description:
-      "The world's premier neural flight deck and fleet management system. Powered by predictive maintenance diagnostics and automated FAA/EASA airworthiness tracking.",
+      "Premier neural flight deck and fleet management system automating predictive airframe diagnostics, dispatch, and airworthiness tracking.",
     features: [
       "Real-time Predictive Airframe Telemetry",
-      "Autonomous Dispatch & Scheduling Engine",
+      "Autonomous Dispatch & Scheduling",
       "Unified Digital Logbook & Passport",
     ],
+    imageSrc: "/images/saios-card.jpg",
     ctaLabel: "Register",
     ctaHref: "/saios",
     ctaVariant: "silver",
-    // Solid opaque dark navy base so Card 1 text never bleeds through
     cardStyle:
       "bg-[#0f1826] border-[#294266] shadow-[0_30px_70px_rgba(0,0,0,0.7)]",
     badgeStyle: "bg-[#16273d] text-[#a3c9f7] border-[#294a73]",
@@ -73,21 +75,46 @@ const PRODUCTS: ProductCard[] = [
     featureColor: "text-zinc-200",
   },
   {
-    id: "ecosystem",
+    id: "avigram",
     tag: "Product 03",
+    title: "AviGram",
+    subtitle: "The Premier Aviation Social Network",
+    description:
+      "The dedicated visual community connecting pilots, aerospace engineers, aircraft owners, and aviation enthusiasts across the globe.",
+    features: [
+      "Cockpit & Hangar Visual Feeds",
+      "Verified Aviator & Fleet Profiles",
+      "Global Aero Community Dispatch",
+    ],
+    imageSrc: "/images/avigram-card.jpg",
+    ctaLabel: "Explore AviGram",
+    ctaHref: "https://www.instagram.com",
+    isExternal: true,
+    ctaVariant: "silver",
+    cardStyle:
+      "bg-[#141221] border-[#362a52] shadow-[0_30px_70px_rgba(0,0,0,0.75)]",
+    badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
+    titleColor: "text-white font-light",
+    subtitleColor: "text-[#c084fc]",
+    descColor: "text-zinc-300",
+    featureColor: "text-zinc-200",
+  },
+  {
+    id: "ecosystem",
+    tag: "Ecosystem",
     title: "Ecosystem",
     subtitle: "Unified Aviation Infrastructure Alliance",
     description:
-      "Bridging the disconnect between aircraft operators, maintenance repair organizations (MROs), and parts suppliers into one continuous real-time operating fabric.",
+      "Compounding synergy bridging aircraft operators, MROs, and suppliers into one continuous real-time operating fabric.",
     features: [
       "OEM & Operator Alliance Protocol",
       "Direct Priority Maintenance Channels",
       "Integrated Aviation Times Media Hub",
     ],
+    imageSrc: "/images/ecosystem-card.jpg",
     ctaLabel: "Become Part of the Vision",
     ctaHref: "/industry-partner",
     ctaVariant: "gold",
-    // Solid opaque dark slate titanium base
     cardStyle:
       "bg-[#1e2127] border-[#5e6675] shadow-[0_35px_80px_rgba(0,0,0,0.85)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
@@ -103,7 +130,7 @@ export default function OurLineup() {
   const lastActiveIndex = useRef<number>(-1);
   const sectionRef = useRef<HTMLDivElement>(null);
   const finaleRef = useRef<HTMLDivElement>(null);
-  const [finaleProgress, setFinaleProgress] = useState(0); // 0..1
+  const [finaleProgress, setFinaleProgress] = useState(0);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Initialize or resume AudioContext
@@ -145,7 +172,7 @@ export default function OurLineup() {
         const subFilter = ctx.createBiquadFilter();
 
         subOsc.type = "sawtooth";
-        const rootFreq = cardIndex === 0 ? 55 : cardIndex === 1 ? 65.4 : 73.4;
+        const rootFreq = cardIndex === 0 ? 55 : cardIndex === 1 ? 65.4 : cardIndex === 2 ? 73.4 : 82.4;
         subOsc.frequency.setValueAtTime(rootFreq * 0.8, now);
         subOsc.frequency.exponentialRampToValueAtTime(rootFreq * 1.5, now + 0.35);
 
@@ -170,7 +197,8 @@ export default function OurLineup() {
           [220, 277.18, 329.63, 440, 659.25],
           [261.63, 329.63, 392, 523.25, 783.99],
           [293.66, 369.99, 440, 587.33, 880],
-        ][cardIndex % 3];
+          [329.63, 415.30, 493.88, 659.25, 987.77],
+        ][cardIndex % 4];
 
         chordPitches.forEach((freq, idx) => {
           const osc = ctx.createOscillator();
@@ -241,11 +269,7 @@ export default function OurLineup() {
     };
   }, [getAudioContext]);
 
-  // Card Stacking & Blurring Sequence:
-  // - Card 1 blurs when Card 2 comes forward
-  // - Card 2 blurs when Card 3 comes forward
-  // - Active top card is ALWAYS sharp, crisp, and unblurred!
-  // - Uniform 34px step between Card 1, 2, and 3 so Card 3 lands smoothly on Card 2
+  // Card Stacking & Blurring Sequence
   useEffect(() => {
     let ticking = false;
 
@@ -253,8 +277,8 @@ export default function OurLineup() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const vh = window.innerHeight;
-          const baseSticky = 80;
-          const stepOffset = 34; // Exact equal spacing between card tops
+          const baseSticky = 70;
+          const stepOffset = 30;
 
           let activeIdx = 0;
 
@@ -267,12 +291,10 @@ export default function OurLineup() {
               const nextTargetSticky = baseSticky + (i + 1) * stepOffset;
               const nextRect = nextEl.getBoundingClientRect();
               
-              // Distance of next card from its resting sticky point
               const distToLanding = nextRect.top - nextTargetSticky;
               const transitionDistance = vh * 0.45;
 
               if (distToLanding < transitionDistance) {
-                // Next card is coming forward: blur THIS card as next card takes the stage!
                 const progress = Math.min(1, Math.max(0, 1 - distToLanding / transitionDistance));
                 const blurPx = (progress * 7).toFixed(1);
                 const brightness = (1 - progress * 0.35).toFixed(2);
@@ -285,17 +307,15 @@ export default function OurLineup() {
                   activeIdx = i + 1;
                 }
               } else {
-                // This card is currently in front and fully active
                 el.style.filter = "none";
                 el.style.transform = "scale(1)";
               }
             } else {
-              // Last card (Card 3): always sharp and unblurred
               el.style.filter = "none";
               el.style.transform = "scale(1)";
               const rect = el.getBoundingClientRect();
               if (rect.top <= targetStickyTop + 40) {
-                activeIdx = 2;
+                activeIdx = PRODUCTS.length - 1;
               }
             }
           });
@@ -316,13 +336,12 @@ export default function OurLineup() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [playXboxBootSound]);
 
-  // Finale deck progress: driven by the scroll spacer below the cards
+  // Finale deck progress
   useEffect(() => {
     const handleFinaleScroll = () => {
       if (!finaleRef.current) return;
       const rect = finaleRef.current.getBoundingClientRect();
       const vh = window.innerHeight;
-      // progress: 0 when top of spacer enters screen, 1 when bottom of spacer passes
       const raw = 1 - rect.top / vh;
       setFinaleProgress(Math.min(1, Math.max(0, raw)));
     };
@@ -331,15 +350,16 @@ export default function OurLineup() {
     return () => window.removeEventListener("scroll", handleFinaleScroll);
   }, []);
 
-  // Fan angles and offsets for the finale deck (3 cards)
-  // Card 0 = bottom of deck (behind), Card 2 = top (front)
+  // Symmetrical fan angles and offsets for 4 cards (equal size, exact symmetry)
   const deckTransforms = [
-    // Card 1 (Marketplace) — deepest, tilted left
-    { rotate: -14, translateX: -220, translateY: -60, scale: 0.82, zIndex: 10 },
-    // Card 2 (SAIOS) — middle
-    { rotate: -5, translateX: -70, translateY: -30, scale: 0.9, zIndex: 11 },
-    // Card 3 (Ecosystem) — front, slight right tilt
-    { rotate: 3, translateX: 60, translateY: 0, scale: 0.96, zIndex: 12 },
+    // Card 0 (Marketplace) — left outer
+    { rotate: -9, translateX: -180, translateY: 10, scale: 1, zIndex: 10 },
+    // Card 1 (SAIOS) — left inner
+    { rotate: -3, translateX: -60,  translateY: 0,  scale: 1, zIndex: 11 },
+    // Card 2 (AviGram) — right inner
+    { rotate: 3,  translateX: 60,   translateY: 0,  scale: 1, zIndex: 12 },
+    // Card 3 (Ecosystem) — right outer
+    { rotate: 9,  translateX: 180,  translateY: 10, scale: 1, zIndex: 13 },
   ];
 
   return (
@@ -355,33 +375,40 @@ export default function OurLineup() {
           </p>
         </div>
 
-        {/* Stacked Cards with Uniform 34px Stacking Step */}
+        {/* Stacked Cards */}
         <div className="relative space-y-24">
           {PRODUCTS.map((prod, index) => {
-            const stickyTopPx = 80 + index * 34;
+            const stickyTopPx = 70 + index * 30;
             return (
               <div
                 key={prod.id}
                 ref={(el) => { cardRefs.current[index] = el; }}
-                className={`sticky rounded-3xl border p-8 sm:p-12 md:p-16 lg:p-20 min-h-[460px] sm:min-h-[500px] md:min-h-[520px] transition-[filter,transform] duration-200 ease-out origin-top will-change-transform flex flex-col justify-between ${prod.cardStyle}`}
+                className={`sticky rounded-3xl border p-6 sm:p-10 md:p-12 lg:p-14 min-h-[460px] sm:min-h-[500px] transition-[filter,transform] duration-200 ease-out origin-top will-change-transform flex flex-col justify-between ${prod.cardStyle}`}
                 style={{ top: `${stickyTopPx}px`, zIndex: index + 10 }}
               >
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
-                  <div className="max-w-3xl space-y-5">
+                {/* Two Column Layout: Text on Left, AI-Generated Image Showcase on Right */}
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+                  <div className="flex-1 space-y-4 max-w-2xl">
                     <div className="flex items-center gap-3">
-                      <div className={`-skew-x-12 inline-flex items-center px-5 py-2 border shadow-sm ${prod.badgeStyle}`}>
+                      <div className={`-skew-x-12 inline-flex items-center px-4 py-1.5 border shadow-sm ${prod.badgeStyle}`}>
                         <span className="inline-block skew-x-12 text-xs font-mono font-bold tracking-widest uppercase">
                           {prod.tag}
                         </span>
                       </div>
                     </div>
-                    <h3 className={`text-4xl sm:text-5xl md:text-6xl tracking-tight ${prod.titleColor}`}>{prod.title}</h3>
-                    <h4 className={`text-base sm:text-lg font-mono tracking-wide ${prod.subtitleColor}`}>{prod.subtitle}</h4>
-                    <p className={`text-base sm:text-lg leading-relaxed pt-1 ${prod.descColor}`}>{prod.description}</p>
-                    <div className="pt-4">
-                      <ul className={`grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm font-mono ${prod.featureColor}`}>
+                    <h3 className={`text-3xl sm:text-4xl md:text-5xl tracking-tight ${prod.titleColor}`}>
+                      {prod.title}
+                    </h3>
+                    <h4 className={`text-sm sm:text-base font-mono tracking-wide ${prod.subtitleColor}`}>
+                      {prod.subtitle}
+                    </h4>
+                    <p className={`text-sm sm:text-base leading-relaxed ${prod.descColor}`}>
+                      {prod.description}
+                    </p>
+                    <div className="pt-2">
+                      <ul className={`grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm font-mono ${prod.featureColor}`}>
                         {prod.features.map((feat, i) => (
-                          <li key={i} className="flex items-center gap-2.5">
+                          <li key={i} className="flex items-center gap-2">
                             <span className="text-base opacity-75">›</span>
                             <span>{feat}</span>
                           </li>
@@ -389,16 +416,32 @@ export default function OurLineup() {
                       </ul>
                     </div>
                   </div>
-                  <div className="flex flex-col items-start lg:items-end justify-center shrink-0 pt-6 lg:pt-0">
-                    <ParallelogramButton
-                      href={prod.ctaHref}
-                      isExternal={prod.isExternal}
-                      variant={prod.ctaVariant}
-                      className="w-full sm:w-auto text-base py-5 px-10 shadow-xl"
-                    >
-                      {prod.ctaLabel}
-                    </ParallelogramButton>
+
+                  {/* AI Generated Product Showcase Image on the Right */}
+                  <div className="w-full lg:w-[380px] xl:w-[440px] shrink-0">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+                      <Image
+                        src={prod.imageSrc}
+                        alt={prod.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 440px"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                    </div>
                   </div>
+                </div>
+
+                {/* Bottom Center: Centered CTA button across all cards */}
+                <div className="flex justify-center items-center pt-8 mt-6 border-t border-black/10 dark:border-white/10 w-full">
+                  <ParallelogramButton
+                    href={prod.ctaHref}
+                    isExternal={prod.isExternal}
+                    variant={prod.ctaVariant}
+                    className="py-4 px-10 text-sm sm:text-base shadow-xl"
+                  >
+                    {prod.ctaLabel}
+                  </ParallelogramButton>
                 </div>
               </div>
             );
@@ -407,8 +450,8 @@ export default function OurLineup() {
       </section>
 
       {/* ── FINALE DECK ZONE ────────────────────────────────────────────────
-           A tall scroll spacer. As user scrolls through it, the cards
-           animate into a beautiful fanned deck visible above the fold. */}
+           Cards animate into a symmetrically fanned deck of equal size,
+           flanked by atmospheric black smoke blur overlays. */}
       <div ref={finaleRef} className="relative" style={{ height: "160vh" }}>
         {/* Sticky viewport that holds the deck */}
         <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
@@ -418,11 +461,35 @@ export default function OurLineup() {
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.05) 0%, transparent 70%)",
+                "radial-gradient(ellipse at 50% 55%, rgba(255,255,255,0.06) 0%, transparent 65%)",
             }}
           />
 
-          {/* Label */}
+          {/* ── Left Atmospheric Black Smoke / Side Blur Overlay ── */}
+          <div
+            className="absolute inset-y-0 left-0 w-32 sm:w-56 md:w-80 pointer-events-none z-20 flex items-center justify-start overflow-hidden transition-opacity duration-700"
+            style={{ opacity: finaleProgress > 0.08 ? Math.min((finaleProgress - 0.08) / 0.3, 1) : 0 }}
+          >
+            {/* Smooth gradient transition fading inward */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-transparent backdrop-blur-md" />
+            {/* Volumetric black smoke blur blobs */}
+            <div className="absolute -left-24 top-1/2 -translate-y-1/2 w-80 h-96 rounded-full bg-black blur-3xl opacity-90" />
+            <div className="absolute -left-12 top-1/4 w-64 h-64 rounded-full bg-zinc-950 blur-2xl opacity-80" />
+            <div className="absolute -left-16 bottom-1/4 w-72 h-72 rounded-full bg-black blur-3xl opacity-90" />
+          </div>
+
+          {/* ── Right Atmospheric Black Smoke / Side Blur Overlay ── */}
+          <div
+            className="absolute inset-y-0 right-0 w-32 sm:w-56 md:w-80 pointer-events-none z-20 flex items-center justify-end overflow-hidden transition-opacity duration-700"
+            style={{ opacity: finaleProgress > 0.08 ? Math.min((finaleProgress - 0.08) / 0.3, 1) : 0 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-l from-black via-black/90 to-transparent backdrop-blur-md" />
+            <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-80 h-96 rounded-full bg-black blur-3xl opacity-90" />
+            <div className="absolute -right-12 top-1/4 w-64 h-64 rounded-full bg-zinc-950 blur-2xl opacity-80" />
+            <div className="absolute -right-16 bottom-1/4 w-72 h-72 rounded-full bg-black blur-3xl opacity-90" />
+          </div>
+
+          {/* Section Heading — Removed the word 'Products' */}
           <div
             className="absolute top-12 left-1/2 -translate-x-1/2 text-center z-30"
             style={{
@@ -435,15 +502,14 @@ export default function OurLineup() {
               The Full Stack
             </p>
             <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-white mt-1">
-              Three Products. One Ecosystem.
+              One Unified Ecosystem.
             </h3>
           </div>
 
-          {/* The fanned deck */}
+          {/* Symmetrical fanned deck with identical card dimensions */}
           <div className="relative w-full h-full flex items-center justify-center" style={{ perspective: "1400px" }}>
             {PRODUCTS.map((prod, index) => {
               const t = deckTransforms[index];
-              // Interpolate from neutral to final fan position using finaleProgress
               const fp = Math.min(finaleProgress / 0.85, 1);
               const ease = 1 - Math.pow(1 - fp, 2.5);
 
@@ -455,7 +521,7 @@ export default function OurLineup() {
               return (
                 <div
                   key={prod.id}
-                  className={`absolute rounded-2xl border p-6 sm:p-8 w-[72vw] max-w-[520px] min-h-[320px] sm:min-h-[360px] flex flex-col justify-between shadow-2xl ${prod.cardStyle}`}
+                  className={`absolute rounded-2xl border p-6 sm:p-7 w-[82vw] max-w-[460px] h-[320px] sm:h-[340px] flex flex-col justify-between shadow-2xl overflow-hidden ${prod.cardStyle}`}
                   style={{
                     zIndex: t.zIndex,
                     transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg) scale(${sc})`,
@@ -465,16 +531,19 @@ export default function OurLineup() {
                   }}
                 >
                   <div>
-                    <div className={`-skew-x-12 inline-flex items-center px-3 py-1 mb-3 border text-[10px] font-mono font-bold tracking-widest uppercase ${prod.badgeStyle}`}>
+                    <div className={`-skew-x-12 inline-flex items-center px-3.5 py-1 mb-3.5 border text-[10px] font-mono font-bold tracking-widest uppercase ${prod.badgeStyle}`}>
                       <span className="skew-x-12">{prod.tag}</span>
                     </div>
                     <h3 className={`text-2xl sm:text-3xl tracking-tight ${prod.titleColor}`}>{prod.title}</h3>
-                    <p className={`text-sm mt-2 ${prod.subtitleColor}`}>{prod.subtitle}</p>
+                    <p className={`text-xs sm:text-sm mt-1.5 font-mono ${prod.subtitleColor}`}>{prod.subtitle}</p>
                   </div>
-                  <div className="pt-4">
-                    <ul className={`space-y-1 text-xs font-mono ${prod.featureColor} opacity-75`}>
+                  <div className="pt-3 border-t border-black/10 dark:border-white/10">
+                    <ul className={`space-y-1.5 text-xs font-mono ${prod.featureColor} opacity-80`}>
                       {prod.features.slice(0, 2).map((f, i) => (
-                        <li key={i}>› {f}</li>
+                        <li key={i} className="flex items-center gap-2">
+                          <span className="opacity-75">›</span>
+                          <span>{f}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -483,7 +552,7 @@ export default function OurLineup() {
             })}
           </div>
 
-          {/* Scroll hint — fades out as progress advances */}
+          {/* Scroll hint */}
           <div
             className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 text-zinc-600 text-[10px] font-mono tracking-widest uppercase"
             style={{ opacity: Math.max(0, 1 - finaleProgress * 3) }}
