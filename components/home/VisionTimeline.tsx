@@ -93,7 +93,7 @@ export const MILESTONES: MilestoneItem[] = [
     side: "left", // Outside left bend
     roadX: 640,
     roadY: 730,
-    cardX: 50,
+    cardX: 10,
     cardY: 600,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -201,7 +201,7 @@ export default function VisionTimeline() {
       { p: 0.40, x: 1240, y: 520, zoom: 1.06 }, // Step 03 (sweeping right bend)
       { p: 0.62, x: 580,  y: 730, zoom: 1.08 }, // Step 04 (sweeping left bend)
       { p: 0.82, x: 1220, y: 920, zoom: 1.10 }, // Step 05 (sweeping right east)
-      { p: 1.00, x: 2060, y: 1040, zoom: 0.98 }, // Step 06 & Extra Large Parked Jet in empty space
+      { p: 1.00, x: 2180, y: 1120, zoom: 1.06 }, // Step 06 & Extra Large Parked Jet in centered perspective
     ];
 
     for (let i = 0; i < WAYPOINTS.length - 1; i++) {
@@ -235,7 +235,7 @@ export default function VisionTimeline() {
     <div
       ref={containerRef}
       aria-label="The 10-Year Vision Roadmap"
-      className="relative w-full h-[320vh] bg-[#04060a]"
+      className="relative w-full h-[235vh] bg-black"
     >
       {/* ── Relative Section Header (Moves naturally up and out of the way as user scrolls down) ── */}
       <div className="relative z-30 pt-14 sm:pt-20 pb-4 px-6 max-w-5xl mx-auto text-center pointer-events-none">
@@ -254,9 +254,9 @@ export default function VisionTimeline() {
 
       {/* ── Sticky Fullscreen Viewport for the Road Scene ── */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-start select-none">
-        {/* Subtle Dark Matte Background */}
-        <div className="absolute inset-0 pointer-events-none z-0 bg-[#04060a]">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#04060a] via-[#080b10] to-[#04060a]" />
+        {/* Subtle Dark Matte Background (Pure black seamless integration) */}
+        <div className="absolute inset-0 pointer-events-none z-0 bg-black">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-950/40 to-black" />
         </div>
 
         {/* ── Road Scene along the Wavy Serpentine Path ── */}

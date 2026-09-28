@@ -189,10 +189,10 @@ export default function ContactFlightJet() {
       // Takeoff trigger: Begins once user finishes the Vision timeline roadmap (visionRect.bottom <= vh)
       const gap = Math.max(0, contactRect.top - visionRect.bottom);
       const flightStartContactTop = vh + gap;
-      // Landing trigger: Docks comfortably as the Contact form card enters view
-      const flightEndContactTop = vh * 0.22;
-      // Generous flight distance so flight feels expansive and deliberate
-      const flightDistance = Math.max(750, flightStartContactTop - flightEndContactTop);
+      // Landing trigger: Docks cleanly as the Contact form card enters comfortable viewing height
+      const flightEndContactTop = vh * 0.30;
+      // Tight, responsive flight distance without prolonged empty scroll
+      const flightDistance = Math.max(380, Math.min(540, flightStartContactTop - flightEndContactTop));
 
       const currentScrolled = flightStartContactTop - contactRect.top;
       const rawProgress = currentScrolled / flightDistance;

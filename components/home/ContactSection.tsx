@@ -38,7 +38,7 @@ export default function ContactSection() {
     <section
       id="contact"
       aria-label="Contact and Inquiries"
-      className="relative py-32 px-6 md:px-12 max-w-5xl mx-auto scroll-mt-20 overflow-hidden"
+      className="relative pt-6 pb-24 md:pt-10 md:pb-28 px-6 md:px-12 max-w-5xl mx-auto scroll-mt-10 overflow-hidden"
     >
       {/* ── Background Radar Compass & Flight Vector Rings ─────────── */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
@@ -47,7 +47,7 @@ export default function ContactSection() {
         <div className="w-[300px] h-[300px] rounded-full border border-white/10" />
       </div>
 
-      <div className="text-center mb-14 relative z-10">
+      <div className="text-center mb-6 relative z-10">
         {/* <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 mb-3">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-400">

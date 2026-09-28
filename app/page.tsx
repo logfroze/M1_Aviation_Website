@@ -54,8 +54,6 @@ export default function Home() {
           <VisionTimeline />
         </SectionFocusItem>
 
-        <SectionDivider />
-
         {/* 3D Flying Jet connecting Vision Roadmap End -> Contact Section Form */}
         <ContactFlightJet />
 
