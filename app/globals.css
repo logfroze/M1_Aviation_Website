@@ -178,26 +178,26 @@ body {
   transform-origin: center;
 }
 
-/* Contact Section Supersonic Air Streaks (Flipped to opposite direction: streams backward from nose past tail at +18deg) */
+/* Contact Section Supersonic Air Streaks (Flipped to opposite direction: streams backward from nose past tail at -22deg) */
 @keyframes contactSlipstream {
   0% {
-    transform: rotate(18deg) translateX(140px) translateZ(10px) scale(1.05);
+    transform: rotate(-22deg) translateX(150px) translateZ(10px) scale(1.05);
     opacity: 0;
   }
-  20% {
-    opacity: 0.65;
+  15% {
+    opacity: 0.70;
   }
   75% {
-    opacity: 0.65;
+    opacity: 0.70;
   }
   100% {
-    transform: rotate(18deg) translateX(-140px) translateZ(-50px) scale(0.80);
+    transform: rotate(-22deg) translateX(-150px) translateZ(-50px) scale(0.80);
     opacity: 0;
   }
 }
 
 .contact-slipstream-streak {
-  animation: contactSlipstream var(--dur, 0.48s) linear var(--delay, 0s) infinite;
+  animation: contactSlipstream var(--dur, 0.46s) linear var(--delay, 0s) infinite;
   will-change: transform, opacity;
   transform-origin: center;
 }

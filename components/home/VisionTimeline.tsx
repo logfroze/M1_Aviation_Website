@@ -35,8 +35,8 @@ export const MILESTONES: MilestoneItem[] = [
     side: "right", // Above the road
     roadX: 420,
     roadY: 198,
-    cardX: 300,
-    cardY: -150, // Elevated with generous clearance above the road
+    cardX: 270,
+    cardY: -160, // Elevated with generous clearance above the road
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
@@ -54,8 +54,8 @@ export const MILESTONES: MilestoneItem[] = [
     side: "left", // Below the road
     roadX: 900,
     roadY: 265,
-    cardX: 1200,
-    cardY: 1,
+    cardX: 1120,
+    cardY: -10,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
@@ -74,8 +74,8 @@ export const MILESTONES: MilestoneItem[] = [
     side: "right", // Outside right bend
     roadX: 1350,
     roadY: 560,
-    cardX: 1500,
-    cardY: 550,
+    cardX: 1470,
+    cardY: 520,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <line x1="12" x2="12" y1="20" y2="10" />
@@ -93,7 +93,7 @@ export const MILESTONES: MilestoneItem[] = [
     side: "left", // Outside left bend
     roadX: 640,
     roadY: 730,
-    cardX: 100,
+    cardX: 50,
     cardY: 600,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -112,8 +112,8 @@ export const MILESTONES: MilestoneItem[] = [
     side: "right", // Above the road
     roadX: 1240,
     roadY: 980,
-    cardX: 900,
-    cardY: 1100,
+    cardX: 830,
+    cardY: 1070,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
@@ -130,7 +130,7 @@ export const MILESTONES: MilestoneItem[] = [
     side: "left", // Below the road
     roadX: 1760,
     roadY: 975,
-    cardX: 1620,
+    cardX: 1500,
     cardY: 1060,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
@@ -262,7 +262,7 @@ export default function VisionTimeline() {
         {/* ── Road Scene along the Wavy Serpentine Path ── */}
         <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto overflow-hidden">
           <div
-            className="relative w-full h-full max-w-[2200px] max-h-[1200px] will-change-transform"
+            className="relative w-full h-full max-w-[2200px] max-h-[1350px] will-change-transform"
             style={{
               transform: `translate3d(${cameraTransform.translateX}px, ${cameraTransform.translateY}px, 0) scale(${cameraTransform.zoomScale})`,
               transformOrigin: "0 0",
@@ -270,7 +270,7 @@ export default function VisionTimeline() {
           >
             {/* ── SVG Road & Interactive Milestones ── */}
             <svg
-              viewBox="0 0 2200 1200"
+              viewBox="0 0 2200 1350"
               preserveAspectRatio="xMidYMid meet"
               className="w-full h-full overflow-visible"
             >
@@ -393,9 +393,9 @@ export default function VisionTimeline() {
                 const isRight = m.side === "right";
 
                 // Enlarged card dimensions (longer cards for better readability)
-                const cardW = 490;
-                const cardH = 245;
-                const slant = 26;
+                const cardW = 540;
+                const cardH = 250;
+                const slant = 28;
 
                 // Dedicated, clean leader line attachment coordinates per milestone card
                 const getCardConnection = () => {
@@ -598,13 +598,13 @@ export default function VisionTimeline() {
                         height={cardH - 16}
                         className="pointer-events-none overflow-visible"
                       >
-                        <div className="p-5 space-y-3.5 select-none">
+                        <div className="p-6 space-y-4 select-none">
                           {/* Header: Phase & Icon */}
                           <div className="flex items-center justify-between gap-3">
                             <span
-                              className={`text-sm sm:text-base font-mono font-black tracking-[0.28em] uppercase transition-colors ${
+                              className={`text-base sm:text-lg font-mono font-black tracking-[0.28em] uppercase transition-colors ${
                                 isActive
-                                  ? "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.85)]"
+                                  ? "text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]"
                                   : "text-zinc-200 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
                               }`}
                             >
@@ -613,7 +613,7 @@ export default function VisionTimeline() {
                             <span
                               className={`transition-colors p-2 rounded bg-zinc-900/90 border ${
                                 isActive
-                                  ? "text-white border-white shadow-[0_0_12px_rgba(255,255,255,0.45)]"
+                                  ? "text-white border-white shadow-[0_0_14px_rgba(255,255,255,0.5)]"
                                   : "text-zinc-200 border-zinc-500/70"
                               }`}
                             >
@@ -623,9 +623,9 @@ export default function VisionTimeline() {
 
                           {/* Title */}
                           <h4
-                            className={`text-xl sm:text-2xl font-mono font-black tracking-wide transition-colors ${
+                            className={`text-xl sm:text-2xl font-mono font-black tracking-wide leading-snug transition-colors ${
                               isActive
-                                ? "text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.9)]"
+                                ? "text-white drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]"
                                 : "text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]"
                             }`}
                           >
@@ -634,10 +634,10 @@ export default function VisionTimeline() {
 
                           {/* Statement */}
                           <p
-                            className={`text-sm sm:text-base font-mono font-medium leading-relaxed transition-colors ${
+                            className={`text-sm sm:text-base font-mono font-normal leading-relaxed transition-colors ${
                               isActive
                                 ? "text-zinc-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                                : "text-zinc-300"
+                                : "text-zinc-200"
                             }`}
                           >
                             {m.statement}
