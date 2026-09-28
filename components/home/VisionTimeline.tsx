@@ -129,9 +129,9 @@ export const MILESTONES: MilestoneItem[] = [
     statement: VISION_MILESTONES[5].statement,
     side: "left", // Below the road
     roadX: 1760,
-    roadY: 975,
+    roadY: 1030,
     cardX: 1500,
-    cardY: 1060,
+    cardY: 1115,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
@@ -144,7 +144,7 @@ export const MILESTONES: MilestoneItem[] = [
 
 // ── Wavy Serpentine Road Path: First heads right, sweeps in a big smooth curve left, then sweeps right towards destination ──
 const ROAD_PATH =
-  "M 60 160 C 340 180, 620 220, 940 270 C 1260 320, 1440 430, 1340 560 C 1220 680, 860 620, 680 720 C 540 800, 600 910, 880 960 C 1200 1010, 1620 980, 2140 970";
+  "M 60 160 C 340 180, 620 220, 940 270 C 1260 320, 1440 430, 1340 560 C 1220 680, 860 620, 680 720 C 540 800, 600 910, 880 960 C 1200 990, 1680 1015, 2140 1070";
 
 export default function VisionTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -201,7 +201,7 @@ export default function VisionTimeline() {
       { p: 0.40, x: 1240, y: 520, zoom: 1.06 }, // Step 03 (sweeping right bend)
       { p: 0.62, x: 580,  y: 730, zoom: 1.08 }, // Step 04 (sweeping left bend)
       { p: 0.82, x: 1220, y: 920, zoom: 1.10 }, // Step 05 (sweeping right east)
-      { p: 1.00, x: 2060, y: 950, zoom: 0.98 }, // Step 06 & Extra Large Parked Jet in empty space
+      { p: 1.00, x: 2060, y: 1040, zoom: 0.98 }, // Step 06 & Extra Large Parked Jet in empty space
     ];
 
     for (let i = 0; i < WAYPOINTS.length - 1; i++) {
@@ -262,7 +262,7 @@ export default function VisionTimeline() {
         {/* ── Road Scene along the Wavy Serpentine Path ── */}
         <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto overflow-hidden">
           <div
-            className="relative w-full h-full max-w-[2200px] max-h-[1350px] will-change-transform"
+            className="relative w-full h-full max-w-[2200px] max-h-[1450px] will-change-transform"
             style={{
               transform: `translate3d(${cameraTransform.translateX}px, ${cameraTransform.translateY}px, 0) scale(${cameraTransform.zoomScale})`,
               transformOrigin: "0 0",
@@ -270,7 +270,7 @@ export default function VisionTimeline() {
           >
             {/* ── SVG Road & Interactive Milestones ── */}
             <svg
-              viewBox="0 0 2200 1350"
+              viewBox="0 0 2200 1450"
               preserveAspectRatio="xMidYMid meet"
               className="w-full h-full overflow-visible"
             >
@@ -345,8 +345,8 @@ export default function VisionTimeline() {
                 </text> */}
               </g>
 
-              {/* ── END OF ROAD: Terminal Destination Beacon at Road Tip (x=2140, y=970) ── */}
-              <g transform="translate(2140, 970)">
+              {/* ── END OF ROAD: Terminal Destination Beacon at Road Tip (x=2140, y=1070) ── */}
+              <g transform="translate(2140, 1070)">
                 <circle cx="0" cy="0" r="32" fill="none" stroke="#475569" strokeWidth="1.5" strokeDasharray="4 4" />
                 <circle cx="0" cy="0" r="20" fill="none" stroke="#94a3b8" strokeWidth="1.2" />
                 {/* <circle cx="0" cy="0" r="6" fill="#38bdf8" />
@@ -356,7 +356,7 @@ export default function VisionTimeline() {
               {/* ── Stationary Supersonic Jet Parked in Empty Space (Extra Large 820px, Horizontal / Standing Attitude) ── */}
               <g
                 id="vision-end-jet-anchor"
-                transform="translate(2580, 930)"
+                transform="translate(2580, 1030)"
               >
                 <g
                   id="vision-end-jet-wrapper"

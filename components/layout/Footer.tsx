@@ -12,101 +12,119 @@ import {
 } from "@/data/navigation";
 
 // ── Supersonic Afterburner Thrust Fire Effect on Mouse Hover ──
+function JetFlameTorch({ idPrefix }: { idPrefix: string }) {
+  return (
+    <div className="relative w-full h-full">
+      {/* Tight, sleek atmospheric glow (tight spread, no oversized cloud) */}
+      <div className="absolute -inset-x-3 -inset-y-1 bg-[radial-gradient(ellipse_at_80%_50%,_rgba(255,255,255,0.9)_0%,_rgba(56,189,248,0.85)_20%,_rgba(249,115,22,0.85)_50%,_transparent_100%)] blur-sm rounded-full opacity-85 mix-blend-screen" />
+      <div className="absolute -inset-x-5 -inset-y-1.5 bg-[radial-gradient(ellipse_at_75%_50%,_rgba(255,140,0,0.65)_0%,_rgba(234,88,12,0.35)_50%,_transparent_80%)] blur-md opacity-70 mix-blend-screen" />
+      <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[radial-gradient(circle,_#ffffff_0%,_#38bdf8_35%,_#f97316_70%,_transparent_100%)] blur-[1.5px] mix-blend-screen opacity-95" />
+
+      {/* Sharp Supersonic Thrust Stream SVG */}
+      <svg
+        viewBox="0 0 160 30"
+        preserveAspectRatio="none"
+        className="absolute inset-0 w-full h-full overflow-visible drop-shadow-[0_0_12px_rgba(249,115,22,0.9)]"
+      >
+        <defs>
+          <linearGradient id={`${idPrefix}-torch`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="8%" stopColor="#38bdf8" stopOpacity="1" />
+            <stop offset="20%" stopColor="#fef08a" stopOpacity="1" />
+            <stop offset="40%" stopColor="#ff7700" stopOpacity="0.95" />
+            <stop offset="70%" stopColor="#ff3d00" stopOpacity="0.8" />
+            <stop offset="90%" stopColor="#ea580c" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#c2410c" stopOpacity="0" />
+          </linearGradient>
+
+          <linearGradient id={`${idPrefix}-core`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="25%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="50%" stopColor="#7dd3fc" stopOpacity="0.95" />
+            <stop offset="75%" stopColor="#fdba74" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+          </linearGradient>
+
+          <linearGradient id={`${idPrefix}-needle`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="55%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="85%" stopColor="#bae6fd" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </linearGradient>
+
+          <radialGradient id={`${idPrefix}-throat`} cx="100%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="35%" stopColor="#38bdf8" stopOpacity="1" />
+            <stop offset="70%" stopColor="#f97316" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Outer Aerodynamic High-Thrust Torch */}
+        <path
+          d="M 160,11 C 120,8.5 70,5 28,6.5 C 10,7.5 0,11.5 0,15 C 0,18.5 10,22.5 28,23.5 C 70,25 120,21.5 160,19 Z"
+          fill={`url(#${idPrefix}-torch)`}
+          filter="blur(0.8px)"
+        />
+
+        {/* Mid High-Heat Flame Mantle */}
+        <path
+          d="M 160,12 C 125,10 75,7.5 32,8.5 C 14,10 6,13 6,15 C 6,17 14,20 32,21.5 C 75,22.5 125,20 160,18 Z"
+          fill={`url(#${idPrefix}-core)`}
+          filter="blur(0.4px)"
+        />
+
+        {/* Razor-Sharp Center White-Hot Plasma Needle */}
+        <path
+          d="M 160,13.8 C 130,13 90,12 42,13 C 22,13.8 12,14.5 12,15 C 12,15.5 22,16.2 42,17 C 90,18 130,17 160,16.2 Z"
+          fill={`url(#${idPrefix}-needle)`}
+        />
+
+        {/* 4 Crisp Supersonic Mach Shock Diamonds */}
+        <polygon points="140,15 144.5,11.5 149,15 144.5,18.5" fill="#ffffff" filter="drop-shadow(0 0 4px #38bdf8)" />
+        <polygon points="115,15 120.5,11 126,15 120.5,19" fill="#ffffff" filter="drop-shadow(0 0 6px #ffffff)" />
+        <polygon points="88,15 94.5,11.5 101,15 94.5,18.5" fill="#fef08a" filter="drop-shadow(0 0 5px #f97316)" />
+        <polygon points="62,15 67.5,12.5 73,15 67.5,17.5" fill="#fed7aa" filter="drop-shadow(0 0 4px #ea580c)" />
+
+        {/* Nozzle Throat Flare */}
+        <ellipse cx="160" cy="15" rx="6" ry="9" fill={`url(#${idPrefix}-throat)`} />
+        <ellipse cx="160" cy="15" rx="3" ry="5" fill="#ffffff" />
+      </svg>
+    </div>
+  );
+}
+
 function FooterJetThrustFire() {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-visible">
-      {/* ── Engine 1: Upper / Farther Engine (Placed exactly at default image fire) ── */}
+    <div className="absolute inset-0 pointer-events-none overflow-visible z-20">
+      {/* ── Engine 1: Upper / Tail Engine ── */}
       <div
-        className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-right z-0"
+        className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out origin-right"
         style={{
           top: "67.5%",
           right: "79.3%",
-          width: "12%",
-          height: "20px",
+          width: "16%",
+          height: "22px",
           transformOrigin: "right center",
           transform: "translateY(-50%) rotate(-24.5deg)",
         }}
       >
-        <div className="relative w-full h-full">
-          {/* Ambient Afterburner Radial Glow Bloom */}
-          <div className="absolute -inset-2 bg-gradient-to-l from-cyan-400/90 via-orange-500/80 to-transparent blur-md rounded-full opacity-80" />
-
-          {/* Outer Supersonic Afterburner Torch */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background:
-                "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.92) 46%, rgba(239,68,68,0.75) 75%, transparent 100%)",
-              boxShadow: "0 0 16px rgba(249,115,22,0.9), 0 0 26px rgba(56,189,248,0.65)",
-              filter: "blur(1.2px)",
-            }}
-          />
-
-          {/* Inner White-Hot Plasma Needle */}
-          <div
-            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2 rounded-full mix-blend-screen"
-            style={{
-              background:
-                "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
-              filter: "blur(0.5px)",
-              boxShadow: "0 0 10px #ffffff, 0 0 18px #38bdf8",
-            }}
-          />
-
-          {/* Shock Diamond Pressure Nodes */}
-          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2 h-2 rotate-45 bg-white/95 shadow-[0_0_8px_#38bdf8]" />
-          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-sky-200/90 shadow-[0_0_6px_#f97316]" />
-
-          {/* Nozzle Throat High-Intensity Flare Ring */}
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_12px_#38bdf8] mix-blend-screen" />
-        </div>
+        <JetFlameTorch idPrefix="e1" />
       </div>
 
-      {/* ── Engine 2: Lower / Near Engine (Placed exactly at default image fire) ── */}
+      {/* ── Engine 2: Lower / Wing Engine ── */}
       <div
-        className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-right z-0"
+        className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out origin-right"
         style={{
           top: "72.4%",
           right: "62.6%",
-          width: "14%",
+          width: "16%",
           height: "22px",
           transformOrigin: "right center",
           transform: "translateY(-50%) rotate(-15.5deg)",
         }}
       >
-        <div className="relative w-full h-full">
-          {/* Ambient Afterburner Radial Glow Bloom */}
-          <div className="absolute -inset-2.5 bg-gradient-to-l from-cyan-400/95 via-orange-500/85 to-transparent blur-md rounded-full opacity-85" />
-
-          {/* Outer Supersonic Afterburner Torch */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background:
-                "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.95) 48%, rgba(239,68,68,0.8) 78%, transparent 100%)",
-              boxShadow: "0 0 18px rgba(249,115,22,0.95), 0 0 32px rgba(56,189,248,0.7)",
-              filter: "blur(1.3px)",
-            }}
-          />
-
-          {/* Inner White-Hot Plasma Needle */}
-          <div
-            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2.5 rounded-full mix-blend-screen"
-            style={{
-              background:
-                "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
-              filter: "blur(0.5px)",
-              boxShadow: "0 0 12px #ffffff, 0 0 20px #38bdf8",
-            }}
-          />
-
-          {/* Shock Diamond Pressure Nodes */}
-          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-white/95 shadow-[0_0_10px_#38bdf8]" />
-          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-2 h-2 rotate-45 bg-sky-200/90 shadow-[0_0_8px_#f97316]" />
-
-          {/* Nozzle Throat High-Intensity Flare Ring */}
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-[0_0_14px_#38bdf8] mix-blend-screen" />
-        </div>
+        <JetFlameTorch idPrefix="e2" />
       </div>
     </div>
   );
@@ -138,9 +156,6 @@ export default function Footer() {
               <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
             </div>
 
-            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
-            <FooterJetThrustFire />
-
             {/* Transparent PNG Jet */}
             <Image
               src="/images/footer-jet.png"
@@ -149,6 +164,9 @@ export default function Footer() {
               sizes="(max-width: 768px) 340px, 640px"
               className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
             />
+
+            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
+            <FooterJetThrustFire />
           </div>
         </div>
       </div>
@@ -165,9 +183,6 @@ export default function Footer() {
               <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
             </div>
 
-            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
-            <FooterJetThrustFire />
-
             {/* Transparent PNG Jet */}
             <Image
               src="/images/footer-jet.png"
@@ -176,6 +191,9 @@ export default function Footer() {
               sizes="(max-width: 768px) 340px, 640px"
               className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
             />
+
+            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
+            <FooterJetThrustFire />
           </div>
         </div>
       </div>

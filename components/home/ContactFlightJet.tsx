@@ -16,6 +16,128 @@ const FLIGHT_AIR_STREAKS = [
   { top: "30%", left: "30%", width: "35%", delay: "0.17s", duration: "0.43s", opacity: 0.50, h: "1.5px" },
 ];
 
+// ── Supersonic Afterburner Thrust Fire Effect during Flight ──
+function JetFlameTorch({ idPrefix }: { idPrefix: string }) {
+  return (
+    <div className="relative w-full h-full">
+      {/* Tight, sleek atmospheric glow (tight spread, no oversized cloud) */}
+      <div className="absolute -inset-x-3 -inset-y-1 bg-[radial-gradient(ellipse_at_80%_50%,_rgba(255,255,255,0.9)_0%,_rgba(56,189,248,0.85)_20%,_rgba(249,115,22,0.85)_50%,_transparent_100%)] blur-sm rounded-full opacity-85 mix-blend-screen" />
+      <div className="absolute -inset-x-5 -inset-y-1.5 bg-[radial-gradient(ellipse_at_75%_50%,_rgba(255,140,0,0.65)_0%,_rgba(234,88,12,0.35)_50%,_transparent_80%)] blur-md opacity-70 mix-blend-screen" />
+      <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[radial-gradient(circle,_#ffffff_0%,_#38bdf8_35%,_#f97316_70%,_transparent_100%)] blur-[1.5px] mix-blend-screen opacity-95" />
+
+      {/* Sharp Supersonic Thrust Stream SVG */}
+      <svg
+        viewBox="0 0 160 30"
+        preserveAspectRatio="none"
+        className="absolute inset-0 w-full h-full overflow-visible drop-shadow-[0_0_12px_rgba(249,115,22,0.9)]"
+      >
+        <defs>
+          <linearGradient id={`${idPrefix}-torch`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="8%" stopColor="#38bdf8" stopOpacity="1" />
+            <stop offset="20%" stopColor="#fef08a" stopOpacity="1" />
+            <stop offset="40%" stopColor="#ff7700" stopOpacity="0.95" />
+            <stop offset="70%" stopColor="#ff3d00" stopOpacity="0.8" />
+            <stop offset="90%" stopColor="#ea580c" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#c2410c" stopOpacity="0" />
+          </linearGradient>
+
+          <linearGradient id={`${idPrefix}-core`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="25%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="50%" stopColor="#7dd3fc" stopOpacity="0.95" />
+            <stop offset="75%" stopColor="#fdba74" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#f97316" stopOpacity="0" />
+          </linearGradient>
+
+          <linearGradient id={`${idPrefix}-needle`} x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="55%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="85%" stopColor="#bae6fd" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </linearGradient>
+
+          <radialGradient id={`${idPrefix}-throat`} cx="100%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="35%" stopColor="#38bdf8" stopOpacity="1" />
+            <stop offset="70%" stopColor="#f97316" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Outer Aerodynamic High-Thrust Torch */}
+        <path
+          d="M 160,11 C 120,8.5 70,5 28,6.5 C 10,7.5 0,11.5 0,15 C 0,18.5 10,22.5 28,23.5 C 70,25 120,21.5 160,19 Z"
+          fill={`url(#${idPrefix}-torch)`}
+          filter="blur(0.8px)"
+        />
+
+        {/* Mid High-Heat Flame Mantle */}
+        <path
+          d="M 160,12 C 125,10 75,7.5 32,8.5 C 14,10 6,13 6,15 C 6,17 14,20 32,21.5 C 75,22.5 125,20 160,18 Z"
+          fill={`url(#${idPrefix}-core)`}
+          filter="blur(0.4px)"
+        />
+
+        {/* Razor-Sharp Center White-Hot Plasma Needle */}
+        <path
+          d="M 160,13.8 C 130,13 90,12 42,13 C 22,13.8 12,14.5 12,15 C 12,15.5 22,16.2 42,17 C 90,18 130,17 160,16.2 Z"
+          fill={`url(#${idPrefix}-needle)`}
+        />
+
+        {/* 4 Crisp Supersonic Mach Shock Diamonds */}
+        <polygon points="140,15 144.5,11.5 149,15 144.5,18.5" fill="#ffffff" filter="drop-shadow(0 0 4px #38bdf8)" />
+        <polygon points="115,15 120.5,11 126,15 120.5,19" fill="#ffffff" filter="drop-shadow(0 0 6px #ffffff)" />
+        <polygon points="88,15 94.5,11.5 101,15 94.5,18.5" fill="#fef08a" filter="drop-shadow(0 0 5px #f97316)" />
+        <polygon points="62,15 67.5,12.5 73,15 67.5,17.5" fill="#fed7aa" filter="drop-shadow(0 0 4px #ea580c)" />
+
+        {/* Nozzle Throat Flare */}
+        <ellipse cx="160" cy="15" rx="6" ry="9" fill={`url(#${idPrefix}-throat)`} />
+        <ellipse cx="160" cy="15" rx="3" ry="5" fill="#ffffff" />
+      </svg>
+    </div>
+  );
+}
+
+function ContactJetThrustFire({ opacity }: { opacity: number }) {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none overflow-visible z-20 transition-opacity duration-150"
+      style={{ opacity }}
+    >
+      {/* ── Engine 1: Upper / Tail Engine ── */}
+      <div
+        className="absolute origin-right"
+        style={{
+          top: "67.5%",
+          right: "79.3%",
+          width: "16%",
+          height: "22px",
+          transformOrigin: "right center",
+          transform: "translateY(-50%) rotate(-24.5deg)",
+        }}
+      >
+        <JetFlameTorch idPrefix="cflight-e1" />
+      </div>
+
+      {/* ── Engine 2: Lower / Wing Engine ── */}
+      <div
+        className="absolute origin-right"
+        style={{
+          top: "72.4%",
+          right: "62.6%",
+          width: "16%",
+          height: "22px",
+          transformOrigin: "right center",
+          transform: "translateY(-50%) rotate(-15.5deg)",
+        }}
+      >
+        <JetFlameTorch idPrefix="cflight-e2" />
+      </div>
+    </div>
+  );
+}
+
 interface FlightState {
   active: boolean;
   progress: number;
@@ -158,7 +280,7 @@ export default function ContactFlightJet() {
             destY = destRect.bottom - imgRenderedH * 0.5;
           } else {
             imgRenderedW = cardW;
-            imgRenderedH = cardW / imgAspect;
+            imgRenderedH = cardH / imgAspect;
             destX = destRect.right - imgRenderedW * 0.5;
             destY = destRect.bottom - imgRenderedH * 0.5;
           }
@@ -247,39 +369,6 @@ export default function ContactFlightJet() {
         }}
       >
         <div className="relative w-full h-auto">
-          {/* ── Dynamic Glowing Afterburner Exhaust Plumes ── */}
-          {state.afterburnerBoost > 0.05 && (
-            <div
-              className="absolute pointer-events-none z-10"
-              style={{
-                top: "62%",
-                left: "17%",
-                transform: "translate(-50%, -50%) rotate(15deg)",
-                opacity: Math.min(1, state.afterburnerBoost * 1.3),
-              }}
-            >
-              {/* Central Afterburner Core Flame */}
-              <div
-                className="w-16 h-5 rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at left, rgba(255,255,255,0.95) 0%, rgba(56,189,248,0.85) 30%, rgba(249,115,22,0.7) 65%, transparent 100%)",
-                  filter: "blur(2.5px)",
-                  boxShadow: "0 0 16px rgba(56,189,248,0.7), 0 0 28px rgba(249,115,22,0.5)",
-                }}
-              />
-              {/* Lower Engine Auxiliary Flame */}
-              <div
-                className="w-12 h-3.5 rounded-full -mt-1 ml-1"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at left, rgba(255,255,255,0.95) 0%, rgba(249,115,22,0.8) 45%, transparent 100%)",
-                  filter: "blur(2px)",
-                }}
-              />
-            </div>
-          )}
-
           {/* ── Flight Air Streaks Effect during High-Speed Transit ── */}
           {state.showAirStreaks && (
             <div
@@ -317,8 +406,15 @@ export default function ContactFlightJet() {
             height={768}
             priority
             draggable={false}
-            className="w-full h-auto object-contain pointer-events-none select-none drop-shadow-[0_24px_50px_rgba(0,0,0,0.85)] brightness-105"
+            className="w-full h-auto object-contain pointer-events-none select-none drop-shadow-[0_24px_50px_rgba(0,0,0,0.85)] brightness-105 relative z-10"
           />
+
+          {/* ── Dynamic Supersonic Afterburner Thrust Fire in Mid-Air Flight ── */}
+          {state.afterburnerBoost > 0.02 && (
+            <ContactJetThrustFire
+              opacity={Math.min(1, Math.max(0, state.afterburnerBoost * 1.5))}
+            />
+          )}
         </div>
       </div>
     </div>
