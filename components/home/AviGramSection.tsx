@@ -51,7 +51,7 @@ export default function AviGramSection() {
 
           <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
             The world’s dedicated visual ecosystem designed exclusively for verified jet captains, 
-            aerospace pioneers, private airframe owners, and high-altitude connoisseurs.
+            aerospace pioneers, private airframe owners and high-altitude connoisseurs.
           </p>
         </div>
 
@@ -153,11 +153,12 @@ export default function AviGramSection() {
                 <div className="space-y-1.5 pt-1 border-t border-white/10">
                   <p className="text-xs text-zinc-200 leading-relaxed">
                     <span className="font-semibold text-white mr-1.5">Capt. Vance</span>
-                    Cruising at FL430 above the cloud blanket. SAIOS auto-telemetry optimized our climb profile, saving 180kg of Jet-A.
+                    <br />
+                    Cruising at FL430 above the cloud blanket. <br />SAIOS auto-telemetry optimized our climb profile, saving 180kg of Jet-A.
                   </p>
-                  <p className="text-[10px] font-mono text-zinc-400 tracking-wider">
+                  {/* <p className="text-[10px] font-mono text-zinc-400 tracking-wider">
                     Gulfstream G700 • Geneva (LSGG) → Zurich (LSZH)
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>

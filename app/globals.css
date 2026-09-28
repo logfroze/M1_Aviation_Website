@@ -178,6 +178,30 @@ body {
   transform-origin: center;
 }
 
+/* Contact Section Supersonic Air Streaks (Flipped to opposite direction: streams backward from nose past tail at +18deg) */
+@keyframes contactSlipstream {
+  0% {
+    transform: rotate(18deg) translateX(140px) translateZ(10px) scale(1.05);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.65;
+  }
+  75% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: rotate(18deg) translateX(-140px) translateZ(-50px) scale(0.80);
+    opacity: 0;
+  }
+}
+
+.contact-slipstream-streak {
+  animation: contactSlipstream var(--dur, 0.48s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
 /* Gentle hovering in/out-of-screen breathing buoyancy (almost negligible) */
 @keyframes jetInAndOutFloat {
   0%, 100% {

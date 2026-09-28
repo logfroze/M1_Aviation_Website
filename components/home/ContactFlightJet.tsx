@@ -289,7 +289,7 @@ export default function ContactFlightJet() {
               {FLIGHT_AIR_STREAKS.map((s, i) => (
                 <div
                   key={i}
-                  className="jet-slipstream-streak"
+                  className="contact-slipstream-streak"
                   style={
                     {
                       position: "absolute",

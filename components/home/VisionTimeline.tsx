@@ -38,7 +38,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 300,
     cardY: -150, // Elevated with generous clearance above the road
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
         <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
         <path d="M9 12H4s.55-3.03 2-4.5c1.62-1.63 5-2 5-2" />
@@ -57,7 +57,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 1200,
     cardY: 1,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
         <line x1="16" x2="16" y1="2" y2="6" />
         <line x1="8" x2="8" y1="2" y2="6" />
@@ -77,7 +77,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 1500,
     cardY: 550,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <line x1="12" x2="12" y1="20" y2="10" />
         <line x1="18" x2="18" y1="20" y2="4" />
         <line x1="6" x2="6" y1="20" y2="16" />
@@ -96,7 +96,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 100,
     cardY: 600,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
         <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
         <path d="M12 6v2" />
@@ -115,7 +115,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 900,
     cardY: 1100,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
         <path d="M2 12h20" />
         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -133,7 +133,7 @@ export const MILESTONES: MilestoneItem[] = [
     cardX: 1620,
     cardY: 1060,
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="6" />
         <circle cx="12" cy="12" r="2" />
@@ -392,10 +392,10 @@ export default function VisionTimeline() {
                 const isActive = idx === activeIndex;
                 const isRight = m.side === "right";
 
-                // Enlarged card dimensions
-                const cardW = 390;
-                const cardH = 220;
-                const slant = 22;
+                // Enlarged card dimensions (longer cards for better readability)
+                const cardW = 490;
+                const cardH = 245;
+                const slant = 26;
 
                 // Dedicated, clean leader line attachment coordinates per milestone card
                 const getCardConnection = () => {
@@ -590,30 +590,30 @@ export default function VisionTimeline() {
                         opacity={isActive ? 1 : 0.9}
                       />
 
-                      {/* Text & Icon Content inside ForeignObject (Clean layout, no clipping) */}
+                      {/* Text & Icon Content inside ForeignObject (Clean layout, enhanced typography) */}
                       <foreignObject
-                        x={m.cardX + 14}
+                        x={m.cardX + 16}
                         y={m.cardY + 8}
-                        width={cardW - 28}
+                        width={cardW - 32}
                         height={cardH - 16}
                         className="pointer-events-none overflow-visible"
                       >
-                        <div className="p-4 space-y-3 select-none">
+                        <div className="p-5 space-y-3.5 select-none">
                           {/* Header: Phase & Icon */}
                           <div className="flex items-center justify-between gap-3">
                             <span
-                              className={`text-xs font-mono font-black tracking-[0.28em] uppercase transition-colors ${
+                              className={`text-sm sm:text-base font-mono font-black tracking-[0.28em] uppercase transition-colors ${
                                 isActive
-                                  ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                                  ? "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.85)]"
                                   : "text-zinc-200 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
                               }`}
                             >
                               {m.phase}
                             </span>
                             <span
-                              className={`transition-colors p-1.5 rounded bg-zinc-900/90 border ${
+                              className={`transition-colors p-2 rounded bg-zinc-900/90 border ${
                                 isActive
-                                  ? "text-white border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]"
+                                  ? "text-white border-white shadow-[0_0_12px_rgba(255,255,255,0.45)]"
                                   : "text-zinc-200 border-zinc-500/70"
                               }`}
                             >
@@ -623,9 +623,9 @@ export default function VisionTimeline() {
 
                           {/* Title */}
                           <h4
-                            className={`text-lg sm:text-xl font-mono font-black tracking-wide transition-colors ${
+                            className={`text-xl sm:text-2xl font-mono font-black tracking-wide transition-colors ${
                               isActive
-                                ? "text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.85)]"
+                                ? "text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.9)]"
                                 : "text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]"
                             }`}
                           >
@@ -634,10 +634,10 @@ export default function VisionTimeline() {
 
                           {/* Statement */}
                           <p
-                            className={`text-xs sm:text-sm font-mono font-medium leading-relaxed transition-colors ${
+                            className={`text-sm sm:text-base font-mono font-medium leading-relaxed transition-colors ${
                               isActive
                                 ? "text-zinc-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                                : "text-zinc-200"
+                                : "text-zinc-300"
                             }`}
                           >
                             {m.statement}
