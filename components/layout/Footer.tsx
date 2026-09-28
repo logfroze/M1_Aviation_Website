@@ -11,6 +11,107 @@ import {
   X_URL,
 } from "@/data/navigation";
 
+// ── Supersonic Afterburner Thrust Fire Effect on Mouse Hover ──
+function FooterJetThrustFire() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-visible">
+      {/* ── Engine 1: Left / Farther Engine Afterburner Torch ── */}
+      <div
+        className="absolute transition-all duration-300 ease-out origin-right group-hover:animate-[afterburnerThrust_0.12s_ease-in-out_infinite_alternate] z-0"
+        style={{
+          top: "69.5%",
+          right: "77.2%",
+          width: "16%",
+          height: "24px",
+          transformOrigin: "right center",
+          transform: "translateY(-50%) rotate(25deg)",
+        }}
+      >
+        <div className="relative w-full h-full">
+          {/* Ambient Afterburner Radial Glow Flare */}
+          <div className="absolute -inset-2.5 bg-gradient-to-l from-cyan-400/90 via-orange-500/80 to-transparent blur-md rounded-full opacity-20 group-hover:opacity-95 group-hover:scale-130 transition-all duration-300" />
+
+          {/* Outer Supersonic Afterburner Torch */}
+          <div
+            className="absolute inset-0 rounded-full opacity-25 group-hover:opacity-100 transition-all duration-200 origin-right"
+            style={{
+              background:
+                "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.92) 46%, rgba(239,68,68,0.75) 75%, transparent 100%)",
+              boxShadow: "0 0 18px rgba(249,115,22,0.9), 0 0 30px rgba(56,189,248,0.7)",
+              filter: "blur(1.2px)",
+            }}
+          />
+
+          {/* Inner White-Hot Plasma Needle */}
+          <div
+            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2.5 rounded-full opacity-30 group-hover:opacity-100 transition-all duration-200 origin-right mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
+              filter: "blur(0.6px)",
+              boxShadow: "0 0 12px #ffffff, 0 0 20px #38bdf8",
+            }}
+          />
+
+          {/* Shock Diamond Pressure Nodes */}
+          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2 h-2 rotate-45 bg-white/95 shadow-[0_0_8px_#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-sky-200/90 shadow-[0_0_6px_#f97316] opacity-0 group-hover:opacity-90 transition-opacity duration-200" />
+
+          {/* Nozzle Throat High-Intensity Flare Ring */}
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4 h-4 rounded-full bg-white opacity-0 group-hover:opacity-95 shadow-[0_0_14px_#38bdf8] mix-blend-screen transition-opacity duration-200" />
+        </div>
+      </div>
+
+      {/* ── Engine 2: Right / Near Engine Afterburner Torch (Larger & Prominent) ── */}
+      <div
+        className="absolute transition-all duration-300 ease-out origin-right group-hover:animate-[afterburnerThrust_0.12s_ease-in-out_infinite_alternate] z-0"
+        style={{
+          top: "73.5%",
+          right: "62.8%",
+          width: "20%",
+          height: "28px",
+          transformOrigin: "right center",
+          transform: "translateY(-50%) rotate(25deg)",
+        }}
+      >
+        <div className="relative w-full h-full">
+          {/* Ambient Afterburner Radial Glow Flare */}
+          <div className="absolute -inset-3 bg-gradient-to-l from-cyan-400/95 via-orange-500/85 to-transparent blur-md rounded-full opacity-25 group-hover:opacity-100 group-hover:scale-135 transition-all duration-300" />
+
+          {/* Outer Supersonic Afterburner Torch */}
+          <div
+            className="absolute inset-0 rounded-full opacity-30 group-hover:opacity-100 transition-all duration-200 origin-right"
+            style={{
+              background:
+                "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.95) 48%, rgba(239,68,68,0.8) 78%, transparent 100%)",
+              boxShadow: "0 0 22px rgba(249,115,22,0.95), 0 0 38px rgba(56,189,248,0.75)",
+              filter: "blur(1.4px)",
+            }}
+          />
+
+          {/* Inner White-Hot Plasma Needle */}
+          <div
+            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-3 rounded-full opacity-35 group-hover:opacity-100 transition-all duration-200 origin-right mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
+              filter: "blur(0.6px)",
+              boxShadow: "0 0 14px #ffffff, 0 0 24px #38bdf8",
+            }}
+          />
+
+          {/* Shock Diamond Pressure Nodes */}
+          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-white/95 shadow-[0_0_10px_#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-2 h-2 rotate-45 bg-sky-200/90 shadow-[0_0_8px_#f97316] opacity-0 group-hover:opacity-90 transition-opacity duration-200" />
+
+          {/* Nozzle Throat High-Intensity Flare Ring */}
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4.5 h-4.5 rounded-full bg-white opacity-0 group-hover:opacity-95 shadow-[0_0_16px_#38bdf8] mix-blend-screen transition-opacity duration-200" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Footer() {
   return (
     <footer className="relative bg-black text-zinc-400 border-t border-zinc-900 pt-44 sm:pt-48 pb-20 sm:pb-28 overflow-hidden select-none">
@@ -25,47 +126,57 @@ export default function Footer() {
         <div className="absolute top-16 left-0 right-0 h-28 bg-gradient-to-b from-transparent via-white/5 to-transparent blur-xl" />
       </div>
 
-      {/* ── Left Supersonic Jet (Hovering with Streamlines, Closer to Top Line) ── */}
+      {/* ── Left Supersonic Jet (Hovering with Streamlines & Dynamic Afterburner Fire) ── */}
       <div className="absolute left-[-25px] sm:left-0 md:left-6 lg:left-12 top-[-52px] sm:top-[-38px] md:top-[-32px] lg:top-[-28px] w-[340px] sm:w-[460px] md:w-[560px] lg:w-[640px] h-[230px] sm:h-[310px] md:h-[380px] lg:h-[430px] z-10 group pointer-events-auto cursor-pointer">
-        <div className="relative w-full h-full rotate-[12deg] transition-transform duration-500 ease-out group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:rotate-[14deg] animate-[flightBobLeft_4.5s_easeInOut_infinite]">
-          {/* Small Moving Airflow / Speed Slipstream Lines */}
-          <div className="absolute inset-0 pointer-events-none overflow-visible">
-            <span className="absolute top-[35%] left-[25%] w-16 sm:w-24 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent blur-[0.5px] animate-[slipstream_1.4s_linear_infinite]" />
-            <span className="absolute top-[48%] left-[45%] w-24 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-white/90 to-transparent blur-[0.5px] animate-[slipstream_1.1s_linear_infinite] delay-300" />
-            <span className="absolute top-[62%] left-[18%] w-20 sm:w-28 h-[1.5px] bg-gradient-to-r from-transparent via-sky-300/70 to-transparent blur-[0.5px] animate-[slipstream_1.7s_linear_infinite] delay-700" />
-            <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
-          </div>
+        <div className="relative w-full h-full flex items-center justify-center rotate-[12deg] transition-transform duration-500 ease-out group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:rotate-[14deg] animate-[flightBobLeft_4.5s_easeInOut_infinite]">
+          <div className="relative w-full aspect-[1376/768]">
+            {/* Small Moving Airflow / Speed Slipstream Lines */}
+            <div className="absolute inset-0 pointer-events-none overflow-visible z-20">
+              <span className="absolute top-[35%] left-[25%] w-16 sm:w-24 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent blur-[0.5px] animate-[slipstream_1.4s_linear_infinite]" />
+              <span className="absolute top-[48%] left-[45%] w-24 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-white/90 to-transparent blur-[0.5px] animate-[slipstream_1.1s_linear_infinite] delay-300" />
+              <span className="absolute top-[62%] left-[18%] w-20 sm:w-28 h-[1.5px] bg-gradient-to-r from-transparent via-sky-300/70 to-transparent blur-[0.5px] animate-[slipstream_1.7s_linear_infinite] delay-700" />
+              <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
+            </div>
 
-          {/* Transparent PNG Jet */}
-          <Image
-            src="/images/footer-jet.png"
-            alt="M1 Supersonic Interceptor"
-            fill
-            sizes="(max-width: 768px) 340px, 640px"
-            className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
-          />
+            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
+            <FooterJetThrustFire />
+
+            {/* Transparent PNG Jet */}
+            <Image
+              src="/images/footer-jet.png"
+              alt="M1 Supersonic Interceptor"
+              fill
+              sizes="(max-width: 768px) 340px, 640px"
+              className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
+            />
+          </div>
         </div>
       </div>
 
-      {/* ── Right Supersonic Jet (Mirrored, Banking toward Top Center) ── */}
+      {/* ── Right Supersonic Jet (Mirrored, Banking toward Top Center & Dynamic Thrust Fire) ── */}
       <div className="absolute right-[-25px] sm:right-0 md:right-6 lg:right-12 top-[-10px] sm:top-2 w-[340px] sm:w-[460px] md:w-[560px] lg:w-[640px] h-[230px] sm:h-[310px] md:h-[380px] lg:h-[430px] z-10 group pointer-events-auto cursor-pointer">
-        <div className="relative w-full h-full scale-x-[-1] rotate-[12deg] transition-transform duration-500 ease-out group-hover:-translate-x-3 group-hover:-translate-y-3 group-hover:rotate-[14deg] animate-[flightBobRight_4.5s_easeInOut_infinite]">
-          {/* Small Moving Airflow / Speed Slipstream Lines */}
-          <div className="absolute inset-0 pointer-events-none overflow-visible">
-            <span className="absolute top-[35%] left-[25%] w-16 sm:w-24 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent blur-[0.5px] animate-[slipstream_1.4s_linear_infinite]" />
-            <span className="absolute top-[48%] left-[45%] w-24 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-white/90 to-transparent blur-[0.5px] animate-[slipstream_1.1s_linear_infinite] delay-300" />
-            <span className="absolute top-[62%] left-[18%] w-20 sm:w-28 h-[1.5px] bg-gradient-to-r from-transparent via-sky-300/70 to-transparent blur-[0.5px] animate-[slipstream_1.7s_linear_infinite] delay-700" />
-            <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
-          </div>
+        <div className="relative w-full h-full flex items-center justify-center scale-x-[-1] rotate-[12deg] transition-transform duration-500 ease-out group-hover:-translate-x-3 group-hover:-translate-y-3 group-hover:rotate-[14deg] animate-[flightBobRight_4.5s_easeInOut_infinite]">
+          <div className="relative w-full aspect-[1376/768]">
+            {/* Small Moving Airflow / Speed Slipstream Lines */}
+            <div className="absolute inset-0 pointer-events-none overflow-visible z-20">
+              <span className="absolute top-[35%] left-[25%] w-16 sm:w-24 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent blur-[0.5px] animate-[slipstream_1.4s_linear_infinite]" />
+              <span className="absolute top-[48%] left-[45%] w-24 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-white/90 to-transparent blur-[0.5px] animate-[slipstream_1.1s_linear_infinite] delay-300" />
+              <span className="absolute top-[62%] left-[18%] w-20 sm:w-28 h-[1.5px] bg-gradient-to-r from-transparent via-sky-300/70 to-transparent blur-[0.5px] animate-[slipstream_1.7s_linear_infinite] delay-700" />
+              <span className="absolute top-[22%] left-[55%] w-14 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.5px] animate-[slipstream_1.3s_linear_infinite] delay-500" />
+            </div>
 
-          {/* Transparent PNG Jet */}
-          <Image
-            src="/images/footer-jet.png"
-            alt="M1 Supersonic Fleet Interceptor"
-            fill
-            sizes="(max-width: 768px) 340px, 640px"
-            className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
-          />
+            {/* Dynamic Supersonic Afterburner Thrust Fire on Hover */}
+            <FooterJetThrustFire />
+
+            {/* Transparent PNG Jet */}
+            <Image
+              src="/images/footer-jet.png"
+              alt="M1 Supersonic Fleet Interceptor"
+              fill
+              sizes="(max-width: 768px) 340px, 640px"
+              className="object-contain relative z-10 drop-shadow-[0_15px_35px_rgba(0,0,0,0.95)]"
+            />
+          </div>
         </div>
       </div>
 
