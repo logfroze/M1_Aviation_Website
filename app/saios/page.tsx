@@ -102,9 +102,25 @@ export default function SaiosPage() {
   }, [playTechEntranceSound]);
 
   return (
-    <div className="w-full flex flex-col items-center pt-20 pb-36 select-none">
+    <div className="relative w-full min-h-screen bg-black flex flex-col items-center pt-20 pb-36 select-none overflow-hidden">
+      {/* ── Background Video (Auto-repeat, muted, playsInline) ── */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <video
+          className="w-full h-full object-cover opacity-35"
+          src="/videos/siaos-background.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+        {/* Deep cinematic gradient overlay ensuring high text readability and smooth contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85" />
+      </div>
+
       {/* ── 1. Hero Section (SRS: In first section, there will be nothing but SAIOS written in the middle) ── */}
-      <section className="relative w-full h-[85vh] min-h-[580px] flex items-center justify-center text-center px-6 overflow-hidden bg-black">
+      <section className="relative z-10 w-full h-[85vh] min-h-[580px] flex items-center justify-center text-center px-6 overflow-hidden">
         {/* Transient Tech Grid & Pixel Matrix Lines */}
         <div
           className={`absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:2rem_2rem] pointer-events-none transition-opacity duration-1000 ${
@@ -132,7 +148,7 @@ export default function SaiosPage() {
       </section>
 
       {/* ── 2. Motherboard 6 Core Functions Section ───────────────────────── */}
-      <section id="functions" className="relative py-32 px-6 md:px-12 max-w-6xl mx-auto w-full">
+      <section id="functions" className="relative z-10 py-32 px-6 md:px-12 max-w-6xl mx-auto w-full">
         <div className="text-center mb-16 space-y-2">
           <span className="text-xs font-mono uppercase tracking-[0.25em] text-zinc-400">
             Avionics Neural Architecture
@@ -170,7 +186,7 @@ export default function SaiosPage() {
       </section>
 
       {/* ── 3. Acronym Breakdown with Centered SAIOS, Pointer Lines & Clouds (SRS Requirement) ── */}
-      <section className="relative py-32 px-6 md:px-12 max-w-6xl mx-auto w-full border-t border-zinc-900 overflow-hidden">
+      <section className="relative z-10 py-32 px-6 md:px-12 max-w-6xl mx-auto w-full border-t border-zinc-900/80 overflow-hidden">
         {/* Volumetric Clouds on Right and Left (SRS: "clouds on right and left so we portray SAIOS as being in the air") */}
         <div className="absolute -left-16 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-r from-white/15 to-transparent blur-3xl pointer-events-none" />
         <div className="absolute -right-16 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-gradient-to-l from-white/15 to-transparent blur-3xl pointer-events-none" />
@@ -198,23 +214,26 @@ export default function SaiosPage() {
             {ACRONYM_ITEMS.map((item, idx) => (
               <div
                 key={idx}
-                className="relative flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-md hover:border-zinc-600 transition-all gap-4"
+                className="group relative cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 rounded-2xl border border-zinc-800/90 bg-[#0c0d12]/90 backdrop-blur-md hover:-translate-y-2.5 hover:scale-[1.018] hover:border-zinc-300 hover:shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(255,255,255,0.12),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all duration-300 ease-out will-change-transform gap-4 overflow-hidden"
               >
-                <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center font-mono text-2xl font-bold text-white shadow-inner">
+                {/* Ambient Glass Hover Shine */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/[0.06] via-transparent to-white/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                <div className="flex items-center gap-5 relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center font-mono text-2xl font-bold text-white shadow-inner group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] transition-all duration-300">
                     {item.letter}
                   </div>
                   <div>
-                    <span className="text-lg sm:text-xl font-light text-white tracking-wide">
+                    <span className="text-lg sm:text-xl font-light text-zinc-100 group-hover:text-white group-hover:drop-shadow-[0_0_16px_rgba(255,255,255,0.45)] tracking-wide transition-all duration-300">
                       {item.word}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 relative z-10">
                   {/* Subtle Callout Pointer Line */}
-                  <div className="hidden md:block w-16 h-[1px] bg-gradient-to-r from-transparent to-zinc-600" />
-                  <p className="text-xs font-mono text-zinc-400 sm:text-right max-w-md">
+                  <div className="hidden md:block w-16 group-hover:w-24 h-[1.5px] bg-gradient-to-r from-transparent to-zinc-600 group-hover:to-white transition-all duration-300" />
+                  <p className="text-xs font-mono text-zinc-400 group-hover:text-zinc-200 sm:text-right max-w-md transition-colors duration-300">
                     {item.desc}
                   </p>
                 </div>
@@ -224,28 +243,28 @@ export default function SaiosPage() {
         </div>
       </section>
 
-      {/* ── 4. Founder Directive Section (Re-styled to Founder card style reference) ── */}
-      <section className="relative py-24 sm:py-32 px-6 md:px-12 max-w-5xl mx-auto w-full border-t border-zinc-900">
+      {/* ── 4. Founder Directive Section (Clean Silver/White & B&W to Color on hover) ── */}
+      <section className="relative z-10 py-24 sm:py-32 px-6 md:px-12 max-w-5xl mx-auto w-full border-t border-zinc-900/80">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
           {/* Left Card: Internal Directive Quote */}
-          <div className="md:col-span-7 bg-[#0c0c0e] border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col justify-between relative shadow-2xl overflow-hidden min-h-[420px]">
+          <div className="md:col-span-7 bg-[#0c0c0e]/95 border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col justify-between relative shadow-2xl backdrop-blur-md overflow-hidden min-h-[420px]">
             {/* Ambient Watermark Quote Icon */}
             <div className="absolute -top-6 left-6 text-[120px] font-serif text-white/[0.03] select-none pointer-events-none leading-none">
               “
             </div>
 
-            {/* Directive Pill Tag */}
+            {/* Directive Pill Tag - Silver/White aesthetic */}
             <div className="flex items-center gap-2 mb-8 relative z-10">
-              <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
+              <span className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
               <span className="text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase font-medium">
                 INTERNAL DIRECTIVE
               </span>
             </div>
 
-            {/* Main Quote */}
+            {/* Main Quote - White & Silver emphasis */}
             <blockquote className="text-2xl sm:text-3xl md:text-[32px] font-light text-white tracking-tight leading-[1.3] relative z-10 my-auto">
               &ldquo;Our vision with RSI Studio is to lead with a{" "}
-              <span className="text-rose-400 italic font-serif underline decoration-rose-400/50 underline-offset-8">
+              <span className="text-white italic font-serif underline decoration-white/40 underline-offset-8">
                 perfection in pixels
               </span>{" "}
               philosophy, in the international and national market.&rdquo;
@@ -255,7 +274,7 @@ export default function SaiosPage() {
             <div className="flex items-end justify-between border-t border-white/5 pt-6 mt-8 relative z-10">
               <div>
                 <div className="text-base sm:text-lg font-bold text-white tracking-wide">Daniyal</div>
-                <div className="text-[10px] sm:text-[11px] font-mono tracking-widest text-rose-400/90 uppercase mt-0.5 font-medium">
+                <div className="text-[10px] sm:text-[11px] font-mono tracking-widest text-zinc-400 uppercase mt-0.5 font-medium">
                   CO-FOUNDER, RSI STUDIO
                 </div>
               </div>
@@ -267,23 +286,26 @@ export default function SaiosPage() {
             </div>
           </div>
 
-          {/* Right Card: Studio Monochrome Founder Portrait */}
-          <div className="md:col-span-5 relative rounded-[32px] overflow-hidden border border-white/10 bg-[#0c0c0e] shadow-2xl min-h-[380px] sm:min-h-[440px] md:min-h-[480px]">
+          {/* Right Card: Studio Founder Portrait (Starts B&W, reveals true color on hover) */}
+          <div className="group md:col-span-5 relative rounded-[32px] overflow-hidden border border-white/10 bg-[#0c0c0e] shadow-2xl min-h-[380px] sm:min-h-[440px] md:min-h-[480px] cursor-pointer transition-all duration-500 hover:border-white/30">
             <Image
               src="/founder.jpg"
               alt="Daniyal – Co-Founder, RSI Studio"
               fill
               sizes="(max-width: 768px) 100vw, 420px"
-              className="object-cover object-top filter grayscale contrast-110"
+              className="object-cover object-top filter grayscale contrast-110 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-out"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            {/* Subtle cinematic gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-80 group-hover:opacity-40 transition-opacity duration-700" />
           </div>
         </div>
       </section>
 
       {/* ── 5. Play Your Role CTA (SRS Requirement) ─────────────────── */}
-      <PlayYourRoleCTA />
+      <div className="relative z-10 w-full">
+        <PlayYourRoleCTA />
+      </div>
     </div>
   );
 }

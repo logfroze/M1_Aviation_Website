@@ -62,22 +62,29 @@ export default function ContactSection() {
         </p>
       </div>
 
-      {/* ── White Form Card with Black Text and Silver Input Fields ─── */}
-      <div className="relative bg-white text-black rounded-3xl p-8 sm:p-12 md:p-14 shadow-[0_25px_60px_rgba(255,255,255,0.06)] border border-zinc-200 overflow-hidden z-10">
-        {/* Jet image watermark — large, colorful, covers full white card area */}
+      {/* ── White to Black/Grey Gradient Form Card with Black Text and Silver Input Fields ─── */}
+      <div className="relative bg-gradient-to-br from-white via-zinc-100 via-35% to-[#0e1017] text-black rounded-3xl p-8 sm:p-12 md:p-14 shadow-[0_25px_60px_rgba(255,255,255,0.06)] border border-zinc-200 overflow-hidden z-10">
+        {/* Jet image watermark with white-to-black/grey gradient */}
         <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden">
-          <div className="absolute -bottom-4 -right-8 sm:right-0 sm:bottom-0 w-full h-full" style={{ opacity: 1 }}>
+          {/* Base gradient layer: white to black/grey */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-[#eef0f4] via-35% to-[#090b10]" />
+
+          <div
+            id="contact-jet-destination"
+            className="absolute -bottom-4 -right-8 sm:right-0 sm:bottom-0 w-full h-full transition-opacity duration-200"
+            style={{ opacity: 1 }}
+          >
             <Image
-              src="/images/footer-jet.jpg"
-              alt=""
+              src="/images/footer-jet.png"
+              alt="M1 Velocity S1 Supersonic Aircraft"
               fill
               sizes="100%"
               className="object-cover object-right-bottom"
               priority={false}
             />
           </div>
-          {/* Gradient overlay so left/top of form stays clean and readable */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/50 to-white/0" />
+          {/* Subtle gradient overlay so left/top of form stays clean, bright and readable */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/45 via-45% to-transparent" />
         </div>
 
         {/* Top Avionics Dispatch Telemetry Header */}

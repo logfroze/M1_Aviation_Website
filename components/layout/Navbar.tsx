@@ -21,8 +21,8 @@ export default function Navbar() {
         document.documentElement.offsetHeight
       );
 
-      // Hide navbar when scrolled into the bottom footer banner area (M1 AVIATION)
-      if (scrollY + viewportHeight >= docHeight - 320) {
+      // Hide only at the very bottom copyright edge if needed
+      if (scrollY + viewportHeight >= docHeight - 80) {
         setHiddenAtBottom(true);
       } else {
         setHiddenAtBottom(false);
@@ -34,9 +34,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Prevent background scroll when menu drawer is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   return (
     <>
-      {/* ── Universal Suspended Floating Bottom Navigation Bar ── */}
+      {/* ── Suspended Floating Bottom Navigation Bar (Rounded & Transparent) ── */}
       <header
         className={`fixed bottom-7 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none select-none transition-all duration-500 ease-out ${
           hiddenAtBottom ? "translate-y-28 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
@@ -44,16 +56,14 @@ export default function Navbar() {
       >
         <nav
           aria-label="Main Suspended Navigation"
-          className="pointer-events-auto flex items-center justify-between sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-10 px-5 sm:px-8 md:px-10 py-1.5 sm:py-2 -skew-x-6 backdrop-blur-2xl border border-slate-300/40 hover:border-slate-200/60 text-white transition-all max-w-5xl md:max-w-5xl lg:max-w-6xl w-full sm:w-auto overflow-x-auto no-scrollbar font-mono text-[11px] sm:text-xs uppercase tracking-wider"
+          className="pointer-events-auto flex items-center justify-between sm:justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-6 sm:px-8 md:px-10 py-2 sm:py-2.5 rounded-full backdrop-blur-xl border border-white/20 hover:border-white/35 text-white transition-all max-w-5xl md:max-w-5xl lg:max-w-6xl w-full sm:w-auto overflow-x-auto no-scrollbar font-mono text-[11px] sm:text-xs uppercase tracking-wider shadow-[0_12px_40px_rgba(0,0,0,0.65),inset_0_1px_1px_rgba(255,255,255,0.3)]"
           style={{
             background:
-              "linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(20, 26, 36, 0.45) 50%, rgba(8, 12, 18, 0.60) 100%)",
-            boxShadow:
-              "0 15px 40px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.5), inset 0 -1px 1px rgba(0, 0, 0, 0.6), 0 0 25px rgba(203, 213, 225, 0.15)",
+              "linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(10, 15, 25, 0.22) 50%, rgba(5, 8, 14, 0.28) 100%)",
           }}
         >
-          {/* Inner content un-skewed */}
-          <div className="skew-x-6 flex items-center justify-between sm:justify-center gap-3 sm:gap-6 md:gap-8 lg:gap-10 w-full">
+          {/* Inner content */}
+          <div className="flex items-center justify-between sm:justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full">
             {/* 1. M1 Logo */}
             <Link
               href="/"
@@ -67,132 +77,171 @@ export default function Navbar() {
               />
             </Link>
 
-            <span className="text-slate-400/50 hidden sm:inline select-none font-light leading-none">|</span>
-
             {/* 2. Aviation */}
             <Link
               href="/aviation-times"
-              className={`whitespace-nowrap transition-all duration-200 px-3 sm:px-3.5 py-0.5 sm:py-1 -skew-x-3 border font-bold tracking-[0.16em] ${
+              className={`whitespace-nowrap transition-all duration-200 px-3.5 py-1 rounded-full font-bold tracking-[0.16em] ${
                 pathname === "/aviation-times"
-                  ? "text-white bg-white/20 border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.45)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
-                  : "text-zinc-100 hover:text-white border-transparent hover:border-slate-300/40 hover:bg-white/10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                  ? "text-white bg-white/20 border border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.4)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                  : "text-zinc-200 hover:text-white border border-transparent hover:border-white/20 hover:bg-white/10"
               }`}
             >
-              <span className="inline-block skew-x-3">Aviation</span>
+              <span>Aviation</span>
             </Link>
-
-            <span className="text-slate-400/50 hidden sm:inline select-none font-light leading-none">|</span>
 
             {/* 3. Marketplace */}
             <a
               href="https://app.m-1.tech"
               target="_blank"
               rel="noopener noreferrer"
-              className="whitespace-nowrap text-zinc-100 hover:text-white transition-all duration-200 px-3 sm:px-3.5 py-0.5 sm:py-1 -skew-x-3 border border-transparent hover:border-slate-300/40 hover:bg-white/10 flex items-center gap-1.5 font-bold tracking-[0.16em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+              className="whitespace-nowrap text-zinc-200 hover:text-white transition-all duration-200 px-3.5 py-1 rounded-full border border-transparent hover:border-white/20 hover:bg-white/10 flex items-center gap-1.5 font-bold tracking-[0.16em]"
             >
-              <span className="inline-block skew-x-3">Marketplace</span>
-              <span className="inline-block skew-x-3 text-[9px] text-slate-200 font-bold">↗</span>
+              <span>Marketplace</span>
+              <span className="text-[9px] text-slate-300 font-bold">↗</span>
             </a>
-
-            <span className="text-slate-400/50 hidden sm:inline select-none font-light leading-none">|</span>
 
             {/* 4. Industry Partner */}
             <Link
               href="/industry-partner"
-              className={`whitespace-nowrap transition-all duration-200 px-3 sm:px-3.5 py-0.5 sm:py-1 -skew-x-3 border font-bold tracking-[0.16em] ${
+              className={`whitespace-nowrap transition-all duration-200 px-3.5 py-1 rounded-full font-bold tracking-[0.16em] ${
                 pathname === "/industry-partner"
-                  ? "text-white bg-white/20 border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.45)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
-                  : "text-zinc-100 hover:text-white border-transparent hover:border-slate-300/40 hover:bg-white/10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                  ? "text-white bg-white/20 border border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.4)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                  : "text-zinc-200 hover:text-white border border-transparent hover:border-white/20 hover:bg-white/10"
               }`}
             >
-              <span className="inline-block skew-x-3">Industry Partner</span>
+              <span>Industry Partner</span>
             </Link>
-
-            <span className="text-slate-400/50 hidden sm:inline select-none font-light leading-none">|</span>
 
             {/* 5. SIOS */}
             <Link
               href="/saios"
-              className={`whitespace-nowrap transition-all duration-200 px-3 sm:px-3.5 py-0.5 sm:py-1 -skew-x-3 border font-bold tracking-[0.16em] ${
+              className={`whitespace-nowrap transition-all duration-200 px-3.5 py-1 rounded-full font-bold tracking-[0.16em] ${
                 pathname === "/saios"
-                  ? "text-white bg-white/20 border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.45)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
-                  : "text-zinc-100 hover:text-white border-transparent hover:border-slate-300/40 hover:bg-white/10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]"
+                  ? "text-white bg-white/20 border border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.4)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                  : "text-zinc-200 hover:text-white border border-transparent hover:border-white/20 hover:bg-white/10"
               }`}
             >
-              <span className="inline-block skew-x-3">SIOS</span>
+              <span>SIOS</span>
             </Link>
 
-            <span className="text-slate-400/50 hidden sm:inline select-none font-light leading-none">|</span>
-
-            {/* 6. Hamburger icon */}
+            {/* 6. Hamburger Menu Button */}
             <button
               type="button"
-              aria-label="Open Full Navigation Menu"
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1 sm:p-1.5 text-white hover:text-cyan-200 hover:bg-white/10 border border-transparent hover:border-slate-300/40 transition-all flex items-center justify-center shrink-0 cursor-pointer -skew-x-3"
+              aria-label="Open Extended Menu Drawer"
+              onClick={() => setMenuOpen(true)}
+              className="p-1.5 rounded-full text-white hover:text-cyan-200 hover:bg-white/15 border border-transparent hover:border-white/30 transition-all flex items-center justify-center shrink-0 cursor-pointer"
             >
-              <span className="skew-x-3 flex items-center justify-center">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
           </div>
         </nav>
       </header>
 
-      {/* ── Overlay Menu Modal ── */}
-      {menuOpen && (
-        <div
-          role="dialog"
-          aria-label="Navigation Directory"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-2xl p-6 animate-in fade-in duration-200"
-        >
-          <div className="relative w-full max-w-lg bg-zinc-950/95 border border-slate-400/40 p-8 sm:p-10 shadow-2xl text-center space-y-6 -skew-x-2">
-            <div className="skew-x-2">
-              <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
-                <div className="flex items-center gap-2">
-                  <M1Logo width={90} height={28} className="h-6 w-auto" />
-                  <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
-                    Directory
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen(false)}
-                  className="w-8 h-8 border border-slate-600 text-zinc-300 hover:text-white hover:border-slate-300 flex items-center justify-center cursor-pointer -skew-x-3"
-                >
-                  <span className="skew-x-3">✕</span>
-                </button>
-              </div>
+      {/* ── Slide-in Menu Panel Drawer (Image 5 Reference) ── */}
+      {/* 1. Backdrop with blur */}
+      <div
+        className={`fixed inset-0 z-50 bg-black/65 backdrop-blur-md transition-opacity duration-300 pointer-events-auto ${
+          menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+      />
 
-              <div className="flex flex-col space-y-2 font-mono text-sm uppercase tracking-wider mt-4">
-                {[
-                  { href: "/",                 label: "01 // Home",                 sub: "Overview",     external: false },
-                  { href: "/aviation-times",   label: "02 // Aviation Times",       sub: "Newsletter",   external: false },
-                  { href: "https://app.m-1.tech", label: "03 // M1 Marketplace",   sub: "app.m-1.tech ↗", external: true },
-                  { href: "/industry-partner", label: "04 // Industry Partner",     sub: "Alliance",     external: false },
-                  { href: "/saios",            label: "05 // SAIOS Core",           sub: "Flight OS",    external: false },
-                  { href: "/#contact",         label: "06 // Contact & Advisory",   sub: "Booking",      external: false },
-                ].map(({ href, label, sub, external }) => {
-                  const cls = "py-2.5 px-4 -skew-x-3 border border-transparent hover:border-slate-500/50 hover:bg-white/10 text-zinc-100 hover:text-white transition-all text-left flex items-center justify-between group font-semibold";
-                  const content = (
-                    <>
-                      <span className="inline-block skew-x-3">{label}</span>
-                      <span className="inline-block skew-x-3 text-xs text-slate-400 group-hover:text-zinc-200">{sub}</span>
-                    </>
-                  );
-                  return external ? (
-                    <a key={href} href={href} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)} className={cls}>{content}</a>
-                  ) : (
-                    <Link key={href} href={href} onClick={() => setMenuOpen(false)} className={cls}>{content}</Link>
-                  );
-                })}
-              </div>
+      {/* 2. Slide-over Right Drawer */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label="Extended Navigation Menu"
+        className={`fixed top-0 right-0 bottom-0 w-full max-w-[340px] sm:max-w-[400px] z-50 bg-[#08090c] border-l border-white/10 p-8 sm:p-10 flex flex-col justify-between shadow-[0_0_80px_rgba(0,0,0,0.95)] transition-transform duration-300 ease-out select-none ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div>
+          {/* Header Row: Brand + Sharp Close Button */}
+          <div className="flex items-center justify-between pb-8">
+            <div className="flex items-center gap-2.5">
+              <M1Logo width={85} height={26} className="h-5 w-auto" />
+              <span className="text-white font-bold tracking-wider text-base uppercase">
+                Aviation
+              </span>
             </div>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close Menu"
+              className="w-9 h-9 rounded-none border border-white/20 hover:border-white text-zinc-300 hover:text-white flex items-center justify-center transition-all cursor-pointer bg-white/5 hover:bg-white/10"
+            >
+              <span className="text-sm">✕</span>
+            </button>
+          </div>
+
+          {/* Subheader: EXTENDED MENU (Website colors: Silver/Grey) */}
+          <div className="mb-6">
+            <span className="text-[11px] font-mono tracking-[0.28em] text-zinc-400 uppercase font-bold">
+              EXTENDED MENU
+            </span>
+          </div>
+
+          {/* Navigation Links List (Large, bold, modern typography) */}
+          <nav className="flex flex-col space-y-3.5">
+            {[
+              { href: "/",                 label: "Home",                 sub: "Overview" },
+              { href: "/aviation-times",   label: "Aviation Times",       sub: "Journal" },
+              { href: "https://app.m-1.tech", label: "Marketplace",       sub: "Trading ↗", external: true },
+              { href: "/industry-partner", label: "Industry Partner",     sub: "Alliance" },
+              { href: "/saios",            label: "SAIOS Core",           sub: "Flight OS" },
+              { href: "/#contact",         label: "Contact & Advisory",   sub: "Dispatch" },
+            ].map(({ href, label, sub, external }) => {
+              const linkCls =
+                "group flex items-center justify-between text-2xl sm:text-[28px] font-bold text-zinc-200 hover:text-white transition-all py-1 hover:translate-x-2";
+              return external ? (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className={linkCls}
+                >
+                  <span>{label}</span>
+                  <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 font-normal">
+                    {sub}
+                  </span>
+                </a>
+              ) : (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={linkCls}
+                >
+                  <span>{label}</span>
+                  <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 font-normal">
+                    {sub}
+                  </span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Drawer Bottom: Start a Project / Apply CTA Button (Sharp, Website Silver/White) */}
+        <div className="pt-8 border-t border-zinc-900 mt-auto">
+          <Link
+            href="/#contact"
+            onClick={() => setMenuOpen(false)}
+            className="block w-full py-4 px-6 rounded-none bg-white hover:bg-zinc-200 text-black font-mono font-bold text-center uppercase tracking-widest text-xs sm:text-sm transition-all border border-white shadow-[0_4px_25px_rgba(255,255,255,0.15)] hover:shadow-[0_6px_30px_rgba(255,255,255,0.3)] cursor-pointer"
+          >
+            START A PROJECT
+          </Link>
+          <div className="text-center text-[10px] font-mono text-zinc-500 tracking-widest uppercase mt-3">
+            M1 Global Aviation Platform
           </div>
         </div>
-      )}
+      </aside>
     </>
   );
 }
+

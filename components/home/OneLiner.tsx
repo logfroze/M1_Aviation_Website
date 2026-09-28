@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 interface EcosystemNode {
@@ -16,6 +16,7 @@ interface EcosystemNode {
   metric: string;
 }
 
+// 4 Corner Nodes only (Requirement 4: 1st top-left, 2nd top-right, 3rd lower-right, 4th lower-left)
 const NODES: EcosystemNode[] = [
   {
     id: "aircraft",
@@ -24,9 +25,9 @@ const NODES: EcosystemNode[] = [
     subtitle: "Jet Inventory & Fleet Management",
     labelX: 160,
     labelY: 105,
-    jetX: 458,
-    jetY: 288,
-    pathD: "M 160 105 C 280 105 385 195 458 288",
+    jetX: 420,
+    jetY: 340,
+    pathD: "M 160 105 C 270 105 340 220 420 340",
     metric: "5,000+ Verified Airframes",
   },
   {
@@ -36,9 +37,9 @@ const NODES: EcosystemNode[] = [
     subtitle: "Charter, Management & Operations",
     labelX: 1045,
     labelY: 105,
-    jetX: 692,
-    jetY: 298,
-    pathD: "M 1045 105 C 915 105 795 200 692 298",
+    jetX: 780,
+    jetY: 260,
+    pathD: "M 1045 105 C 930 105 850 180 780 260",
     metric: "340+ Flight Operations",
   },
   {
@@ -46,11 +47,11 @@ const NODES: EcosystemNode[] = [
     number: "03",
     title: "PARTS",
     subtitle: "Spare Parts & Supply Chain",
-    labelX: 1090,
-    labelY: 340,
-    jetX: 818,
-    jetY: 382,
-    pathD: "M 1090 340 C 995 340 905 360 818 382",
+    labelX: 1045,
+    labelY: 550,
+    jetX: 830,
+    jetY: 450,
+    pathD: "M 1045 550 C 960 550 900 490 830 450",
     metric: "Instant OEM Escrow",
   },
   {
@@ -58,76 +59,44 @@ const NODES: EcosystemNode[] = [
     number: "04",
     title: "MAINTENANCE",
     subtitle: "MRO & Service Network",
-    labelX: 1050,
-    labelY: 560,
-    jetX: 702,
-    jetY: 432,
-    pathD: "M 1050 560 C 935 560 815 500 702 432",
+    labelX: 160,
+    labelY: 550,
+    jetX: 500,
+    jetY: 420,
+    pathD: "M 160 550 C 270 550 380 470 500 420",
     metric: "12 Certified Repair Hubs",
-  },
-  {
-    id: "data",
-    number: "05",
-    title: "DATA",
-    subtitle: "Insights, Analytics & Intelligence",
-    labelX: 250,
-    labelY: 560,
-    jetX: 558,
-    jetY: 435,
-    pathD: "M 250 560 C 355 560 460 500 558 435",
-    metric: "Autonomous Flight Telemetry",
-  },
-  {
-    id: "finance",
-    number: "06",
-    title: "FINANCE",
-    subtitle: "Leasing, Payments & Capital",
-    labelX: 120,
-    labelY: 370,
-    jetX: 375,
-    jetY: 330,
-    pathD: "M 120 370 C 205 370 295 345 375 330",
-    metric: "$450M+ Capital Pipeline",
   },
 ];
 
-// Air-streak definitions for hover flyby effect (Subtle hairline slipstreams parallel to jet)
+// Air-streak definitions for hover flyby effect
 const AIR_STREAKS = [
-  // 1. Radome / Nose tip
   { top: "60%", left: "10%", width: "24%", delay: "0s",    duration: "0.52s", opacity: 0.42, h: "1px" },
-
-  // 2. Cockpit windshield
   { top: "48%", left: "19%", width: "28%", delay: "0.14s", duration: "0.56s", opacity: 0.48, h: "1px" },
-
-  // 3. Left wing leading edge
   { top: "38%", left: "18%", width: "26%", delay: "0.06s", duration: "0.50s", opacity: 0.38, h: "1px" },
-
-  // 4. Fuselage window beltline
   { top: "46%", left: "30%", width: "32%", delay: "0.10s", duration: "0.54s", opacity: 0.45, h: "1px" },
-
-  // 5. Left engine nacelle
   { top: "37%", left: "44%", width: "28%", delay: "0.04s", duration: "0.52s", opacity: 0.42, h: "1px" },
-
-  // 6. Right wing span
   { top: "62%", left: "42%", width: "30%", delay: "0.18s", duration: "0.55s", opacity: 0.38, h: "1px" },
-
-  // 7. T-tail stabilizer
   { top: "22%", left: "54%", width: "26%", delay: "0.08s", duration: "0.52s", opacity: 0.40, h: "1px" },
 ];
 
 export default function OneLiner() {
-  const [activeNode, setActiveNode] = useState<string>("aircraft");
+  // Details only show when user manually hovers over a box (Requirement 4)
+  const [activeNode, setActiveNode] = useState<string | null>(null);
   const [jetHovered, setJetHovered] = useState(false);
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveNode((curr) => {
-        const idx = NODES.findIndex((n) => n.id === curr);
-        return NODES[(idx + 1) % NODES.length].id;
-      });
-    }, 4500);
-    return () => clearInterval(interval);
-  }, []);
+  const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMouseOffset({ x, y });
+  };
+
+  const handleContainerMouseLeave = () => {
+    setJetHovered(false);
+    setMouseOffset({ x: 0, y: 0 });
+    setActiveNode(null);
+  };
 
   return (
     <section
@@ -182,8 +151,13 @@ export default function OneLiner() {
       </div>
 
       {/* 3. Desktop centerpiece */}
-      <div className="hidden lg:block relative max-w-[1280px] mx-auto px-4 w-full" style={{ height: 680 }}>
-        {/* SVG: platform + connection lines */}
+      <div
+        className="hidden lg:block relative max-w-[1280px] mx-auto px-4 w-full"
+        style={{ height: 680 }}
+        onMouseMove={handleContainerMouseMove}
+        onMouseLeave={handleContainerMouseLeave}
+      >
+        {/* SVG: Clean metallic platform + thick hover connecting lines */}
         <svg
           viewBox="0 0 1200 680"
           preserveAspectRatio="none"
@@ -222,20 +196,8 @@ export default function OneLiner() {
               <stop offset="55%" stopColor="#000" stopOpacity="0.30" />
               <stop offset="100%" stopColor="#000" stopOpacity="0.0" />
             </radialGradient>
-            <linearGradient id="activeLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="50%" stopColor="#cbd5e1" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.6" />
-            </linearGradient>
             <filter id="silverGlow" x="-25%" y="-25%" width="150%" height="150%">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <filter id="dotGlow" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feGaussianBlur stdDeviation="3.0" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -243,127 +205,48 @@ export default function OneLiner() {
             </filter>
           </defs>
 
-          {/* Solid silver platform */}
+          {/* Clean, Plain Aesthetic Floating Platform (Extra dotted lines removed per Requirement 4) */}
           <g>
             <ellipse cx="600" cy="452" rx="385" ry="62" fill="url(#platShadow)" />
             <ellipse cx="600" cy="432" rx="408" ry="132" fill="url(#platSideGrad)" />
             <ellipse cx="600" cy="412" rx="408" ry="132" fill="url(#platTopSurface)" />
             <ellipse cx="600" cy="432" rx="408" ry="132" fill="none" stroke="url(#platBotRim)" strokeWidth="2.5" />
             <ellipse cx="600" cy="412" rx="408" ry="132" fill="none" stroke="url(#platTopRim)" strokeWidth="2.8" />
-            <ellipse
-              cx="600"
-              cy="412"
-              rx="312"
-              ry="100"
-              fill="none"
-              stroke="#94a3b8"
-              strokeWidth="0.9"
-              strokeDasharray="12 9"
-              opacity="0.35"
-            />
-            <ellipse
-              cx="600"
-              cy="412"
-              rx="200"
-              ry="64"
-              fill="none"
-              stroke="#cbd5e1"
-              strokeWidth="0.8"
-              strokeDasharray="6 5"
-              opacity="0.28"
-            />
-            <ellipse
-              cx="600"
-              cy="412"
-              rx="95"
-              ry="30"
-              fill="none"
-              stroke="#e2e8f0"
-              strokeWidth="0.6"
-              opacity="0.22"
-            />
-            <ellipse cx="600" cy="412" rx="18" ry="6" fill="#f8fafc" opacity="0.35" />
-            <line x1="192" y1="412" x2="248" y2="412" stroke="#94a3b8" strokeWidth="0.7" opacity="0.30" />
-            <line x1="952" y1="412" x2="1008" y2="412" stroke="#94a3b8" strokeWidth="0.7" opacity="0.30" />
+            {/* Grounding shadow cast by aircraft directly onto platform surface */}
+            <ellipse cx="600" cy="416" rx="270" ry="50" fill="rgba(0,0,0,0.55)" filter="blur(16px)" />
           </g>
 
-          {/* Connection lines */}
+          {/* Connecting lines — Only thick white line shown on hover, no dotted lines, no tiny dots */}
           {NODES.map((n) => {
             const isActive = activeNode === n.id;
+            if (!isActive) return null;
             return (
               <g key={`line-${n.id}`}>
-                {/* Connecting Path */}
+                {/* Thick white luminous connecting line */}
                 <path
                   d={n.pathD}
                   fill="none"
-                  stroke="#94a3b8"
-                  strokeWidth="1.2"
-                  strokeOpacity={isActive ? 0 : 0.55}
-                  strokeDasharray="5 4"
+                  stroke="#ffffff"
+                  strokeWidth="3.2"
+                  filter="url(#silverGlow)"
+                  className="transition-all duration-300"
                 />
-                {isActive && (
-                  <path
-                    d={n.pathD}
-                    fill="none"
-                    stroke="url(#activeLineGrad)"
-                    strokeWidth="2.2"
-                    filter="url(#silverGlow)"
-                  />
-                )}
-
-                {/* Badge End Connector Dot */}
-                <circle
-                  cx={n.labelX}
-                  cy={n.labelY}
-                  r={isActive ? 4.5 : 3}
-                  fill={isActive ? "#ffffff" : "#cbd5e1"}
-                  filter={isActive ? "url(#dotGlow)" : undefined}
-                  opacity={isActive ? 1 : 0.8}
-                />
-                {isActive && (
-                  <circle
-                    cx={n.labelX}
-                    cy={n.labelY}
-                    r={9}
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth="1"
-                    className="animate-ping"
-                    opacity={0.4}
-                  />
-                )}
-
-                {/* Jet End Beacon Dot */}
-                <circle
-                  cx={n.jetX}
-                  cy={n.jetY}
-                  r={isActive ? 5.5 : 3.5}
-                  fill={isActive ? "#ffffff" : "#94a3b8"}
-                  filter={isActive ? "url(#dotGlow)" : undefined}
-                  opacity={isActive ? 1 : 0.65}
-                />
-                {isActive && (
-                  <circle
-                    cx={n.jetX}
-                    cy={n.jetY}
-                    r={13}
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth="1.2"
-                    className="animate-ping"
-                    opacity={0.5}
-                  />
-                )}
               </g>
             );
           })}
         </svg>
 
-        {/* Aircraft + hover air-stream (Single-direction, streaming backward from left to right) */}
+        {/* Aircraft centered directly on top of metallic platform */}
         <div
-          className="absolute top-[43%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[900px] z-20 cursor-pointer"
+          id="ecosystem-jet-source"
+          className="absolute top-[80%] left-[85%] -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[920px] z-20 cursor-pointer pointer-events-auto"
           onMouseEnter={() => setJetHovered(true)}
           onMouseLeave={() => setJetHovered(false)}
+          style={{
+            transform: `translate3d(calc(-50% + ${mouseOffset.x * 20}px), calc(-50% + ${mouseOffset.y * 14}px), 0) rotateX(${-mouseOffset.y * 6}deg) rotateY(${mouseOffset.x * 10}deg)`,
+            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            perspective: 1200,
+          }}
         >
           {jetHovered && (
             <div
@@ -399,25 +282,22 @@ export default function OneLiner() {
             height={768}
             priority
             draggable={false}
-            className={`w-full h-auto object-contain pointer-events-none select-none transition-all duration-700 ${
-              jetHovered ? "jet-hover-float" : ""
+            className={`w-full h-auto object-contain pointer-events-none select-none transition-all duration-500 ${
+              jetHovered ? "brightness-110 drop-shadow-[0_40px_70px_rgba(0,0,0,0.99)]" : "brightness-105 drop-shadow-[0_28px_56px_rgba(0,0,0,0.95)]"
             }`}
-            style={{
-              filter: "brightness(1.10) contrast(1.05) drop-shadow(0 32px 64px rgba(0,0,0,0.98))",
-            }}
           />
         </div>
 
-        {/* Node labels — parallelogram sharp-edge boxes (Brighter & Larger) */}
+        {/* 4 Corner Point Boxes (Details show on manual hover only) */}
         {NODES.map((n) => {
           const isActive = activeNode === n.id;
           const isRight = n.labelX > 600;
           return (
             <div
               key={n.id}
-              onClick={() => setActiveNode(n.id)}
               onMouseEnter={() => setActiveNode(n.id)}
-              className="absolute z-30 cursor-pointer transition-all duration-300"
+              onMouseLeave={() => setActiveNode(null)}
+              className="absolute z-30 cursor-pointer transition-all duration-300 pointer-events-auto"
               style={{
                 left: `${(n.labelX / 1200) * 100}%`,
                 top: `${(n.labelY / 680) * 100}%`,
@@ -425,23 +305,23 @@ export default function OneLiner() {
               }}
             >
               <div
-                className="relative flex items-center gap-3 px-5 sm:px-6 py-3 sm:py-3.5 border transition-all duration-300 group"
+                className="relative flex items-center gap-3.5 px-6 py-3.5 border transition-all duration-300 group"
                 style={{
                   clipPath: "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
                   background: isActive
                     ? "linear-gradient(135deg, rgba(38, 52, 72, 0.98) 0%, rgba(18, 26, 38, 0.98) 100%)"
-                    : "linear-gradient(135deg, rgba(24, 30, 42, 0.94) 0%, rgba(12, 16, 24, 0.96) 100%)",
-                  borderColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(160, 185, 215, 0.65)",
+                    : "linear-gradient(135deg, rgba(20, 24, 34, 0.92) 0%, rgba(10, 14, 20, 0.95) 100%)",
+                  borderColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(160, 185, 215, 0.4)",
                   boxShadow: isActive
                     ? "0 0 28px rgba(255, 255, 255, 0.35), 0 0 12px rgba(186, 230, 253, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)"
-                    : "0 6px 20px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.25)",
-                  transform: isActive ? "scale(1.08)" : "scale(1)",
-                  backdropFilter: "blur(12px)",
+                    : "0 6px 20px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15)",
+                  transform: isActive ? "scale(1.06)" : "scale(1)",
+                  backdropFilter: "blur(14px)",
                 }}
               >
                 {/* Number */}
                 <span
-                  className="text-[12px] sm:text-[13px] font-mono font-bold tracking-[0.25em] shrink-0 transition-colors"
+                  className="text-[13px] font-mono font-bold tracking-[0.25em] shrink-0 transition-colors"
                   style={{ color: isActive ? "#ffffff" : "#cbd5e1" }}
                 >
                   {n.number}
@@ -450,12 +330,12 @@ export default function OneLiner() {
                 {/* Divider */}
                 <span
                   className="w-[1.5px] h-4.5 shrink-0 transition-colors"
-                  style={{ background: isActive ? "rgba(255, 255, 255, 0.85)" : "rgba(148, 163, 184, 0.5)" }}
+                  style={{ background: isActive ? "rgba(255, 255, 255, 0.9)" : "rgba(148, 163, 184, 0.4)" }}
                 />
 
                 {/* Title */}
                 <span
-                  className="text-[16px] sm:text-[18px] font-mono font-black tracking-[0.16em] whitespace-nowrap transition-colors"
+                  className="text-[17px] font-mono font-black tracking-[0.16em] whitespace-nowrap transition-colors"
                   style={{
                     color: isActive ? "#ffffff" : "#f1f5f9",
                     textShadow: isActive ? "0 0 14px rgba(255, 255, 255, 0.7)" : "0 1px 2px rgba(0, 0, 0, 0.8)",
@@ -464,9 +344,9 @@ export default function OneLiner() {
                   {n.title}
                 </span>
 
-                {/* Active metric — shown inline after title */}
+                {/* Details shown ONLY when user manually hovers over the box */}
                 {isActive && (
-                  <span className="text-[11px] sm:text-[12px] font-mono tracking-wider text-cyan-200 font-semibold whitespace-nowrap pl-2.5 border-l border-slate-500/80 ml-1">
+                  <span className="text-[12px] font-mono tracking-wider text-cyan-200 font-semibold whitespace-nowrap pl-2.5 border-l border-slate-500/80 ml-1 animate-in fade-in duration-200">
                     {n.metric}
                   </span>
                 )}
@@ -476,7 +356,7 @@ export default function OneLiner() {
         })}
       </div>
 
-      {/* 4. Mobile */}
+      {/* 4. Mobile Layout (First 4 cards) */}
       <div className="lg:hidden relative max-w-xl mx-auto px-4 z-20 space-y-6">
         <div className="relative w-full max-w-md mx-auto aspect-[16/10] flex items-center justify-center">
           <div className="absolute inset-x-8 bottom-4 h-20 rounded-full bg-slate-400/10 blur-2xl pointer-events-none" />
@@ -495,30 +375,25 @@ export default function OneLiner() {
             return (
               <div
                 key={`mob-${n.id}`}
-                onClick={() => setActiveNode(n.id)}
-                className="cursor-pointer transition-all duration-300 p-3.5 flex items-center gap-2.5 border"
+                onClick={() => setActiveNode(activeNode === n.id ? null : n.id)}
+                className="cursor-pointer transition-all duration-300 p-3.5 flex flex-col gap-1 border"
                 style={{
                   clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
                   background: isActive
                     ? "linear-gradient(135deg, rgba(38, 52, 72, 0.98) 0%, rgba(18, 26, 38, 0.98) 100%)"
-                    : "linear-gradient(135deg, rgba(24, 30, 42, 0.94) 0%, rgba(12, 16, 24, 0.96) 100%)",
-                  borderColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(160, 185, 215, 0.65)",
+                    : "linear-gradient(135deg, rgba(20, 24, 34, 0.92) 0%, rgba(10, 14, 20, 0.95) 100%)",
+                  borderColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(160, 185, 215, 0.4)",
                   boxShadow: isActive ? "0 0 18px rgba(255, 255, 255, 0.3)" : "none",
                 }}
               >
-                <span
-                  className="text-[11px] font-mono font-bold tracking-widest"
-                  style={{ color: isActive ? "#ffffff" : "#cbd5e1" }}
-                >
-                  {n.number}
-                </span>
-                <span className="w-px h-3.5 bg-slate-600 shrink-0" />
-                <span
-                  className="text-[13px] font-mono font-black tracking-wider"
-                  style={{ color: isActive ? "#ffffff" : "#f1f5f9" }}
-                >
-                  {n.title}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono font-bold text-white tracking-widest">{n.number}</span>
+                  <span className="w-px h-3 bg-slate-600 shrink-0" />
+                  <span className="text-[13px] font-mono font-black text-white tracking-wider">{n.title}</span>
+                </div>
+                {isActive && (
+                  <span className="text-[10px] font-mono text-cyan-200 font-semibold">{n.metric}</span>
+                )}
               </div>
             );
           })}
@@ -527,3 +402,4 @@ export default function OneLiner() {
     </section>
   );
 }
+

@@ -3,13 +3,7 @@
 import React from "react";
 import Image from "next/image";
 
-/**
- * Real logos extracted from the Logos carousel reference.png.
- * Row1: extracted left-to-right from the top strip.
- * Row2: extracted left-to-right from the bottom strip.
- * Rendered 100% natural, crisp, authentic, and without any artificial blur or drop-shadow.
- */
-const ROW_1_LOGOS = [
+const ALL_LOGOS = [
   { id: "r1-1",  src: "/images/partners/row1_1.png",  alt: "Brand Partner" },
   { id: "r1-2",  src: "/images/partners/row1_2.png",  alt: "Recipli" },
   { id: "r1-3",  src: "/images/partners/row1_3.png",  alt: "Shell Aviation" },
@@ -18,9 +12,6 @@ const ROW_1_LOGOS = [
   { id: "r1-6",  src: "/images/partners/row1_6.png",  alt: "BugatoCare" },
   { id: "r1-7",  src: "/images/partners/row1_7.png",  alt: "RSI" },
   { id: "r1-8",  src: "/images/partners/row1_8.png",  alt: "Naqabi Bakery" },
-];
-
-const ROW_2_LOGOS = [
   { id: "r2-1",  src: "/images/partners/row2_1.png",  alt: "Royal Aviation" },
   { id: "r2-2",  src: "/images/partners/row2_2.png",  alt: "Shopify" },
   { id: "r2-3",  src: "/images/partners/row2_3.png",  alt: "Cameco" },
@@ -31,62 +22,44 @@ const ROW_2_LOGOS = [
 ];
 
 export default function PartnerStrip() {
-  // Repeat each set 5× to guarantee seamless looping at all viewport widths
-  const row1 = [...ROW_1_LOGOS, ...ROW_1_LOGOS, ...ROW_1_LOGOS, ...ROW_1_LOGOS, ...ROW_1_LOGOS];
-  const row2 = [...ROW_2_LOGOS, ...ROW_2_LOGOS, ...ROW_2_LOGOS, ...ROW_2_LOGOS, ...ROW_2_LOGOS];
+  // Repeat 4x to guarantee uninterrupted infinite marquee across ultra-wide viewports
+  const singleRowLogos = [...ALL_LOGOS, ...ALL_LOGOS, ...ALL_LOGOS, ...ALL_LOGOS];
 
   return (
     <section
       aria-label="Industry Partners & Alliances"
-      className="relative w-full py-16 sm:py-20 bg-black overflow-hidden select-none border-y border-zinc-900"
+      className="relative z-30 w-full py-14 sm:py-20 bg-gradient-to-b from-[#141923] via-[#1a2130] to-[#141923] border-y border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),inset_0_-1px_0_rgba(255,255,255,0.15)] overflow-hidden select-none"
     >
-      {/* ── Narrow Edge Vignettes (No blur over logos) ── */}
-      <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-14 z-20 pointer-events-none bg-gradient-to-r from-black to-transparent" />
-      <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-14 z-20 pointer-events-none bg-gradient-to-l from-black to-transparent" />
+      {/* ── Soft Ambient Center Glow for High Contrast Logo Visibility (Lighter backdrop) ── */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_60%_at_50%_50%,rgba(255,255,255,0.12)_0%,transparent_80%)]" />
+      </div>
 
-      <div className="relative w-full flex flex-col gap-9 sm:gap-11 z-10">
-        {/* ── Row 1: Right → Left ── */}
-        <div className="relative w-full overflow-hidden">
-          <div className="flex items-center gap-14 sm:gap-20 w-max animate-marquee-rtl">
-            {row1.map((logo, i) => (
-              <div
-                key={`r1-${logo.id}-${i}`}
-                className="shrink-0 flex items-center justify-center transition-transform duration-200 hover:scale-105"
-                style={{ height: 56 }}
-              >
+      {/* ── Edge Vignettes for smooth fade matching slate background ── */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 z-20 pointer-events-none bg-gradient-to-r from-[#141923] to-transparent" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 z-20 pointer-events-none bg-gradient-to-l from-[#141923] to-transparent" />
+
+      {/* ── Single Moving Line with Vivid, Ultra-Crisp Logos (Zero blur, clear visibility) ── */}
+      <div className="relative w-full overflow-hidden group z-30">
+        <div className="flex items-center gap-10 sm:gap-14 w-max animate-marquee-rtl group-hover:[animation-play-state:paused] py-2">
+          {singleRowLogos.map((logo, i) => (
+            <div
+              key={`logo-${logo.id}-${i}`}
+              className="shrink-0 -skew-x-6 bg-white/[0.07] hover:bg-white/[0.15] border border-white/15 hover:border-white/40 px-6 sm:px-8 py-3.5 transition-all duration-300 cursor-pointer shadow-md group/item flex items-center justify-center"
+              style={{ minHeight: 96 }}
+            >
+              <div className="skew-x-6 flex items-center justify-center">
                 <Image
                   src={logo.src}
                   alt={logo.alt}
-                  width={140}
-                  height={56}
-                  className="object-contain max-h-[56px] w-auto select-none pointer-events-none"
+                  width={280}
+                  height={110}
+                  className="object-contain max-h-[75px] sm:max-h-[90px] w-auto select-none pointer-events-none opacity-100 brightness-125 contrast-110 group-hover/item:brightness-140 group-hover/item:scale-105 transition-all duration-300 drop-shadow-[0_2px_10px_rgba(255,255,255,0.22)]"
                   unoptimized
                 />
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── Row 2: Left → Right ── */}
-        <div className="relative w-full overflow-hidden">
-          <div className="flex items-center gap-14 sm:gap-20 w-max animate-marquee-ltr">
-            {row2.map((logo, i) => (
-              <div
-                key={`r2-${logo.id}-${i}`}
-                className="shrink-0 flex items-center justify-center transition-transform duration-200 hover:scale-105"
-                style={{ height: 56 }}
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={140}
-                  height={56}
-                  className="object-contain max-h-[56px] w-auto select-none pointer-events-none"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

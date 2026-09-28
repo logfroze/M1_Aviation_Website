@@ -20,6 +20,14 @@ export const metadata: Metadata = {
   title: "M1 Aviation | Business Aviation Digital Ecosystem",
   description:
     "The premier digital ecosystem for business aviation: M1 Marketplace, SAIOS operating intelligence, and industry partner network.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

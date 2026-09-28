@@ -192,3 +192,15 @@ body {
   animation: jetInAndOutFloat 3.4s ease-in-out infinite;
   will-change: transform;
 }
+
+/* Hide Next.js dev overlay indicator and logo from bottom left of screen */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-tools-button],
+#__next-build-watcher,
+div:has(> svg[data-nextjs-dev-tools-icon]) {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}

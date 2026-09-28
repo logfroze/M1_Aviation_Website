@@ -54,8 +54,8 @@ export default function PlayYourRoleCTA({ className = "" }: { className?: string
 
         {/* ── Centered Concise Content (Less text, clean hierarchy) ── */}
         <div className="relative z-10 max-w-xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-900/80 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-700 bg-zinc-900/80 text-[10px] font-mono tracking-[0.25em] text-zinc-300 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]" />
             Partnership Opportunities
           </div>
 
@@ -68,25 +68,25 @@ export default function PlayYourRoleCTA({ className = "" }: { className?: string
           </p>
 
           {/* Punchy concise highlights */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-zinc-400 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs font-mono text-zinc-300 pt-2">
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" /> Early Flight Deck Intelligence
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 shadow-[0_0_6px_rgba(255,255,255,0.7)]" /> Early Flight Deck Intelligence
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" /> Executive Roundtable Network
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 shadow-[0_0_6px_rgba(255,255,255,0.7)]" /> Executive Roundtable Network
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" /> Priority Ecosystem Access
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 shadow-[0_0_6px_rgba(255,255,255,0.7)]" /> Priority Ecosystem Access
             </span>
           </div>
         </div>
 
-        {/* ── Button Moved to Bottom of Card ── */}
+        {/* ── Button Moved to Bottom of Card (Silver/White Theme per Requirement 9) ── */}
         <div className="relative z-10 flex flex-col items-center justify-center w-full pt-8 mt-6 border-t border-zinc-800/80">
-          <ParallelogramButton href="/#contact" variant="gold" className="text-sm px-12 py-4 shadow-xl">
+          <ParallelogramButton href="/#contact" variant="silver" className="text-sm px-12 py-4 shadow-xl">
             Apply Now
           </ParallelogramButton>
-          <span className="text-[11px] text-zinc-500 font-mono mt-3">
+          <span className="text-[11px] text-zinc-400 font-mono mt-3">
             Review cycle: 2–3 business days
           </span>
         </div>
@@ -94,3 +94,4 @@ export default function PlayYourRoleCTA({ className = "" }: { className?: string
     </section>
   );
 }
+

@@ -13,7 +13,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="relative bg-black text-zinc-400 border-t border-zinc-900 pt-52 pb-0 overflow-hidden select-none">
+    <footer className="relative bg-black text-zinc-400 border-t border-zinc-900 pt-44 sm:pt-48 pb-20 sm:pb-28 overflow-hidden select-none">
       {/* ── Atmospheric Clouds Horizon ─────────────────────────── */}
       <div className="absolute top-0 left-0 right-0 h-72 overflow-hidden pointer-events-none z-0">
         {/* Sky Ambient Glow */}
@@ -213,23 +213,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* ── Massive Edge-to-Edge Brand Display: M1 AVIATION (Elevated above bottom) ── */}
-      <div className="w-full relative z-10 overflow-hidden select-none pointer-events-none mt-10 sm:mt-14 flex items-end justify-center px-0 pb-10 sm:pb-16 md:pb-20 leading-none">
-        <h2
-          className="text-[13.5vw] sm:text-[11vw] font-black italic tracking-tighter uppercase leading-[0.72] -skew-x-6 text-center whitespace-nowrap select-none -translate-y-2 sm:-translate-y-4"
-          style={{
-            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-            background: 'linear-gradient(180deg, #FFFFFF 0%, #E4E4E7 25%, #71717A 48%, #27272A 68%, #09090B 85%, #000000 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.25) 88%, rgba(0,0,0,0.05) 100%)',
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.25) 88%, rgba(0,0,0,0.05) 100%)',
-          }}
-        >
-          M1 AVIATION
-        </h2>
-      </div>
     </footer>
   );
 }
+
