@@ -38,7 +38,10 @@ export default function PartnerStrip() {
 
       {/* ── Direct Logos Placement: Single Moving Line on Plain Black Screen ── */}
       <div className="relative w-full overflow-hidden group z-30">
-        <div className="flex items-center gap-14 sm:gap-20 w-max animate-marquee-rtl group-hover:[animation-play-state:paused] py-2">
+        <div
+          className="flex items-center gap-14 sm:gap-20 w-max animate-marquee-rtl group-hover:[animation-play-state:paused] py-2"
+          style={{ animationDuration: "68s" }}
+        >
           {singleRowLogos.map((logo, i) => (
             <div
               key={`logo-${logo.id}-${i}`}

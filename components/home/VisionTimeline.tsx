@@ -6,7 +6,6 @@ import { VISION_MILESTONES } from "@/data/vision";
 
 interface MilestoneItem {
   year: string;
-  step: string;
   phase: string;
   title: string;
   statement: string;
@@ -30,8 +29,7 @@ interface MilestoneItem {
 export const MILESTONES: MilestoneItem[] = [
   {
     year: "2027",
-    step: "STEP 01",
-    phase: "Phase 01",
+    phase: "PHASE 01",
     title: "Marketplace Data",
     statement: VISION_MILESTONES[0].statement,
     side: "right", // Above the road
@@ -50,8 +48,7 @@ export const MILESTONES: MilestoneItem[] = [
   },
   {
     year: "2028",
-    step: "STEP 02",
-    phase: "Phase 02",
+    phase: "PHASE 02",
     title: "SAIOS Launch",
     statement: VISION_MILESTONES[1].statement,
     side: "left", // Below the road
@@ -71,8 +68,7 @@ export const MILESTONES: MilestoneItem[] = [
   },
   {
     year: "2029",
-    step: "STEP 03",
-    phase: "Phase 03",
+    phase: "PHASE 03",
     title: "Enterprise Liquidity",
     statement: VISION_MILESTONES[2].statement,
     side: "right", // Outside right bend
@@ -91,8 +87,7 @@ export const MILESTONES: MilestoneItem[] = [
   },
   {
     year: "2030",
-    step: "STEP 04",
-    phase: "Phase 04",
+    phase: "PHASE 04",
     title: "Global Fleet Scale",
     statement: VISION_MILESTONES[3].statement,
     side: "left", // Outside left bend
@@ -111,8 +106,7 @@ export const MILESTONES: MilestoneItem[] = [
   },
   {
     year: "2035",
-    step: "STEP 05",
-    phase: "Phase 05",
+    phase: "PHASE 05",
     title: "Autonomous Network",
     statement: VISION_MILESTONES[4].statement,
     side: "right", // Above the road
@@ -130,8 +124,7 @@ export const MILESTONES: MilestoneItem[] = [
   },
   {
     year: "2037",
-    step: "STEP 06",
-    phase: "Phase 06",
+    phase: "PHASE 06",
     title: "Unicorn Ecosystem",
     statement: VISION_MILESTONES[5].statement,
     side: "left", // Below the road
@@ -606,23 +599,17 @@ export default function VisionTimeline() {
                         className="pointer-events-none overflow-visible"
                       >
                         <div className="p-4 space-y-3 select-none">
-                          {/* Header: Step & Phase & Icon */}
+                          {/* Header: Phase & Icon */}
                           <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-2.5">
-                              <span
-                                className={`text-xs font-mono font-black tracking-[0.28em] uppercase transition-colors ${
-                                  isActive
-                                    ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                                    : "text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
-                                }`}
-                              >
-                                {m.step}
-                              </span>
-                              <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
-                              <span className="text-[11px] font-mono tracking-widest text-zinc-300 font-semibold uppercase">
-                                {m.phase}
-                              </span>
-                            </div>
+                            <span
+                              className={`text-xs font-mono font-black tracking-[0.28em] uppercase transition-colors ${
+                                isActive
+                                  ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                                  : "text-zinc-200 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+                              }`}
+                            >
+                              {m.phase}
+                            </span>
                             <span
                               className={`transition-colors p-1.5 rounded bg-zinc-900/90 border ${
                                 isActive
