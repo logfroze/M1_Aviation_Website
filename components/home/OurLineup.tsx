@@ -129,29 +129,34 @@ const PRODUCTS: ProductCard[] = [
 // Tab spacing for each stacked card in pixels (matching Cards stacking reference.png)
 const TAB_OFFSET_PX = 42;
 
+interface CardDynamics {
+  translateY: number;
+  scale: number;
+  rotateX: number;
+  shadowY: number;
+  shadowBlur: number;
+  shadowOpacity: number;
+}
+
 export default function OurLineup() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const targetProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
+  const [smoothProgress, setSmoothProgress] = useState(0);
   const [vh, setVh] = useState(900);
-  const lastActiveIndex = useRef<number>(-1);
+  const dockedCards = useRef<Set<number>>(new Set());
 
-  // Resume audio on first user interaction
+  // Unlock AudioContext on any direct user interaction
   useEffect(() => {
-    const handleFirstUserInteraction = () => {
+    const handleUserInteraction = () => {
       getSharedAudioContext();
-      window.removeEventListener("scroll", handleFirstUserInteraction);
-      window.removeEventListener("click", handleFirstUserInteraction);
-      window.removeEventListener("touchstart", handleFirstUserInteraction);
     };
 
-    window.addEventListener("scroll", handleFirstUserInteraction, { passive: true });
-    window.addEventListener("click", handleFirstUserInteraction);
-    window.addEventListener("touchstart", handleFirstUserInteraction, { passive: true });
+    const events = ["click", "pointerdown", "mousedown", "touchstart", "keydown", "wheel", "scroll"];
+    events.forEach((ev) => window.addEventListener(ev, handleUserInteraction, { passive: true }));
 
     return () => {
-      window.removeEventListener("scroll", handleFirstUserInteraction);
-      window.removeEventListener("click", handleFirstUserInteraction);
-      window.removeEventListener("touchstart", handleFirstUserInteraction);
+      events.forEach((ev) => window.removeEventListener(ev, handleUserInteraction));
     };
   }, []);
 
@@ -165,106 +170,177 @@ export default function OurLineup() {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Compute scroll progress through the track
+  // Continuous 60fps/120fps fluid RAF loop with inertia & sound triggers
   useEffect(() => {
-    let ticking = false;
+    let animId: number;
 
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (!trackRef.current) {
-            ticking = false;
-            return;
-          }
+      if (!trackRef.current) return;
+      const rect = trackRef.current.getBoundingClientRect();
+      const viewH = window.innerHeight;
+      const totalDistance = rect.height - viewH;
+      if (totalDistance <= 0) return;
 
-          const rect = trackRef.current.getBoundingClientRect();
-          const viewH = window.innerHeight;
-          const totalDistance = rect.height - viewH;
+      const rawProgress = -rect.top / totalDistance;
+      targetProgressRef.current = Math.max(0, Math.min(1, rawProgress));
+    };
 
-          if (totalDistance <= 0) {
-            ticking = false;
-            return;
-          }
+    const updateLoop = () => {
+      const diff = targetProgressRef.current - currentProgressRef.current;
+      currentProgressRef.current += diff * 0.095;
+      const p = currentProgressRef.current;
+      setSmoothProgress(p);
 
-          const rawProgress = -rect.top / totalDistance;
-          const p = Math.max(0, Math.min(1, rawProgress));
-          setScrollProgress(p);
-
-          // Card landing phases
-          // Phase 1 (Card 1 docks): ~0.36
-          // Phase 2 (Card 2 docks): ~0.62
-          // Phase 3 (Card 3 docks): ~0.88
-          let currentActive = 0;
-          if (p >= 0.86) {
-            currentActive = 3;
-          } else if (p >= 0.60) {
-            currentActive = 2;
-          } else if (p >= 0.34) {
-            currentActive = 1;
-          } else {
-            currentActive = 0;
-          }
-
-          if (currentActive !== lastActiveIndex.current) {
-            lastActiveIndex.current = currentActive;
-            if (currentActive > 0) {
-              playSolidDockSound(currentActive);
-            }
-          }
-
-          ticking = false;
-        });
-        ticking = true;
+      // Sound triggers on downward touchdown landing
+      if (p >= 0.325 && !dockedCards.current.has(1)) {
+        dockedCards.current.add(1);
+        playSolidDockSound(1);
       }
+      if (p >= 0.615 && !dockedCards.current.has(2)) {
+        dockedCards.current.add(2);
+        playSolidDockSound(2);
+      }
+      if (p >= 0.905 && !dockedCards.current.has(3)) {
+        dockedCards.current.add(3);
+        playSolidDockSound(3);
+      }
+
+      // Hysteresis re-arm when scrolling backward
+      if (p < 0.26) dockedCards.current.delete(1);
+      if (p < 0.55) dockedCards.current.delete(2);
+      if (p < 0.84) dockedCards.current.delete(3);
+
+      animId = requestAnimationFrame(updateLoop);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    animId = requestAnimationFrame(updateLoop);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      cancelAnimationFrame(animId);
+    };
   }, []);
 
-  // Helper to compute card translateY based on scroll progress
-  // Card 0: always translateY = 0
-  // Card 1: slides up between p=0.10 and p=0.36
-  // Card 2: slides up between p=0.36 and p=0.62
-  // Card 3: slides up between p=0.62 and p=0.88
-  // Between p=0.88 and 1.00: All 4 cards stay docked together in final stacked state
-  const getCardTransform = (index: number) => {
-    if (index === 0) return 0;
+  // Helper to compute card dynamics: Approach -> Uplift -> Cushion Landing
+  const getCardDynamics = (index: number): CardDynamics => {
+    const p = smoothProgress;
+
+    // Card 0: Resting base card with micro-compression when Card 1 lands
+    if (index === 0) {
+      let cushion = 0;
+      let scale = 1.0;
+      if (p >= 0.27 && p <= 0.35) {
+        const norm = (p - 0.27) / 0.08;
+        cushion = Math.sin(norm * Math.PI) * 2.5;
+        scale = 1.0 - 0.003 * Math.sin(norm * Math.PI);
+      }
+      return {
+        translateY: cushion,
+        scale,
+        rotateX: 0,
+        shadowY: 16,
+        shadowBlur: 38,
+        shadowOpacity: 0.60,
+      };
+    }
 
     let pStart = 0;
     let pEnd = 0;
 
     if (index === 1) {
-      pStart = 0.10;
-      pEnd = 0.36;
+      pStart = 0.05;
+      pEnd = 0.33;
     } else if (index === 2) {
-      pStart = 0.36;
+      pStart = 0.34;
       pEnd = 0.62;
     } else if (index === 3) {
-      pStart = 0.62;
-      pEnd = 0.88;
+      pStart = 0.63;
+      pEnd = 0.91;
     }
 
-    if (scrollProgress <= pStart) {
-      return vh;
-    }
-    if (scrollProgress >= pEnd) {
-      return 0;
+    // Card hasn't entered yet
+    if (p <= pStart) {
+      return {
+        translateY: vh + 80,
+        scale: 0.98,
+        rotateX: -2.5,
+        shadowY: 12,
+        shadowBlur: 24,
+        shadowOpacity: 0.35,
+      };
     }
 
-    const t = (scrollProgress - pStart) / (pEnd - pStart);
-    // Smooth ease-out cubic
-    const eased = 1 - Math.pow(1 - t, 2.5);
-    return (1 - eased) * vh;
+    // Card has docked
+    if (p >= pEnd) {
+      // Cushion compression when the next card lands on this card
+      let cushion = 0;
+      let scale = 1.0;
+      const nextLandStart = index === 1 ? 0.56 : index === 2 ? 0.85 : 999;
+      const nextLandEnd = nextLandStart + 0.08;
+
+      if (p >= nextLandStart && p <= nextLandEnd) {
+        const norm = (p - nextLandStart) / 0.08;
+        cushion = Math.sin(norm * Math.PI) * 2.5;
+        scale = 1.0 - 0.003 * Math.sin(norm * Math.PI);
+      }
+
+      return {
+        translateY: cushion,
+        scale,
+        rotateX: 0,
+        shadowY: 18 + index * 6,
+        shadowBlur: 40 + index * 8,
+        shadowOpacity: 0.68 + index * 0.08,
+      };
+    }
+
+    // Card in transit: Approach -> Uplift -> Land
+    const t = (p - pStart) / (pEnd - pStart);
+
+    if (t < 0.74) {
+      // 1. Approach phase: Glides smoothly upward from bottom
+      const normT = t / 0.74;
+      const eased = 1 - Math.pow(1 - normT, 2.8);
+      const translateY = (1 - eased) * vh;
+      const scale = 0.98 + 0.035 * normT;
+      const rotateX = -2.5 * (1 - normT);
+
+      return {
+        translateY,
+        scale,
+        rotateX,
+        shadowY: 16 + 10 * normT,
+        shadowBlur: 30 + 15 * normT,
+        shadowOpacity: 0.50 + 0.25 * normT,
+      };
+    } else {
+      // 2. Uplift & Cushion-Landing phase: Lifts gently above card below, then lands flush
+      const landT = (t - 0.74) / 0.26; // 0 to 1
+      const uplift = -18 * Math.sin(landT * Math.PI);
+      const scale = 1.0 + 0.016 * Math.sin(landT * Math.PI);
+      const rotateX = -0.7 * Math.sin(landT * Math.PI);
+
+      return {
+        translateY: uplift,
+        scale,
+        rotateX,
+        shadowY: 22 + 16 * Math.sin(landT * Math.PI),
+        shadowBlur: 42 + 20 * Math.sin(landT * Math.PI),
+        shadowOpacity: 0.72 + 0.20 * Math.sin(landT * Math.PI),
+      };
+    }
   };
 
   return (
-    // Outer scroll runway (260vh for smooth, natural docking intervals)
+    // Outer scroll runway (280vh for smooth, natural docking intervals)
     <div
       ref={trackRef}
       className="relative w-full"
-      style={{ height: "260vh" }}
+      style={{ height: "280vh" }}
     >
       {/* Sticky Viewport Stage: Pinned in view while the runway scrolls */}
       <div className="sticky top-12 sm:top-14 w-full flex flex-col items-center justify-start overflow-visible pt-2 px-3 sm:px-6">
@@ -280,10 +356,13 @@ export default function OurLineup() {
         </div>
 
         {/* Stack Stage: Holds all 4 cards in an absolute stack with millimeter-equal tab reveals */}
-        <div className="relative w-full max-w-5xl h-[490px] sm:h-[510px] md:h-[520px]">
+        <div
+          className="relative w-full max-w-5xl h-[490px] sm:h-[510px] md:h-[520px]"
+          style={{ perspective: "1200px" }}
+        >
           {PRODUCTS.map((prod, index) => {
             const cardTop = index * TAB_OFFSET_PX;
-            const translateY = getCardTransform(index);
+            const dyn = getCardDynamics(index);
 
             return (
               <div
@@ -292,8 +371,9 @@ export default function OurLineup() {
                 style={{
                   top: `${cardTop}px`,
                   zIndex: 10 + index,
-                  transform: `translateY(${translateY}px) translateZ(0)`,
-                  boxShadow: `0 -4px 18px rgba(0,0,0,0.5), 0 ${16 + index * 6}px ${40 + index * 8}px rgba(0,0,0,${0.65 + index * 0.08})`,
+                  transform: `translate3d(0, ${dyn.translateY}px, 0) scale(${dyn.scale}) rotateX(${dyn.rotateX}deg)`,
+                  transformOrigin: "center top",
+                  boxShadow: `0 -4px 18px rgba(0,0,0,0.5), 0 ${dyn.shadowY}px ${dyn.shadowBlur}px rgba(0,0,0,${dyn.shadowOpacity})`,
                 }}
               >
                 {/* Two Column Layout: Text on Left, Product Image on Right */}
