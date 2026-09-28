@@ -15,97 +15,97 @@ import {
 function FooterJetThrustFire() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-visible">
-      {/* ── Engine 1: Left / Farther Engine Afterburner Torch ── */}
+      {/* ── Engine 1: Upper / Farther Engine (Placed exactly at default image fire) ── */}
       <div
-        className="absolute transition-all duration-300 ease-out origin-right group-hover:animate-[afterburnerThrust_0.12s_ease-in-out_infinite_alternate] z-0"
+        className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-right z-0"
         style={{
-          top: "69.5%",
-          right: "77.2%",
-          width: "16%",
-          height: "24px",
+          top: "67.5%",
+          right: "79.3%",
+          width: "12%",
+          height: "20px",
           transformOrigin: "right center",
-          transform: "translateY(-50%) rotate(25deg)",
+          transform: "translateY(-50%) rotate(-24.5deg)",
         }}
       >
         <div className="relative w-full h-full">
-          {/* Ambient Afterburner Radial Glow Flare */}
-          <div className="absolute -inset-2.5 bg-gradient-to-l from-cyan-400/90 via-orange-500/80 to-transparent blur-md rounded-full opacity-20 group-hover:opacity-95 group-hover:scale-130 transition-all duration-300" />
+          {/* Ambient Afterburner Radial Glow Bloom */}
+          <div className="absolute -inset-2 bg-gradient-to-l from-cyan-400/90 via-orange-500/80 to-transparent blur-md rounded-full opacity-80" />
 
           {/* Outer Supersonic Afterburner Torch */}
           <div
-            className="absolute inset-0 rounded-full opacity-25 group-hover:opacity-100 transition-all duration-200 origin-right"
+            className="absolute inset-0 rounded-full"
             style={{
               background:
                 "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.92) 46%, rgba(239,68,68,0.75) 75%, transparent 100%)",
-              boxShadow: "0 0 18px rgba(249,115,22,0.9), 0 0 30px rgba(56,189,248,0.7)",
+              boxShadow: "0 0 16px rgba(249,115,22,0.9), 0 0 26px rgba(56,189,248,0.65)",
               filter: "blur(1.2px)",
             }}
           />
 
           {/* Inner White-Hot Plasma Needle */}
           <div
-            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2.5 rounded-full opacity-30 group-hover:opacity-100 transition-all duration-200 origin-right mix-blend-screen"
+            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2 rounded-full mix-blend-screen"
             style={{
               background:
                 "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
-              filter: "blur(0.6px)",
-              boxShadow: "0 0 12px #ffffff, 0 0 20px #38bdf8",
+              filter: "blur(0.5px)",
+              boxShadow: "0 0 10px #ffffff, 0 0 18px #38bdf8",
             }}
           />
 
           {/* Shock Diamond Pressure Nodes */}
-          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2 h-2 rotate-45 bg-white/95 shadow-[0_0_8px_#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-sky-200/90 shadow-[0_0_6px_#f97316] opacity-0 group-hover:opacity-90 transition-opacity duration-200" />
+          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2 h-2 rotate-45 bg-white/95 shadow-[0_0_8px_#38bdf8]" />
+          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-1.5 h-1.5 rotate-45 bg-sky-200/90 shadow-[0_0_6px_#f97316]" />
 
           {/* Nozzle Throat High-Intensity Flare Ring */}
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4 h-4 rounded-full bg-white opacity-0 group-hover:opacity-95 shadow-[0_0_14px_#38bdf8] mix-blend-screen transition-opacity duration-200" />
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_12px_#38bdf8] mix-blend-screen" />
         </div>
       </div>
 
-      {/* ── Engine 2: Right / Near Engine Afterburner Torch (Larger & Prominent) ── */}
+      {/* ── Engine 2: Lower / Near Engine (Placed exactly at default image fire) ── */}
       <div
-        className="absolute transition-all duration-300 ease-out origin-right group-hover:animate-[afterburnerThrust_0.12s_ease-in-out_infinite_alternate] z-0"
+        className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-right z-0"
         style={{
-          top: "73.5%",
-          right: "62.8%",
-          width: "20%",
-          height: "28px",
+          top: "72.4%",
+          right: "62.6%",
+          width: "14%",
+          height: "22px",
           transformOrigin: "right center",
-          transform: "translateY(-50%) rotate(25deg)",
+          transform: "translateY(-50%) rotate(-15.5deg)",
         }}
       >
         <div className="relative w-full h-full">
-          {/* Ambient Afterburner Radial Glow Flare */}
-          <div className="absolute -inset-3 bg-gradient-to-l from-cyan-400/95 via-orange-500/85 to-transparent blur-md rounded-full opacity-25 group-hover:opacity-100 group-hover:scale-135 transition-all duration-300" />
+          {/* Ambient Afterburner Radial Glow Bloom */}
+          <div className="absolute -inset-2.5 bg-gradient-to-l from-cyan-400/95 via-orange-500/85 to-transparent blur-md rounded-full opacity-85" />
 
           {/* Outer Supersonic Afterburner Torch */}
           <div
-            className="absolute inset-0 rounded-full opacity-30 group-hover:opacity-100 transition-all duration-200 origin-right"
+            className="absolute inset-0 rounded-full"
             style={{
               background:
                 "linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(56,189,248,0.95) 16%, rgba(249,115,22,0.95) 48%, rgba(239,68,68,0.8) 78%, transparent 100%)",
-              boxShadow: "0 0 22px rgba(249,115,22,0.95), 0 0 38px rgba(56,189,248,0.75)",
-              filter: "blur(1.4px)",
+              boxShadow: "0 0 18px rgba(249,115,22,0.95), 0 0 32px rgba(56,189,248,0.7)",
+              filter: "blur(1.3px)",
             }}
           />
 
           {/* Inner White-Hot Plasma Needle */}
           <div
-            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-3 rounded-full opacity-35 group-hover:opacity-100 transition-all duration-200 origin-right mix-blend-screen"
+            className="absolute top-1/2 right-0 -translate-y-1/2 w-4/5 h-2.5 rounded-full mix-blend-screen"
             style={{
               background:
                 "linear-gradient(to left, #ffffff 0%, rgba(186,230,253,0.95) 30%, rgba(249,115,22,0.85) 65%, transparent 100%)",
-              filter: "blur(0.6px)",
-              boxShadow: "0 0 14px #ffffff, 0 0 24px #38bdf8",
+              filter: "blur(0.5px)",
+              boxShadow: "0 0 12px #ffffff, 0 0 20px #38bdf8",
             }}
           />
 
           {/* Shock Diamond Pressure Nodes */}
-          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-white/95 shadow-[0_0_10px_#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-2 h-2 rotate-45 bg-sky-200/90 shadow-[0_0_8px_#f97316] opacity-0 group-hover:opacity-90 transition-opacity duration-200" />
+          <div className="absolute top-1/2 right-[20%] -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-white/95 shadow-[0_0_10px_#38bdf8]" />
+          <div className="absolute top-1/2 right-[45%] -translate-y-1/2 w-2 h-2 rotate-45 bg-sky-200/90 shadow-[0_0_8px_#f97316]" />
 
           {/* Nozzle Throat High-Intensity Flare Ring */}
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4.5 h-4.5 rounded-full bg-white opacity-0 group-hover:opacity-95 shadow-[0_0_16px_#38bdf8] mix-blend-screen transition-opacity duration-200" />
+          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-[0_0_14px_#38bdf8] mix-blend-screen" />
         </div>
       </div>
     </div>

@@ -36,8 +36,8 @@ export default function AviGramSection() {
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-24 space-y-4">
           {/* Tilted Sharp-Cornered Pill Badge (White/silver & magenta glow) */}
           <div className="-skew-x-12 inline-flex items-center gap-2.5 px-5 py-2 border border-white/20 bg-white/5 backdrop-blur-md shadow-[0_0_25px_rgba(225,48,108,0.25)]">
-            <span className="skew-x-12 inline-block text-[11px] font-mono tracking-[0.28em] uppercase font-bold text-zinc-200">
-              M1 AVIGRAM • EXCLUSIVE AERO NETWORK
+            <span className="skew-x-12 inline-block text-[11px] font-mono tracking-[0.50em] uppercase font-bold text-zinc-100">
+              M1 AVIGRAM EXCLUSIVE AERO NETWORK
             </span>
           </div>
 
