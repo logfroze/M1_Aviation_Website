@@ -20,14 +20,14 @@ export default function Home() {
         <Hero />
 
         {/* 2. Stacked Products Lineup with Card Scroll Sound Effects */}
-        <div id="lineup" className="w-full">
+        <div id="lineup" className="relative z-20 w-full">
           <OurLineup />
         </div>
 
         {/* 2b. The Full Stack: 4-Cards Fanned Perspective Deck */}
-        <SectionFocusItem id="fullstack">
+        <div id="fullstack" className="relative z-10 w-full">
           <FullStackDeck />
-        </SectionFocusItem>
+        </div>
 
         {/* 2c. M1 AviGram: The High-Altitude Aviation Social Network */}
         <SectionFocusItem id="avigram">

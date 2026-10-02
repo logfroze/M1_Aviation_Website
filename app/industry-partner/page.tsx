@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import ParallelogramButton from "@/components/ui/ParallelogramButton";
 import PlayYourRoleCTA from "@/components/ui/PlayYourRoleCTA";
-import { PARTNERS_ROSTER } from "@/data/partners";
+import { ALL_LOGOS } from "@/components/home/PartnerStrip";
 
 const ENGAGEMENT_CARDS = [
   {
@@ -19,8 +19,9 @@ const ENGAGEMENT_CARDS = [
     image: "/images/article-1.jpg",
     stats: "48 Operators • 340 Aircraft Managed",
     ctaLabel: "Review Delegation Protocol",
-    cardStyle: "bg-zinc-950 border-zinc-800 shadow-[0_30px_70px_rgba(0,0,0,0.6)]",
-    badgeStyle: "bg-zinc-900 text-zinc-100 border-zinc-700",
+    cardStyle:
+      "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)] shadow-[0_30px_70px_rgba(0,0,0,0.6)]",
+    badgeStyle: "bg-zinc-950 text-zinc-100 border-zinc-700",
     buttonVariant: "silver" as const,
   },
   {
@@ -35,7 +36,8 @@ const ENGAGEMENT_CARDS = [
     image: "/images/article-2.jpg",
     stats: "99.8% Telemetry Accuracy • Zero AOG Incidents",
     ctaLabel: "Examine Trial Telemetry",
-    cardStyle: "bg-[#0b1320] border-[#1d3557] shadow-[0_30px_70px_rgba(0,0,0,0.7)]",
+    cardStyle:
+      "bg-[linear-gradient(135deg,#0a1322_0%,#13243d_18%,#334155_36%,#94a3b8_50%,#e2e8f0_62%,#475569_78%,#0f172a_100%)] border-slate-400/80 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] shadow-[0_30px_70px_rgba(0,0,0,0.7)]",
     badgeStyle: "bg-[#14243b] text-sky-300 border-sky-500/30",
     buttonVariant: "silver" as const,
   },
@@ -51,9 +53,10 @@ const ENGAGEMENT_CARDS = [
     image: "/images/article-3.jpg",
     stats: "12 Certified Repair Facilities • Instant Escrow",
     ctaLabel: "Access MRO Framework",
-    cardStyle: "bg-[#16181f] border-[#2f3342] shadow-[0_30px_70px_rgba(0,0,0,0.75)]",
-    badgeStyle: "bg-[#222530] text-zinc-200 border-zinc-600/40",
-    buttonVariant: "white" as const,
+    cardStyle:
+      "bg-[linear-gradient(135deg,#130e24_0%,#24173d_18%,#4a3b66_36%,#94a3b8_50%,#e2e8f0_62%,#5b467e_78%,#19122c_100%)] border-slate-400/70 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] shadow-[0_30px_70px_rgba(0,0,0,0.75)]",
+    badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
+    buttonVariant: "silver" as const,
   },
 ];
 
@@ -63,10 +66,12 @@ export default function IndustryPartnerPage() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastActiveIndex = useRef<number>(-1);
 
-  const repeatedPartners = [
-    ...PARTNERS_ROSTER,
-    ...PARTNERS_ROSTER,
-    ...PARTNERS_ROSTER,
+  // Repeat 4x to guarantee uninterrupted infinite marquee across ultra-wide viewports
+  const repeatedLogos = [
+    ...ALL_LOGOS,
+    ...ALL_LOGOS,
+    ...ALL_LOGOS,
+    ...ALL_LOGOS,
   ];
 
   // Resume audio on first user touch/scroll/click
@@ -159,11 +164,11 @@ export default function IndustryPartnerPage() {
     let pStart = 0;
     let pEnd = 0;
     if (index === 1) {
-      pStart = 0.12;
-      pEnd = 0.42;
+      pStart = 0.10;
+      pEnd = 0.38;
     } else if (index === 2) {
-      pStart = 0.42;
-      pEnd = 0.78;
+      pStart = 0.38;
+      pEnd = 0.70;
     }
     if (scrollProgress <= pStart) return vh;
     if (scrollProgress >= pEnd) return 0;
@@ -175,17 +180,17 @@ export default function IndustryPartnerPage() {
   return (
     <div className="w-full flex flex-col items-center pt-24 pb-32 select-none">
       {/* ── 1. Hero Section ── */}
-      <section className="relative w-full min-h-[55vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 overflow-hidden">
+      <section className="relative w-full min-h-[55vh] flex flex-col items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_70%)] pointer-events-none" />
 
-        <div className="relative z-10 space-y-6 max-w-4xl mx-auto flex flex-col items-center">
+        <div className="relative z-10 space-y-6 max-w-4xl mx-auto flex flex-col items-center px-4 sm:px-6">
           <div className="inline-flex items-center gap-2 px-4 py-1 border border-zinc-800 bg-zinc-950/80 rounded-full">
             <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-400">
               Executive Alliance Network
             </span>
           </div>
 
-          {/* Single-line text for Industry Partner (Requirement 8) */}
+          {/* Single-line text for Industry Partner */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight tracking-tight text-white whitespace-nowrap">
             Industry Partner
           </h1>
@@ -197,31 +202,47 @@ export default function IndustryPartnerPage() {
           </div>
         </div>
 
-        {/* ── Partner Logo Carousel ── */}
-        <div className="w-full max-w-6xl mt-16 pt-6 border-t border-zinc-800/80 relative overflow-hidden">
-          <div className="flex items-center gap-8 w-max animate-marquee-ltr cursor-default py-2">
-            {repeatedPartners.map((partner, index) => (
-              <div
-                key={`${partner.id}-${index}`}
-                className="flex items-center gap-3 px-6 py-2.5 rounded-xl border border-zinc-800 bg-zinc-950/70 hover:border-zinc-600 transition-colors shrink-0"
-              >
-                <div className="w-2 h-2 rounded-full bg-zinc-400" />
-                <span className="text-xs font-semibold text-zinc-200 tracking-wider">
-                  {partner.name}
-                </span>
-                <span className="text-[9px] font-mono text-zinc-500">
-                  {partner.category}
-                </span>
-              </div>
-            ))}
+        {/* ── Partner Logos Carousel (Clean, Plain Screen, Doubled Size, Bright White/Silver & Shine) ── */}
+        <div
+          aria-label="Industry Partners & Alliances"
+          className="relative z-20 w-full mt-10 sm:mt-14 py-4 sm:py-6 overflow-hidden select-none group/marquee"
+        >
+          {/* ── Left Edge Blur & Fade ── */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-44 z-30 pointer-events-none bg-gradient-to-r from-black via-black/80 to-transparent" />
+
+          {/* ── Right Edge Blur & Fade ── */}
+          <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-44 z-30 pointer-events-none bg-gradient-to-l from-black via-black/80 to-transparent" />
+
+          {/* Continuous Moving Logos Row */}
+          <div className="relative w-full overflow-hidden">
+            <div
+              className="flex items-center gap-16 sm:gap-24 md:gap-32 w-max animate-marquee-rtl group-hover/marquee:[animation-play-state:paused] py-3"
+              style={{ animationDuration: "70s" }}
+            >
+              {repeatedLogos.map((logo, i) => (
+                <div
+                  key={`industry-logo-${logo.id}-${i}`}
+                  className="shrink-0 flex items-center justify-center cursor-pointer transition-transform duration-300 group/logo"
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={400}
+                    height={130}
+                    className="object-contain max-h-[85px] sm:max-h-[110px] md:max-h-[125px] w-auto select-none pointer-events-none brightness-[2.0] contrast-[1.15] saturate-[1.2] opacity-95 group-hover/logo:opacity-100 group-hover/logo:scale-115 group-hover/logo:brightness-[2.8] group-hover/logo:drop-shadow-[0_0_24px_rgba(255,255,255,0.85)] group-hover/logo:drop-shadow-[0_0_12px_rgba(147,197,253,0.5)] transition-all duration-300 ease-out"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── 2. Partner Engagement Showcase: 3 Separate Stacked Cards (Pinned Stage Pattern) ── */}
-      <section className="w-full px-4 sm:px-6 md:px-12 my-8">
-        <div ref={trackRef} className="relative w-full max-w-6xl mx-auto" style={{ height: "220vh" }}>
-          <div className="sticky top-14 w-full flex flex-col items-center justify-start overflow-visible pt-2">
+      <section className="relative z-20 w-full px-4 sm:px-6 md:px-12 my-8">
+        <div ref={trackRef} className="relative w-full max-w-6xl mx-auto" style={{ height: "260vh" }}>
+          <div className="sticky top-12 w-full flex flex-col items-center justify-start overflow-visible pt-2 pb-24 sm:pb-32">
             <div className="text-center mb-6 space-y-2 shrink-0">
               <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white">
                 Partner Engagement Showcase
@@ -240,7 +261,7 @@ export default function IndustryPartnerPage() {
                 return (
                   <div
                     key={slide.id}
-                    className={`absolute left-0 right-0 rounded-3xl border pt-3.5 sm:pt-4 px-6 sm:px-8 md:px-10 pb-6 sm:pb-8 h-[460px] md:h-[480px] flex flex-col justify-between will-change-transform ${slide.cardStyle}`}
+                    className={`absolute left-0 right-0 rounded-3xl border pt-3.5 sm:pt-4 px-6 sm:px-8 md:px-10 pb-6 sm:pb-8 h-[460px] md:h-[480px] flex flex-col justify-between will-change-transform overflow-hidden ${slide.cardStyle}`}
                     style={{
                       top: `${cardTop}px`,
                       zIndex: index + 10,
@@ -248,8 +269,11 @@ export default function IndustryPartnerPage() {
                       boxShadow: `0 -4px 18px rgba(0,0,0,0.5), 0 ${18 + index * 8}px ${45 + index * 10}px rgba(0,0,0,${0.55 + index * 0.08})`,
                     }}
                   >
+                    {/* Diagonal Specular Silver Gloss Sheen */}
+                    <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.24)_0%,rgba(255,255,255,0.06)_25%,rgba(203,213,225,0.20)_46%,transparent_64%,rgba(255,255,255,0.14)_100%)] pointer-events-none" />
+
                     {/* Two-Column Content Layout */}
-                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+                    <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
                       {/* Left Column: Details */}
                       <div className="flex-1 space-y-4 max-w-2xl">
                         <div className="flex items-center gap-3">
@@ -298,7 +322,7 @@ export default function IndustryPartnerPage() {
                     </div>
 
                     {/* Bottom Center Button across cards (Our Line Up Style) */}
-                    <div className="flex justify-center items-center pt-6 mt-4 border-t border-white/10 w-full shrink-0">
+                    <div className="relative z-10 flex justify-center items-center pt-6 mt-4 border-t border-white/10 w-full shrink-0">
                       <ParallelogramButton
                         href="/#contact"
                         variant={slide.buttonVariant}

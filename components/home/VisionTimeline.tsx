@@ -160,8 +160,8 @@ export default function VisionTimeline() {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const headerOffset = 130;
-      const bottomHold = 280; // Hold view at end of road so content stays comfortably on screen before unpinning
+      const headerOffset = 30;
+      const bottomHold = 420; // Hold view at end of road so content stays comfortably on screen before unpinning
       const scrollableDistance = rect.height - window.innerHeight - headerOffset - bottomHold;
       if (scrollableDistance <= 0) return;
 
@@ -202,7 +202,7 @@ export default function VisionTimeline() {
       { p: 0.40, x: 1240, y: 520, zoom: 1.06 }, // Step 03 (sweeping right bend)
       { p: 0.62, x: 580,  y: 730, zoom: 1.08 }, // Step 04 (sweeping left bend)
       { p: 0.82, x: 1220, y: 920, zoom: 1.10 }, // Step 05 (sweeping right east)
-      { p: 1.00, x: 2060, y: 870, zoom: 0.98 }, // Step 06 & Extra Large Parked Jet - view stays centered so content stays inside screen
+      { p: 1.00, x: 1540, y: 860, zoom: 1.02 }, // Step 06 & Terminal Jet - perfectly centered so content fills screen without blank void
     ];
 
     for (let i = 0; i < WAYPOINTS.length - 1; i++) {
@@ -481,9 +481,18 @@ export default function VisionTimeline() {
                 };
 
                 const connection = getCardConnection();
+                const dist = Math.abs(idx - activeIndex);
+                const isNearby = dist <= 1;
 
                 return (
-                  <g key={m.year} className="group">
+                  <g
+                    key={m.year}
+                    className="group transition-opacity duration-400"
+                    style={{
+                      opacity: isActive ? 1 : isNearby ? 0.75 : 0,
+                      pointerEvents: isNearby ? "auto" : "none",
+                    }}
+                  >
                     {/* 1. Curved Connection Line between Card and Road Center */}
                     <path
                       d={connection.path}

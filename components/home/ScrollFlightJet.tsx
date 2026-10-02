@@ -154,14 +154,15 @@ export default function ScrollFlightJet() {
       }
 
       // =========================================================================
-      // 📍 2. LANDING PLANE POSITION CONFIGURATION (Where it lands on screen):
-      // - endX: Horizontal position on screen (User configured: 500)
-      // - targetLevelY: Exact vertical level aligned parallel with the road tow anchor
+      // 📍 2. LANDING & FIXED STRING CONFIGURATION:
+      // - FIXED_STRING_LENGTH: Exact taut length of the towing cable (stays strictly constant)
+      // - landingX, landingY: Landing position aligned with road tow anchor
       // =========================================================================
-      const endX = 500;
+      const FIXED_STRING_LENGTH = 110;
+      const landingX = hasValidAnchor ? (roadHookX - FIXED_STRING_LENGTH) - jetW * 0.16 : 500;
       // Vertically aligns plane's tow hook (curY + jetH * 0.08) exactly with the road anchor (roadHookY)
       const targetLevelY = hasValidAnchor ? roadHookY - jetH * 0.08 : vh * 0.42;
-      const endY = targetLevelY;
+      const landingY = targetLevelY;
 
       // Starting coordinate (center of Ecosystem platform jet in viewport)
       const startX = sourceRect.left + sourceRect.width * 0.5;
@@ -175,21 +176,16 @@ export default function ScrollFlightJet() {
       const easeT = 0.82 * flightP + 0.18 * hermite;
       const lateralArc = Math.sin(flightP * Math.PI) * 28;
 
-      const flightX = startX + (endX - startX) * easeT - lateralArc;
-      const flightY = startY + (endY - startY) * easeT;
+      const flightX = startX + (landingX - startX) * easeT - lateralArc;
+      const flightY = startY + (landingY - startY) * easeT;
 
       // ── Road Journey Scroll (Inside Vision Timeline) ──
-      // Tracks how far user has scrolled forward along the road from Step 01 to Step 06
-      const visionScrollable = visionRect.height - vh;
-      const roadScrolled = Math.max(0, landingThreshold - visionRect.top);
-      const roadProgress = visionScrollable > 0 ? Math.min(1, roadScrolled / visionScrollable) : 0;
-
-      // As user scrolls ahead in vision timeline, the plane moves strictly to the left in a
-      // perfectly level horizontal line (backwardOffsetY = 0), parallel to the road anchor!
-      const backwardOffsetX = roadProgress * (vw * 0.85 + 400);
-      const backwardOffsetY = 0; // Strictly 0 so plane flies level without any downward dip
-
-      const curX = flightP >= 1 ? endX - backwardOffsetX : flightX;
+      // Once landed, the plane is physically hitched to the road anchor by the fixed-length cable.
+      // As the road moves to the left with scroll, the plane travels in absolute lockstep with
+      // the road anchor (#road-tow-anchor), ensuring the string stays at a fixed length and NEVER stretches.
+      const curX = flightP >= 1
+        ? (hasValidAnchor ? (roadHookX - FIXED_STRING_LENGTH) - jetW * 0.16 : landingX)
+        : flightX;
       const curY = flightP >= 1 ? targetLevelY : flightY;
 
       // ── Tow Rope Hook Coordinates ──
@@ -199,7 +195,7 @@ export default function ScrollFlightJet() {
       // ── Animated Tow Rope Unwrap & Attachment ──
       // String attaches ONLY once plane has landed at Step 01 (flightP >= 0.98),
       // locks strictly to the real road anchor point without drifting,
-      // and stays consistently attached until the plane moves completely outside the frame
+      // and stays consistently attached at a fixed length until the plane exits the frame
       let ropeVisible = false;
       let ropeProgress = 0;
       let ropePath = "";
@@ -220,7 +216,7 @@ export default function ScrollFlightJet() {
         const targetY = jetHookY + (roadHookY - jetHookY) * ropeProgress;
 
         // When pulling under tension, cable straightens taut
-        const sag = Math.max(0, 14 * (1 - ropeProgress) - roadProgress * 60);
+        const sag = Math.max(0, 14 * (1 - ropeProgress));
         const midX = (jetHookX + targetX) / 2;
         const midY = (jetHookY + targetY) / 2 + sag;
 

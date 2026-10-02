@@ -44,7 +44,7 @@ const PRODUCTS: ProductCard[] = [
     isExternal: true,
     ctaVariant: "white",
     cardStyle:
-      "bg-[#f0e4d0] border-[#b59f80]",
+      "bg-[linear-gradient(135deg,#ffffff_0%,#f1f5f9_16%,#cbd5e1_34%,#e2e8f0_50%,#f6efe5_66%,#cbd5e1_82%,#94a3b8_100%)] border-slate-300 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-950 text-[#f1e6d4] border-zinc-800",
     titleColor: "text-zinc-950 font-normal",
     subtitleColor: "text-zinc-800",
@@ -68,12 +68,12 @@ const PRODUCTS: ProductCard[] = [
     ctaHref: "/saios",
     ctaVariant: "silver",
     cardStyle:
-      "bg-[#0f1826] border-[#294266]",
+      "bg-[linear-gradient(135deg,#0a1322_0%,#13243d_18%,#334155_36%,#94a3b8_50%,#e2e8f0_62%,#475569_78%,#0f172a_100%)] border-slate-400/80 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)]",
     badgeStyle: "bg-[#16273d] text-[#a3c9f7] border-[#294a73]",
     titleColor: "text-white font-light",
     subtitleColor: "text-[#9fc4f0]",
-    descColor: "text-zinc-300",
-    featureColor: "text-zinc-200",
+    descColor: "text-zinc-200",
+    featureColor: "text-white",
   },
   {
     id: "avigram",
@@ -93,12 +93,12 @@ const PRODUCTS: ProductCard[] = [
     isExternal: true,
     ctaVariant: "silver",
     cardStyle:
-      "bg-[#141221] border-[#362a52]",
+      "bg-[linear-gradient(135deg,#130e24_0%,#24173d_18%,#4a3b66_36%,#94a3b8_50%,#e2e8f0_62%,#5b467e_78%,#19122c_100%)] border-slate-400/70 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)]",
     badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
     titleColor: "text-white font-light",
     subtitleColor: "text-[#c084fc]",
-    descColor: "text-zinc-300",
-    featureColor: "text-zinc-200",
+    descColor: "text-zinc-200",
+    featureColor: "text-white",
   },
   {
     id: "ecosystem",
@@ -117,12 +117,12 @@ const PRODUCTS: ProductCard[] = [
     ctaHref: "/industry-partner",
     ctaVariant: "silver",
     cardStyle:
-      "bg-[#1e2127] border-[#5e6675]",
+      "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
     titleColor: "text-white font-light",
     subtitleColor: "text-zinc-300",
-    descColor: "text-zinc-300",
-    featureColor: "text-zinc-200",
+    descColor: "text-zinc-200",
+    featureColor: "text-white",
   },
 ];
 
@@ -192,23 +192,23 @@ export default function OurLineup() {
       setSmoothProgress(p);
 
       // Sound triggers on downward touchdown landing
-      if (p >= 0.325 && !dockedCards.current.has(1)) {
+      if (p >= 0.275 && !dockedCards.current.has(1)) {
         dockedCards.current.add(1);
         playSolidDockSound(1);
       }
-      if (p >= 0.615 && !dockedCards.current.has(2)) {
+      if (p >= 0.525 && !dockedCards.current.has(2)) {
         dockedCards.current.add(2);
         playSolidDockSound(2);
       }
-      if (p >= 0.905 && !dockedCards.current.has(3)) {
+      if (p >= 0.775 && !dockedCards.current.has(3)) {
         dockedCards.current.add(3);
         playSolidDockSound(3);
       }
 
       // Hysteresis re-arm when scrolling backward
-      if (p < 0.26) dockedCards.current.delete(1);
-      if (p < 0.55) dockedCards.current.delete(2);
-      if (p < 0.84) dockedCards.current.delete(3);
+      if (p < 0.22) dockedCards.current.delete(1);
+      if (p < 0.47) dockedCards.current.delete(2);
+      if (p < 0.72) dockedCards.current.delete(3);
 
       animId = requestAnimationFrame(updateLoop);
     };
@@ -233,8 +233,8 @@ export default function OurLineup() {
     if (index === 0) {
       let cushion = 0;
       let scale = 1.0;
-      if (p >= 0.27 && p <= 0.35) {
-        const norm = (p - 0.27) / 0.08;
+      if (p >= 0.23 && p <= 0.31) {
+        const norm = (p - 0.23) / 0.08;
         cushion = Math.sin(norm * Math.PI) * 2.5;
         scale = 1.0 - 0.003 * Math.sin(norm * Math.PI);
       }
@@ -253,13 +253,13 @@ export default function OurLineup() {
 
     if (index === 1) {
       pStart = 0.05;
-      pEnd = 0.33;
+      pEnd = 0.28;
     } else if (index === 2) {
-      pStart = 0.34;
-      pEnd = 0.62;
+      pStart = 0.30;
+      pEnd = 0.53;
     } else if (index === 3) {
-      pStart = 0.63;
-      pEnd = 0.91;
+      pStart = 0.55;
+      pEnd = 0.78;
     }
 
     // Card hasn't entered yet
@@ -279,7 +279,7 @@ export default function OurLineup() {
       // Cushion compression when the next card lands on this card
       let cushion = 0;
       let scale = 1.0;
-      const nextLandStart = index === 1 ? 0.56 : index === 2 ? 0.85 : 999;
+      const nextLandStart = index === 1 ? 0.48 : index === 2 ? 0.73 : 999;
       const nextLandEnd = nextLandStart + 0.08;
 
       if (p >= nextLandStart && p <= nextLandEnd) {
@@ -336,17 +336,17 @@ export default function OurLineup() {
   };
 
   return (
-    // Outer scroll runway (280vh for smooth, natural docking intervals)
+    // Outer scroll runway (320vh for smooth, natural docking intervals and ample hold on Card 4)
     <div
       ref={trackRef}
       className="relative w-full"
-      style={{ height: "280vh" }}
+      style={{ height: "320vh" }}
     >
       {/* Sticky Viewport Stage: Pinned in view while the runway scrolls */}
-      <div className="sticky top-12 sm:top-14 w-full flex flex-col items-center justify-start overflow-visible pt-2 px-3 sm:px-6">
+      <div className="sticky top-6 sm:top-8 w-full flex flex-col items-center justify-start overflow-visible pt-1 px-3 sm:px-6 pb-20 sm:pb-28">
         
         {/* Section Header */}
-        <div className="text-center mb-5 sm:mb-7 shrink-0">
+        <div className="text-center mb-4 sm:mb-6 shrink-0">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white">
             Our Lineup
           </h2>
@@ -357,7 +357,7 @@ export default function OurLineup() {
 
         {/* Stack Stage: Holds all 4 cards in an absolute stack with millimeter-equal tab reveals */}
         <div
-          className="relative w-full max-w-5xl h-[490px] sm:h-[510px] md:h-[520px]"
+          className="relative w-full max-w-5xl xl:max-w-6xl h-[600px] sm:h-[630px] md:h-[660px]"
           style={{ perspective: "1200px" }}
         >
           {PRODUCTS.map((prod, index) => {
@@ -367,7 +367,7 @@ export default function OurLineup() {
             return (
               <div
                 key={prod.id}
-                className={`absolute left-0 right-0 rounded-3xl border pt-3 sm:pt-3.5 px-6 sm:px-8 md:px-10 pb-5 sm:pb-6 h-[460px] sm:h-[475px] md:h-[480px] flex flex-col justify-between will-change-transform ${prod.cardStyle}`}
+                className={`absolute left-0 right-0 rounded-3xl border pt-3 sm:pt-4 px-6 sm:px-8 md:px-10 pb-5 sm:pb-6 h-[480px] sm:h-[505px] md:h-[525px] flex flex-col justify-between will-change-transform ${prod.cardStyle}`}
                 style={{
                   top: `${cardTop}px`,
                   zIndex: 10 + index,
@@ -376,9 +376,12 @@ export default function OurLineup() {
                   boxShadow: `0 -4px 18px rgba(0,0,0,0.5), 0 ${dyn.shadowY}px ${dyn.shadowBlur}px rgba(0,0,0,${dyn.shadowOpacity})`,
                 }}
               >
+                {/* Diagonal Specular Silver Gloss Sheen */}
+                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.26)_0%,rgba(255,255,255,0.08)_24%,rgba(203,213,225,0.22)_46%,transparent_64%,rgba(255,255,255,0.16)_100%)] pointer-events-none" />
+
                 {/* Two Column Layout: Text on Left, Product Image on Right */}
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
-                  <div className="flex-1 space-y-3 max-w-2xl">
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 xl:gap-10">
+                  <div className="flex-1 space-y-3 max-w-xl xl:max-w-2xl">
                     {/* Badge Tab (Header Bar) */}
                     <div className="flex items-center gap-3">
                       <div className={`-skew-x-12 inline-flex items-center px-3.5 py-1 border shadow-sm ${prod.badgeStyle}`}>
@@ -412,14 +415,14 @@ export default function OurLineup() {
                     </div>
                   </div>
 
-                  {/* Product Showcase Image on Right */}
-                  <div className="w-full lg:w-[330px] xl:w-[370px] shrink-0 hidden sm:block">
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+                  {/* Product Showcase Image on Right (Significantly Enlarged) */}
+                  <div className="w-full sm:w-[350px] md:w-[400px] lg:w-[440px] xl:w-[490px] shrink-0 hidden sm:block">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7)] group">
                       <Image
                         src={prod.imageSrc}
                         alt={prod.title}
                         fill
-                        sizes="(max-width: 1024px) 100vw, 370px"
+                        sizes="(max-width: 1024px) 440px, 490px"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />

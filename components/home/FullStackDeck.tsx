@@ -26,7 +26,7 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Global Aircraft Trading & Escrow",
     description: "High-liquidity digital exchange indexing verified commercial and private aircraft with instant escrow telemetry.",
     features: ["5,000+ Curated Aircraft", "Cryptographic Airframe Verification", "Instant Settlement"],
-    cardStyle: "bg-[#f0e4d0] border-[#b59f80] text-zinc-950",
+    cardStyle: "bg-[linear-gradient(135deg,#ffffff_0%,#f1f5f9_16%,#cbd5e1_34%,#e2e8f0_50%,#f6efe5_66%,#cbd5e1_82%,#94a3b8_100%)] border-slate-300 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(148,163,184,0.35)] text-zinc-950",
     badgeStyle: "bg-zinc-950 text-[#f1e6d4] border-zinc-800",
     titleColor: "text-zinc-950 font-medium",
     subtitleColor: "text-zinc-800 font-mono text-xs",
@@ -40,12 +40,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Super Artificially Intelligent OS",
     description: "Premier neural flight deck and fleet management system automating predictive diagnostics and dispatch.",
     features: ["Real-time Predictive Telemetry", "Autonomous Dispatch", "Unified Digital Logbook"],
-    cardStyle: "bg-[#0f1826] border-[#294266] text-white",
+    cardStyle: "bg-[linear-gradient(135deg,#0a1322_0%,#13243d_18%,#334155_36%,#94a3b8_50%,#e2e8f0_62%,#475569_78%,#0f172a_100%)] border-slate-400/80 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] text-white",
     badgeStyle: "bg-[#16273d] text-[#a3c9f7] border-[#294a73]",
     titleColor: "text-white font-light",
     subtitleColor: "text-[#9fc4f0] font-mono text-xs",
-    descColor: "text-zinc-300 text-xs",
-    featureColor: "text-zinc-200 font-mono text-[11px]",
+    descColor: "text-zinc-200 text-xs",
+    featureColor: "text-white font-mono text-[11px]",
   },
   {
     id: "avigram",
@@ -54,12 +54,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "The Premier Aviation Social Network",
     description: "Dedicated visual network connecting pilots, aerospace engineers, and private jet owners across the globe.",
     features: ["Cockpit & Hangar Feeds", "Verified Aviator Profiles", "Global Aero Dispatch"],
-    cardStyle: "bg-[#141221] border-[#362a52] text-white",
+    cardStyle: "bg-[linear-gradient(135deg,#130e24_0%,#24173d_18%,#4a3b66_36%,#94a3b8_50%,#e2e8f0_62%,#5b467e_78%,#19122c_100%)] border-slate-400/70 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] text-white",
     badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
     titleColor: "text-white font-light",
     subtitleColor: "text-[#c084fc] font-mono text-xs",
-    descColor: "text-zinc-300 text-xs",
-    featureColor: "text-zinc-200 font-mono text-[11px]",
+    descColor: "text-zinc-200 text-xs",
+    featureColor: "text-white font-mono text-[11px]",
   },
   {
     id: "ecosystem",
@@ -68,12 +68,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Unified Aviation Alliance",
     description: "Compounding synergy bridging aircraft operators, MROs, and suppliers into one continuous real-time operating fabric.",
     features: ["OEM & Alliance Protocol", "Direct Priority Channels", "Aviation Times Media Hub"],
-    cardStyle: "bg-[#1e2127] border-[#5e6675] text-white",
+    cardStyle: "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)] text-white",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
     titleColor: "text-white font-light",
     subtitleColor: "text-zinc-300 font-mono text-xs",
-    descColor: "text-zinc-300 text-xs",
-    featureColor: "text-zinc-200 font-mono text-[11px]",
+    descColor: "text-zinc-200 text-xs",
+    featureColor: "text-white font-mono text-[11px]",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function FullStackDeck() {
     <div
       ref={containerRef}
       aria-label="The Full Stack Ecosystem Showcase"
-      className="relative w-full pt-10 sm:pt-14 pb-24 sm:pb-32 bg-black select-none overflow-hidden"
+      className="relative w-full pt-16 sm:pt-24 pb-24 sm:pb-32 bg-black select-none overflow-hidden"
     >
       {/* Dark radial glow backdrop */}
       <div className="absolute inset-0 bg-black pointer-events-none" />
@@ -160,14 +160,17 @@ export default function FullStackDeck() {
                 key={card.id}
                 onMouseEnter={() => setHoveredCard(card.id)}
                 onMouseLeave={() => setHoveredCard(null)}
-                className={`absolute rounded-3xl border p-6 sm:p-8 w-[86vw] max-w-[440px] h-[340px] sm:h-[370px] flex flex-col justify-between shadow-[0_25px_65px_rgba(0,0,0,0.92)] cursor-pointer transition-all duration-300 ease-out will-change-transform ${card.cardStyle}`}
+                className={`absolute rounded-3xl border p-6 sm:p-8 w-[86vw] max-w-[440px] h-[340px] sm:h-[370px] flex flex-col justify-between shadow-[0_25px_65px_rgba(0,0,0,0.92)] cursor-pointer transition-all duration-300 ease-out will-change-transform overflow-hidden ${card.cardStyle}`}
                 style={{
                   zIndex: zIdx,
                   transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg) scale(${sc})`,
                   transformOrigin: "center bottom",
                 }}
               >
-                <div>
+                {/* Diagonal Specular Silver Gloss Sheen */}
+                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.24)_0%,rgba(255,255,255,0.06)_25%,rgba(203,213,225,0.20)_46%,transparent_64%,rgba(255,255,255,0.14)_100%)] pointer-events-none" />
+
+                <div className="relative z-10">
                   {/* Badge */}
                   <div className="flex items-center justify-between mb-3.5">
                     <div className={`-skew-x-12 inline-flex items-center px-3.5 py-1 border text-[10px] font-mono font-bold tracking-widest uppercase shadow-sm ${card.badgeStyle}`}>
@@ -199,7 +202,7 @@ export default function FullStackDeck() {
                 </div>
 
                 {/* Features List */}
-                <div className="pt-3 border-t border-black/10 dark:border-white/10">
+                <div className="relative z-10 pt-3 border-t border-black/10 dark:border-white/10">
                   <ul className={`space-y-1.5 ${card.featureColor}`}>
                     {card.features.slice(0, 3).map((f, i) => (
                       <li key={i} className="flex items-center gap-2">

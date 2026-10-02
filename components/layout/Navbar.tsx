@@ -90,15 +90,16 @@ export default function Navbar() {
             </Link>
 
             {/* 3. Marketplace */}
-            <a
-              href="https://app.m-1.tech"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="whitespace-nowrap text-zinc-200 hover:text-white transition-all duration-200 px-3.5 py-1 rounded-full border border-transparent hover:border-white/20 hover:bg-white/10 flex items-center gap-1.5 font-bold tracking-[0.16em]"
+            <Link
+              href="/marketplace"
+              className={`whitespace-nowrap transition-all duration-200 px-3.5 py-1 rounded-full font-bold tracking-[0.16em] ${
+                pathname === "/marketplace"
+                  ? "text-white bg-white/20 border border-white/60 shadow-[0_0_14px_rgba(255,255,255,0.4)] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+                  : "text-zinc-200 hover:text-white border border-transparent hover:border-white/20 hover:bg-white/10"
+              }`}
             >
               <span>Marketplace</span>
-              <span className="text-[9px] text-slate-300 font-bold">↗</span>
-            </a>
+            </Link>
 
             {/* 4. Industry Partner */}
             <Link
@@ -189,54 +190,29 @@ export default function Navbar() {
             {[
               { href: "/",                 label: "Home",                 sub: "Overview" },
               { href: "/aviation-times",   label: "Aviation Times",       sub: "Journal" },
-              { href: "https://app.m-1.tech", label: "Marketplace",       sub: "Trading ↗", external: true },
+              { href: "/marketplace",      label: "Marketplace",          sub: "Exchange" },
               { href: "/industry-partner", label: "Industry Partner",     sub: "Alliance" },
               { href: "/saios",            label: "SAIOS Core",           sub: "Flight OS" },
               { href: "/#contact",         label: "Contact & Advisory",   sub: "Dispatch" },
-            ].map(({ href, label, sub, external }) => {
-              const linkCls =
-                "group flex items-center justify-between text-2xl sm:text-[28px] font-bold text-zinc-200 hover:text-white transition-all py-1 hover:translate-x-2";
-              return external ? (
-                <a
-                  key={href}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMenuOpen(false)}
-                  className={linkCls}
-                >
-                  <span>{label}</span>
-                  <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 font-normal">
-                    {sub}
-                  </span>
-                </a>
-              ) : (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={linkCls}
-                >
-                  <span>{label}</span>
-                  <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 font-normal">
-                    {sub}
-                  </span>
-                </Link>
-              );
-            })}
+            ].map(({ href, label, sub }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="group flex items-center justify-between text-2xl sm:text-[28px] font-bold text-zinc-200 hover:text-white transition-all py-1 hover:translate-x-2"
+              >
+                <span>{label}</span>
+                <span className="text-xs font-mono text-zinc-500 group-hover:text-zinc-300 font-normal">
+                  {sub}
+                </span>
+              </Link>
+            ))}
           </nav>
         </div>
 
-        {/* Drawer Bottom: Start a Project / Apply CTA Button (Sharp, Website Silver/White) */}
-        <div className="pt-8 border-t border-zinc-900 mt-auto">
-          <Link
-            href="/#contact"
-            onClick={() => setMenuOpen(false)}
-            className="block w-full py-4 px-6 rounded-none bg-white hover:bg-zinc-200 text-black font-mono font-bold text-center uppercase tracking-widest text-xs sm:text-sm transition-all border border-white shadow-[0_4px_25px_rgba(255,255,255,0.15)] hover:shadow-[0_6px_30px_rgba(255,255,255,0.3)] cursor-pointer"
-          >
-            START A PROJECT
-          </Link>
-          <div className="text-center text-[10px] font-mono text-zinc-500 tracking-widest uppercase mt-3">
+        {/* Drawer Bottom: Platform Brand Info */}
+        <div className="pt-6 border-t border-zinc-900 mt-auto">
+          <div className="text-center text-[10px] font-mono text-zinc-500 tracking-widest uppercase">
             M1 Global Aviation Platform
           </div>
         </div>

@@ -23,7 +23,7 @@ export default function PlayYourRoleCTA({ className = "" }: { className?: string
   return (
     <section
       aria-label="Partner Program"
-      className={`relative py-24 px-6 md:px-12 max-w-5xl mx-auto border-t border-zinc-800/80 ${className}`}
+      className={`relative py-24 px-6 md:px-12 max-w-5xl mx-auto ${className}`}
     >
       <div className="relative z-10 bg-zinc-950 border border-zinc-800 rounded-3xl p-8 sm:p-12 md:p-14 text-center overflow-hidden shadow-2xl flex flex-col items-center">
         {/* ── Left Background Image Carousel ── */}

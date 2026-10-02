@@ -202,6 +202,53 @@ body {
   transform-origin: center;
 }
 
+/* Acquisition Roadmap Supersonic Air Streaks (Continuously stream backward along calibrated fuselage axis) */
+@keyframes acquisitionSlipstream {
+  0% {
+    transform: translateX(110px) translateZ(10px) scale(1.05);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(-150px) translateZ(-40px) scale(0.80);
+    opacity: 0;
+  }
+}
+
+.acquisition-slipstream-streak {
+  animation: acquisitionSlipstream var(--dur, 0.44s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
+@keyframes acquisitionSlipstreamReverse {
+  0% {
+    transform: translateX(-110px) translateZ(10px) scale(1.05);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  75% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(150px) translateZ(-40px) scale(0.80);
+    opacity: 0;
+  }
+}
+
+.acquisition-slipstream-streak-reverse {
+  animation: acquisitionSlipstreamReverse var(--dur, 0.44s) linear var(--delay, 0s) infinite;
+  will-change: transform, opacity;
+  transform-origin: center;
+}
+
 /* Gentle hovering in/out-of-screen breathing buoyancy (almost negligible) */
 @keyframes jetInAndOutFloat {
   0%, 100% {
