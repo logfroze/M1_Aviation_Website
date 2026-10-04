@@ -148,10 +148,12 @@ const ROAD_PATH =
 
 export default function VisionTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const roadPathRef = useRef<SVGPathElement>(null);
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
   const [smoothProgress, setSmoothProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [fillerHead, setFillerHead] = useState({ x: 60, y: 160 });
 
   // Smooth lerp loop for scroll progress
   useEffect(() => {
@@ -173,6 +175,18 @@ export default function VisionTimeline() {
       currentProgressRef.current += (targetProgressRef.current - currentProgressRef.current) * 0.12;
       const prog = currentProgressRef.current;
       setSmoothProgress(prog);
+
+      // Track exact (x, y) coordinates of the silver fill head along the curved road
+      if (roadPathRef.current) {
+        try {
+          const totalLength = roadPathRef.current.getTotalLength();
+          const currentLen = totalLength * Math.min(1, Math.max(0, prog));
+          const pt = roadPathRef.current.getPointAtLength(currentLen);
+          setFillerHead({ x: pt.x, y: pt.y });
+        } catch {
+          // ignore before SVG mount
+        }
+      }
 
       const idx = Math.min(
         MILESTONES.length - 1,
@@ -232,6 +246,12 @@ export default function VisionTimeline() {
     return { translateX, translateY, zoomScale: cam.zoom };
   })();
 
+  // Calculate live road completion percentage and recharge status
+  const percentage = Math.min(100, Math.max(0, Math.round(smoothProgress * 100)));
+  const isNearEnd = smoothProgress >= 0.88;
+  const isRecharged = smoothProgress >= 0.95;
+  const rechargeRatio = isNearEnd ? Math.min(1, Math.max(0, (smoothProgress - 0.88) / 0.12)) : 0;
+
   return (
     <div
       ref={containerRef}
@@ -260,6 +280,23 @@ export default function VisionTimeline() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#04060a] via-[#080b10] to-[#04060a]" />
         </div>
 
+        {/* ── Minimalist Viewport Telemetry: Live Percentage Readout ── */}
+        <div className="absolute top-6 right-6 sm:right-10 z-30 flex items-center gap-3 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md shadow-xl pointer-events-none">
+          <div
+            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+              isRecharged
+                ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8]"
+                : "bg-white shadow-[0_0_8px_#ffffff]"
+            }`}
+          />
+          <span className="text-xs font-mono tracking-widest text-zinc-300 uppercase font-semibold">
+            Road Completion
+          </span>
+          <span className="text-sm sm:text-base font-mono font-black text-white tracking-wider">
+            {percentage}%
+          </span>
+        </div>
+
         {/* ── Road Scene along the Wavy Serpentine Path ── */}
         <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto overflow-hidden">
           <div
@@ -275,40 +312,234 @@ export default function VisionTimeline() {
               preserveAspectRatio="xMidYMid meet"
               className="w-full h-full overflow-visible"
             >
-              {/* ── Wavy Highway Asphalt Path (Right -> Smooth Left Turn -> Smooth Right Turn) ── */}
-              <g>
-                {/* Outer Shoulder Rims */}
+              <defs>
+                {/* Silver/White Roadbed Fill Gradients */}
+                <linearGradient id="roadSilverGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
+                  <stop offset="50%" stopColor="#cbd5e1" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#e2e8f0" stopOpacity="0.65" />
+                </linearGradient>
+
+                <linearGradient id="roadSilverBeam" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#e2e8f0" stopOpacity="0.85" />
+                  <stop offset="35%" stopColor="#94a3b8" stopOpacity="0.55" />
+                  <stop offset="70%" stopColor="#f8fafc" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+                </linearGradient>
+
+                <radialGradient id="rechargeThrustGlow" cx="100%" cy="50%" r="60%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                  <stop offset="30%" stopColor="#38bdf8" stopOpacity="0.9" />
+                  <stop offset="70%" stopColor="#f97316" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+
+              {/* ── Solid Highway Track Structure (Sharp Geometric Edges, Heavy Asphalt Foundation) ── */}
+              <g id="road-track-solid">
+                {/* 1. Outer Heavy Curb Foundation Line */}
                 <path
                   d={ROAD_PATH}
                   fill="none"
-                  stroke="#334155"
+                  stroke="#1e293b"
+                  strokeWidth="82"
+                  strokeLinecap="butt"
+                />
+                {/* 2. Crisp Shoulder Curb Edges (White/Slate boundary) */}
+                <path
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="#475569"
                   strokeWidth="78"
-                  strokeLinecap="round"
-                  opacity="0.6"
+                  strokeLinecap="butt"
                 />
-                {/* Road Base / Asphalt Body */}
+                {/* 3. Solid Deep Black Tarmac Roadbed */}
                 <path
                   d={ROAD_PATH}
                   fill="none"
-                  stroke="#121722"
+                  stroke="#090d16"
                   strokeWidth="72"
-                  strokeLinecap="round"
+                  strokeLinecap="butt"
                 />
-                {/* Center Dashed Runway Line */}
+                {/* 4. Sharp Dashed Runway Guidance Centerline */}
                 <path
                   d={ROAD_PATH}
                   fill="none"
-                  stroke="#94a3b8"
-                  strokeWidth="2.2"
-                  strokeDasharray="16 14"
-                  strokeLinecap="round"
-                  opacity="0.8"
+                  stroke="#64748b"
+                  strokeWidth="2.5"
+                  strokeDasharray="18 12"
+                  strokeLinecap="butt"
+                  opacity="0.85"
+                />
+
+                {/* ── PROGRESSIVE SILVER/WHITE SOLID ROAD FILLER ── */}
+                {/* 1. Underlying Solid Silver Base Layer */}
+                <path
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="url(#roadSilverGlow)"
+                  strokeWidth="72"
+                  strokeLinecap="butt"
+                  pathLength={1000}
+                  strokeDasharray="1000"
+                  strokeDashoffset={1000 * (1 - smoothProgress)}
+                  opacity={0.55}
+                />
+
+                {/* 2. Core Solid Metallic Highway Slab */}
+                <path
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="url(#roadSilverBeam)"
+                  strokeWidth="64"
+                  strokeLinecap="butt"
+                  pathLength={1000}
+                  strokeDasharray="1000"
+                  strokeDashoffset={1000 * (1 - smoothProgress)}
+                  opacity={0.98}
+                />
+
+                {/* 3. Razor-Sharp Solid White Progress Centerline */}
+                <path
+                  ref={roadPathRef}
+                  d={ROAD_PATH}
+                  fill="none"
+                  stroke="#ffffff"
+                  strokeWidth="4"
+                  strokeLinecap="butt"
+                  pathLength={1000}
+                  strokeDasharray="1000"
+                  strokeDashoffset={1000 * (1 - smoothProgress)}
                 />
               </g>
 
-              {/* ── START OF ROAD: Runway Departure Threshold & Tow Hook Anchor ── */}
-              <g id="road-tow-group" transform="translate(60, 160)">
-                {/* Tow Cable Latch Shackle Point */}
+              {/* ── Traveling Head of the Road Fill with Prominent Solid Percentage Display ── */}
+              {smoothProgress > 0.005 && (
+                <g
+                  transform={`translate(${fillerHead.x}, ${fillerHead.y})`}
+                  className="pointer-events-none transition-transform duration-75"
+                >
+                  {/* Razor-sharp cut bar across the roadbed at the fill head */}
+                  <line
+                    x1="0"
+                    y1="-36"
+                    x2="0"
+                    y2="36"
+                    stroke="#ffffff"
+                    strokeWidth="4"
+                    strokeLinecap="butt"
+                  />
+                  <rect
+                    x="-4"
+                    y="-4"
+                    width="8"
+                    height="8"
+                    fill="#ffffff"
+                    stroke="#000000"
+                    strokeWidth="1.2"
+                  />
+
+                  {/* Floating Sharp Solid Percentage Badge */}
+                  <g transform="translate(0, -50)">
+                    {/* Sharp Solid Connection Stalk */}
+                    <line
+                      x1="0"
+                      y1="22"
+                      x2="0"
+                      y2="44"
+                      stroke="#ffffff"
+                      strokeWidth="2.2"
+                      strokeLinecap="butt"
+                    />
+
+                    {/* Sharp Solid Rectangular Container */}
+                    <rect
+                      x="-105"
+                      y="-22"
+                      width="210"
+                      height="44"
+                      rx="0"
+                      fill="#06090e"
+                      stroke="#ffffff"
+                      strokeWidth="2.5"
+                    />
+
+                    {/* Prominent Large Percentage Word & Value */}
+                    <text
+                      x="0"
+                      y="7"
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      className="font-mono text-[19px] font-black tracking-widest select-none uppercase fill-white"
+                    >
+                      PERCENTAGE {percentage}%
+                    </text>
+                  </g>
+                </g>
+              )}
+
+              {/* ── ALL YEARS ON THE ROAD: Large, Solid, Sharp Station Labels (Always Visible) ── */}
+              <g id="road-year-stations">
+                {MILESTONES.map((m, idx) => {
+                  const isActive = idx === activeIndex;
+                  const isPassed = smoothProgress >= (idx / (MILESTONES.length - 1)) * 0.95;
+
+                  return (
+                    <g key={`road-station-${m.year}`} className="transition-all duration-300">
+                      {/* Sharp diamond station checkpoint on the road centerline */}
+                      <rect
+                        x={m.roadX - 7}
+                        y={m.roadY - 7}
+                        width="14"
+                        height="14"
+                        transform={`rotate(45 ${m.roadX} ${m.roadY})`}
+                        fill={isActive ? "#ffffff" : isPassed ? "#cbd5e1" : "#090d16"}
+                        stroke={isActive ? "#ffffff" : isPassed ? "#ffffff" : "#64748b"}
+                        strokeWidth="2"
+                      />
+
+                      {/* Enlarged Year label printed prominently along the road */}
+                      <text
+                        x={
+                          m.year === "2029"
+                            ? m.roadX - 32
+                            : m.year === "2030"
+                            ? m.roadX + 32
+                            : m.roadX
+                        }
+                        y={
+                          m.year === "2027" || m.year === "2028"
+                            ? m.roadY + 56
+                            : m.year === "2035" || m.year === "2037"
+                            ? m.roadY - 38
+                            : m.roadY + 9
+                        }
+                        textAnchor={
+                          m.year === "2029"
+                            ? "end"
+                            : m.year === "2030"
+                            ? "start"
+                            : "middle"
+                        }
+                        fill={isActive ? "#ffffff" : isPassed ? "#e2e8f0" : "#94a3b8"}
+                        className={`font-mono text-[26px] font-black tracking-widest select-none transition-all duration-300 ${
+                          isActive
+                            ? "fill-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]"
+                            : isPassed
+                            ? "fill-zinc-100"
+                            : "fill-zinc-400"
+                        }`}
+                      >
+                        {m.year}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+
+              {/* ── START OF ROAD: Solid Sharp Departure Threshold ── */}
+              <g id="road-start-threshold" transform="translate(60, 160)">
+                {/* Tow Cable Latch Shackle Point (Used by ScrollFlightJet to hitch and pull road) */}
                 <circle
                   id="road-tow-anchor"
                   cx="0"
@@ -320,54 +551,127 @@ export default function VisionTimeline() {
                   opacity="1"
                 />
 
-                {/* Runway Threshold Stripes (Piano Keys) */}
-                {[-22, -14, -6, 2, 10, 18].map((offsetY, i) => (
+                {/* Sharp Perpendicular Threshold Border Line (seals the 72px road mouth) */}
+                <line
+                  x1="0"
+                  y1="-36"
+                  x2="0"
+                  y2="36"
+                  stroke="#ffffff"
+                  strokeWidth="4"
+                  strokeLinecap="butt"
+                />
+                {/* Secondary Precision Stop Line */}
+                <line
+                  x1="6"
+                  y1="-36"
+                  x2="6"
+                  y2="36"
+                  stroke="#cbd5e1"
+                  strokeWidth="2"
+                  strokeLinecap="butt"
+                />
+                {/* Runway Piano Key Stripes */}
+                {[-26, -18, -10, -2, 6, 14, 22].map((offsetY, i) => (
                   <line
                     key={`thr-${i}`}
-                    x1="0"
+                    x1="12"
                     y1={offsetY}
-                    x2="18"
+                    x2="30"
                     y2={offsetY}
-                    // stroke="#cbd5e1"
-                    strokeWidth="2.5"
+                    stroke="#ffffff"
+                    strokeWidth="3"
                     strokeLinecap="butt"
-                    opacity="0.85"
+                    opacity="0.9"
                   />
                 ))}
-
-                {/* Runway Designation Markings */}
-                {/* <text
-                  x="30"
-                  y="-18"
-                  // fill="#94a3b8"
-                  className="font-mono text-[9px] font-bold tracking-widest select-none uppercase"
-                >
-                  RWY 27L • DEPARTURE
-                </text> */}
               </g>
 
-              {/* ── END OF ROAD: Terminal Destination Beacon at Road Tip (x=2140, y=1070) ── */}
-              <g transform="translate(2140, 1070)">
-                <circle cx="0" cy="0" r="32" fill="none" stroke="#475569" strokeWidth="1.5" strokeDasharray="4 4" />
-                <circle cx="0" cy="0" r="20" fill="none" stroke="#94a3b8" strokeWidth="1.2" />
-                {/* <circle cx="0" cy="0" r="6" fill="#38bdf8" />
-                <circle cx="0" cy="0" r="14" fill="#38bdf8" opacity="0.25" className="animate-ping" /> */}
+              {/* ── END OF ROAD: Solid Sharp Terminal Edge (x=2140, y=1070) ── */}
+              <g id="road-end-threshold" transform="translate(2140, 1070)">
+                {/* Primary Sharp Terminal Boundary Line across 72px road width */}
+                <line
+                  x1="-4.5"
+                  y1="-36"
+                  x2="4.5"
+                  y2="36"
+                  stroke="#ffffff"
+                  strokeWidth="4"
+                  strokeLinecap="butt"
+                />
+                {/* Secondary Terminal Precision Line */}
+                <line
+                  x1="-10.5"
+                  y1="-36"
+                  x2="-1.5"
+                  y2="36"
+                  stroke="#94a3b8"
+                  strokeWidth="2"
+                  strokeLinecap="butt"
+                />
+                {isNearEnd && (
+                  <line
+                    x1="1.5"
+                    y1="-36"
+                    x2="10.5"
+                    y2="36"
+                    stroke="#ffffff"
+                    strokeWidth={isRecharged ? 3.5 : 2}
+                    strokeLinecap="butt"
+                    opacity={rechargeRatio}
+                  />
+                )}
               </g>
 
-              {/* ── Stationary Supersonic Jet Parked in Empty Space (Extra Large 820px, Horizontal / Standing Attitude) ── */}
+              {/* ── Power Conduit Transfer Line (from Sharp Terminal into Jet) ── */}
+              {isNearEnd && (
+                <g className="transition-opacity duration-300 pointer-events-none">
+                  <line
+                    x1="2140"
+                    y1="1070"
+                    x2="2350"
+                    y2="1030"
+                    stroke="#ffffff"
+                    strokeWidth={isRecharged ? 3 : 1.8}
+                    strokeDasharray="8 6"
+                    strokeLinecap="butt"
+                    opacity={0.8 + rechargeRatio * 0.2}
+                    filter="drop-shadow(0 0 8px rgba(255,255,255,0.85))"
+                  />
+                  <rect
+                    x={2140 + (2350 - 2140) * Math.min(1, (smoothProgress - 0.88) / 0.1) - 4}
+                    cy={1070 + (1030 - 1070) * Math.min(1, (smoothProgress - 0.88) / 0.1) - 4}
+                    width="8"
+                    height="8"
+                    fill="#ffffff"
+                    filter="drop-shadow(0 0 8px #ffffff)"
+                  />
+                </g>
+              )}
+
+              {/* ── Stationary Supersonic Jet with Power Recharged Boost Effect ── */}
               <g
                 id="vision-end-jet-anchor"
-                transform="translate(2580, 1030)"
+                transform={`translate(2580, ${1030 - rechargeRatio * 18})`}
               >
                 <g
                   id="vision-end-jet-wrapper"
-                  className="transition-opacity duration-200"
+                  className="transition-all duration-300"
                   style={{ opacity: 1 }}
                 >
-                  {/* Tarmac Ground Shadow (Gives realistic standing/parked weight) */}
-                  <ellipse cx="10" cy="130" rx="300" ry="24" fill="#000000" opacity="0.80" filter="blur(16px)" />
+                  {/* Tarmac Ground Shadow (softens and shrinks slightly as plane lifts) */}
+                  <ellipse
+                    cx="10"
+                    cy={130 + rechargeRatio * 18}
+                    rx={300 - rechargeRatio * 25}
+                    ry={24 - rechargeRatio * 6}
+                    fill="#000000"
+                    opacity={0.80 - rechargeRatio * 0.25}
+                    filter="blur(16px)"
+                  />
 
-                  {/* Extra Large Jet: Rotated clockwise (15deg) so its nose & fuselage sit completely HORIZONTAL */}
+
+                  {/* Supersonic Jet: Rotated to horizontal, lifts and pitches up slightly on full recharge */}
                   <image
                     id="vision-end-jet"
                     href="/images/footer-jet.png"
@@ -375,16 +679,45 @@ export default function VisionTimeline() {
                     y="-229"
                     width="820"
                     height="458"
-                    transform="rotate(15)"
+                    transform={`rotate(${15 - rechargeRatio * 4})`}
                     preserveAspectRatio="xMidYMid meet"
                     style={{
-                      filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.95))",
+                      filter: isRecharged
+                        ? "drop-shadow(0 0 35px rgba(255,255,255,0.75)) drop-shadow(0 24px 48px rgba(0,0,0,0.95))"
+                        : "drop-shadow(0 24px 48px rgba(0,0,0,0.95))",
+                      transition: "filter 0.3s ease",
                     }}
                   />
 
                   {/* Subtle Standby Navigation Beacon Accent on Engine Nacelle */}
                   <circle cx="-300" cy="55" r="5" fill="#f97316" opacity="0.75" filter="blur(2px)" />
                   <circle cx="-300" cy="55" r="2" fill="#ffffff" />
+
+                  {/* Power Recharged Engine Thrusters Boost Flames */}
+                  {isNearEnd && (
+                    <g
+                      className="transition-opacity duration-300 pointer-events-none"
+                      style={{ opacity: rechargeRatio }}
+                      transform={`rotate(${15 - rechargeRatio * 4})`}
+                    >
+                      {/* Upper Engine Nozzle Thrust Stream */}
+                      <g transform="translate(-320, 52)">
+                        <ellipse cx="-40" cy="0" rx="40" ry="6" fill="url(#rechargeThrustGlow)" />
+                        <ellipse cx="-22" cy="0" rx="22" ry="3.5" fill="#ffffff" filter="drop-shadow(0 0 10px #ffffff)" />
+                        <line x1="-15" y1="-5" x2="-15" y2="5" stroke="#ffffff" strokeWidth="1.5" />
+                        <line x1="-32" y1="-4" x2="-32" y2="4" stroke="#38bdf8" strokeWidth="1.2" />
+                      </g>
+
+                      {/* Lower Engine Nozzle Thrust Stream */}
+                      <g transform="translate(-300, 72)">
+                        <ellipse cx="-40" cy="0" rx="40" ry="6" fill="url(#rechargeThrustGlow)" />
+                        <ellipse cx="-22" cy="0" rx="22" ry="3.5" fill="#ffffff" filter="drop-shadow(0 0 10px #ffffff)" />
+                        <line x1="-15" y1="-5" x2="-15" y2="5" stroke="#ffffff" strokeWidth="1.5" />
+                        <line x1="-32" y1="-4" x2="-32" y2="4" stroke="#38bdf8" strokeWidth="1.2" />
+                      </g>
+                    </g>
+                  )}
+
                 </g>
               </g>
 
@@ -499,42 +832,19 @@ export default function VisionTimeline() {
                       fill="none"
                       stroke={isActive ? "#ffffff" : "#64748b"}
                       strokeWidth={isActive ? 2.4 : 1.6}
-                      strokeDasharray={isActive ? "none" : "4 4"}
+                      strokeDasharray={isActive ? "none" : "6 4"}
+                      strokeLinecap="butt"
                       className="transition-all duration-300"
                     />
 
-                    {/* 2. Anchor Disc on Road Centerline */}
-                    <circle
-                      cx={m.roadX}
-                      cy={m.roadY}
-                      r={isActive ? 7 : 5}
-                      fill={isActive ? "#ffffff" : "#334155"}
-                      stroke={isActive ? "#ffffff" : "#94a3b8"}
-                      strokeWidth={1.8}
-                    />
-
-                    {/* Small Precision Terminal Dot where Leader Line touches Card Border */}
-                    <circle
-                      cx={connection.attachX}
-                      cy={connection.attachY}
-                      r={isActive ? 4 : 3}
+                    {/* 2. Small Precision Terminal Square where Leader Line touches Card Border */}
+                    <rect
+                      x={connection.attachX - 3.5}
+                      y={connection.attachY - 3.5}
+                      width="7"
+                      height="7"
                       fill={isActive ? "#ffffff" : "#94a3b8"}
                     />
-
-                    {/* 3. Year Printed Directly on the Road next to the Checkpoint */}
-                    <g transform={`translate(${m.roadX}, ${m.roadY})`}>
-                      <text
-                        x={m.cardX < m.roadX ? 16 : -16}
-                        y={m.cardY < m.roadY ? 22 : -16}
-                        textAnchor={m.cardX < m.roadX ? "start" : "end"}
-                        fill={isActive ? "#ffffff" : "#cbd5e1"}
-                        className={`font-mono text-sm font-bold tracking-widest select-none transition-colors duration-300 ${
-                          isActive ? "fill-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]" : "fill-zinc-300"
-                        }`}
-                      >
-                        {m.year}
-                      </text>
-                    </g>
 
                     {/* 4. Milestone Card Slanted Parallelogram with Highly Visible 4-Sided Borders (Top, Right, Bottom, Left) */}
                     <g className="transition-all duration-300">

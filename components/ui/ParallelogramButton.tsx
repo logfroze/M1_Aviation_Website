@@ -5,7 +5,7 @@ interface ParallelogramButtonProps {
   children: React.ReactNode;
   href?: string;
   onClick?: () => void;
-  variant?: "white" | "silver" | "gold";
+  variant?: "white" | "silver" | "gold" | "black";
   className?: string;
   isExternal?: boolean;
 }
@@ -19,7 +19,8 @@ export default function ParallelogramButton({
   isExternal = false,
 }: ParallelogramButtonProps) {
   const variantStyles = {
-    white: "bg-white text-black hover:bg-zinc-200 border-white",
+    white: "bg-white text-black hover:bg-zinc-100 hover:text-black border-white shadow-[0_4px_16px_rgba(255,255,255,0.25)]",
+    black: "bg-black text-white hover:bg-zinc-900 hover:text-white border-zinc-800 shadow-[0_4px_16px_rgba(0,0,0,0.6)]",
     silver: "bg-zinc-300 text-black hover:bg-zinc-100 border-zinc-300",
     gold: "bg-[#D4AF37] text-black hover:bg-[#E5C158] border-[#D4AF37]",
   };

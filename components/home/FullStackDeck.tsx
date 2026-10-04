@@ -26,12 +26,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Global Aircraft Trading & Escrow",
     description: "High-liquidity digital exchange indexing verified commercial and private aircraft with instant escrow telemetry.",
     features: ["5,000+ Curated Aircraft", "Cryptographic Airframe Verification", "Instant Settlement"],
-    cardStyle: "bg-[linear-gradient(135deg,#ffffff_0%,#f1f5f9_16%,#cbd5e1_34%,#e2e8f0_50%,#f6efe5_66%,#cbd5e1_82%,#94a3b8_100%)] border-slate-300 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(148,163,184,0.35)] text-zinc-950",
+    cardStyle: "bg-[linear-gradient(135deg,#ffffff_0%,#f1f5f9_16%,#cbd5e1_34%,#e2e8f0_50%,#f6efe5_66%,#cbd5e1_82%,#94a3b8_100%)] border-slate-300 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-950 text-[#f1e6d4] border-zinc-800",
     titleColor: "text-zinc-950 font-medium",
     subtitleColor: "text-zinc-800 font-mono text-xs",
-    descColor: "text-zinc-700 text-xs",
-    featureColor: "text-zinc-900 font-mono text-[11px]",
+    descColor: "text-black text-xs font-medium",
+    featureColor: "text-black font-mono text-[11px] font-medium",
   },
   {
     id: "saios",
@@ -40,12 +40,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Super Artificially Intelligent OS",
     description: "Premier neural flight deck and fleet management system automating predictive diagnostics and dispatch.",
     features: ["Real-time Predictive Telemetry", "Autonomous Dispatch", "Unified Digital Logbook"],
-    cardStyle: "bg-[linear-gradient(135deg,#0a1322_0%,#13243d_18%,#334155_36%,#94a3b8_50%,#e2e8f0_62%,#475569_78%,#0f172a_100%)] border-slate-400/80 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] text-white",
-    badgeStyle: "bg-[#16273d] text-[#a3c9f7] border-[#294a73]",
+    cardStyle: "bg-[linear-gradient(135deg,#020d20_0%,#082048_18%,#12438c_36%,#38bdf8_50%,#93c5fd_62%,#1d4ed8_78%,#04122b_100%)] border-sky-400/70 shadow-[inset_0_2px_4px_rgba(56,189,248,0.6),inset_0_-2px_4px_rgba(29,78,216,0.35)]",
+    badgeStyle: "bg-[#09224f] text-[#38bdf8] border-[#0284c7]/70",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#9fc4f0] font-mono text-xs",
-    descColor: "text-zinc-200 text-xs",
-    featureColor: "text-white font-mono text-[11px]",
+    subtitleColor: "text-[#38bdf8] font-mono text-xs",
+    descColor: "text-blue-50/90 text-xs font-normal",
+    featureColor: "text-white font-mono text-[11px] font-medium",
   },
   {
     id: "avigram",
@@ -54,12 +54,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "The Premier Aviation Social Network",
     description: "Dedicated visual network connecting pilots, aerospace engineers, and private jet owners across the globe.",
     features: ["Cockpit & Hangar Feeds", "Verified Aviator Profiles", "Global Aero Dispatch"],
-    cardStyle: "bg-[linear-gradient(135deg,#130e24_0%,#24173d_18%,#4a3b66_36%,#94a3b8_50%,#e2e8f0_62%,#5b467e_78%,#19122c_100%)] border-slate-400/70 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)] text-white",
-    badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
+    cardStyle: "bg-[linear-gradient(135deg,#1c0529_0%,#3b0a4e_18%,#6d1369_35%,#c026d3_50%,#f472b6_64%,#9d174d_80%,#260433_100%)] border-pink-400/60 shadow-[inset_0_2px_4px_rgba(244,114,182,0.6),inset_0_-2px_4px_rgba(157,23,77,0.35)]",
+    badgeStyle: "bg-[#380b42] text-[#f472b6] border-[#db2777]/60",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#c084fc] font-mono text-xs",
-    descColor: "text-zinc-200 text-xs",
-    featureColor: "text-white font-mono text-[11px]",
+    subtitleColor: "text-[#f472b6] font-mono text-xs",
+    descColor: "text-zinc-200 text-xs font-normal",
+    featureColor: "text-white font-mono text-[11px] font-medium",
   },
   {
     id: "ecosystem",
@@ -68,12 +68,12 @@ const DECK_CARDS: DeckCard[] = [
     subtitle: "Unified Aviation Alliance",
     description: "Compounding synergy bridging aircraft operators, MROs, and suppliers into one continuous real-time operating fabric.",
     features: ["OEM & Alliance Protocol", "Direct Priority Channels", "Aviation Times Media Hub"],
-    cardStyle: "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)] text-white",
+    cardStyle: "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
     titleColor: "text-white font-light",
     subtitleColor: "text-zinc-300 font-mono text-xs",
-    descColor: "text-zinc-200 text-xs",
-    featureColor: "text-white font-mono text-[11px]",
+    descColor: "text-black text-xs font-medium",
+    featureColor: "text-black font-mono text-[11px] font-medium",
   },
 ];
 
@@ -202,11 +202,11 @@ export default function FullStackDeck() {
                 </div>
 
                 {/* Features List */}
-                <div className="relative z-10 pt-3 border-t border-black/10 dark:border-white/10">
+                <div className="relative z-10 pt-3 border-t border-black/20">
                   <ul className={`space-y-1.5 ${card.featureColor}`}>
                     {card.features.slice(0, 3).map((f, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <span className="opacity-60 text-xs">›</span>
+                        <span className="opacity-80 text-xs font-bold text-black">›</span>
                         <span className="truncate">{f}</span>
                       </li>
                     ))}

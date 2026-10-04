@@ -16,7 +16,7 @@ interface ProductCard {
   ctaLabel: string;
   ctaHref: string;
   isExternal?: boolean;
-  ctaVariant: "white" | "silver" | "gold";
+  ctaVariant: "white" | "silver" | "gold" | "black";
   cardStyle: string;
   badgeStyle: string;
   titleColor: string;
@@ -42,7 +42,7 @@ const PRODUCTS: ProductCard[] = [
     ctaLabel: "Sign Up",
     ctaHref: "https://app.m-1.tech",
     isExternal: true,
-    ctaVariant: "white",
+    ctaVariant: "black",
     cardStyle:
       "bg-[linear-gradient(135deg,#ffffff_0%,#f1f5f9_16%,#cbd5e1_34%,#e2e8f0_50%,#f6efe5_66%,#cbd5e1_82%,#94a3b8_100%)] border-slate-300 shadow-[inset_0_2px_4px_rgba(255,255,255,0.95),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-950 text-[#f1e6d4] border-zinc-800",
@@ -66,13 +66,13 @@ const PRODUCTS: ProductCard[] = [
     imageSrc: "/images/saios-card.jpg",
     ctaLabel: "Register",
     ctaHref: "/saios",
-    ctaVariant: "silver",
+    ctaVariant: "white",
     cardStyle:
-      "bg-[linear-gradient(135deg,#0a1322_0%,#13243d_18%,#334155_36%,#94a3b8_50%,#e2e8f0_62%,#475569_78%,#0f172a_100%)] border-slate-400/80 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)]",
-    badgeStyle: "bg-[#16273d] text-[#a3c9f7] border-[#294a73]",
+      "bg-[linear-gradient(135deg,#020d20_0%,#082048_18%,#12438c_36%,#38bdf8_50%,#93c5fd_62%,#1d4ed8_78%,#04122b_100%)] border-sky-400/70 shadow-[inset_0_2px_4px_rgba(56,189,248,0.6),inset_0_-2px_4px_rgba(29,78,216,0.35)]",
+    badgeStyle: "bg-[#09224f] text-[#38bdf8] border-[#0284c7]/70",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#9fc4f0]",
-    descColor: "text-zinc-200",
+    subtitleColor: "text-[#38bdf8]",
+    descColor: "text-blue-50/90",
     featureColor: "text-white",
   },
   {
@@ -91,12 +91,12 @@ const PRODUCTS: ProductCard[] = [
     ctaLabel: "Explore AviGram",
     ctaHref: "https://www.instagram.com",
     isExternal: true,
-    ctaVariant: "silver",
+    ctaVariant: "white",
     cardStyle:
-      "bg-[linear-gradient(135deg,#130e24_0%,#24173d_18%,#4a3b66_36%,#94a3b8_50%,#e2e8f0_62%,#5b467e_78%,#19122c_100%)] border-slate-400/70 shadow-[inset_0_2px_4px_rgba(255,255,255,0.65),inset_0_-2px_4px_rgba(148,163,184,0.3)]",
-    badgeStyle: "bg-[#251c3d] text-[#d8b4fe] border-[#4f3875]",
+      "bg-[linear-gradient(135deg,#1c0529_0%,#3b0a4e_18%,#6d1369_35%,#c026d3_50%,#f472b6_64%,#9d174d_80%,#260433_100%)] border-pink-400/60 shadow-[inset_0_2px_4px_rgba(244,114,182,0.6),inset_0_-2px_4px_rgba(157,23,77,0.35)]",
+    badgeStyle: "bg-[#380b42] text-[#f472b6] border-[#db2777]/60",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#c084fc]",
+    subtitleColor: "text-[#f472b6]",
     descColor: "text-zinc-200",
     featureColor: "text-white",
   },
@@ -115,7 +115,7 @@ const PRODUCTS: ProductCard[] = [
     imageSrc: "/images/ecosystem-card.jpg",
     ctaLabel: "Become Part of the Vision",
     ctaHref: "/industry-partner",
-    ctaVariant: "silver",
+    ctaVariant: "black",
     cardStyle:
       "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",

@@ -278,44 +278,172 @@ function MarketplaceHeroCardView({ card }: { card: HeroCarouselCard }) {
 const V2_LAWS = [
   {
     number: "01",
+    shortTitle: "Instant Escrow",
     title: "Instant Cryptographic Escrow",
     law: "Autonomous Multilateral Clearance Law",
     summary:
       "Eliminates standard 21-day escrow latency by integrating verified smart contracts with institutional aviation banks, releasing title in under 4 minutes.",
     metric: "4-Minute Title Settlement",
     detail: "FAA & EASA Digital Registry Synchronization",
+    theme: {
+      cardBg: "bg-[linear-gradient(145deg,#061422_0%,#0c2236_35%,#123654_65%,#08192a_100%)]",
+      borderColor: "border-cyan-500/35 hover:border-cyan-400/50",
+      glowShadow: "shadow-[0_25px_60px_rgba(6,182,212,0.14),inset_0_1px_2px_rgba(103,232,249,0.25)]",
+      accentText: "text-cyan-400",
+      badgeClass: "bg-cyan-950/70 border-cyan-500/35 text-cyan-300",
+      metricColor: "text-cyan-300",
+      barColor: "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]",
+      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(34,211,238,0.12)_0%,rgba(6,182,212,0.03)_40%,transparent_75%)]",
+      tabActive: "bg-cyan-950/80 text-cyan-300 border-cyan-400/60 shadow-[0_0_15px_rgba(34,211,238,0.25)]",
+    },
   },
   {
     number: "02",
+    shortTitle: "Continuous Audit",
     title: "Continuous Telemetric Audit",
     law: "Zero-Tamper Airframe History Protocol",
     summary:
       "Automated inspection engines parse continuous SAIOS turbine vibration records, APU cycle logs, and unscheduled maintenance filings directly from airframe avionics.",
     metric: "100% Neural Logbook Integrity",
     detail: "Zero Paper-Logbook Discrepancy",
+    theme: {
+      cardBg: "bg-[linear-gradient(145deg,#150a24_0%,#221038_35%,#33184e_65%,#160a26_100%)]",
+      borderColor: "border-purple-500/35 hover:border-purple-400/50",
+      glowShadow: "shadow-[0_25px_60px_rgba(168,85,247,0.14),inset_0_1px_2px_rgba(216,180,254,0.25)]",
+      accentText: "text-purple-400",
+      badgeClass: "bg-purple-950/70 border-purple-500/35 text-purple-300",
+      metricColor: "text-purple-300",
+      barColor: "bg-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.6)]",
+      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(192,132,252,0.12)_0%,rgba(168,85,247,0.03)_40%,transparent_75%)]",
+      tabActive: "bg-purple-950/80 text-purple-300 border-purple-400/60 shadow-[0_0_15px_rgba(192,132,252,0.25)]",
+    },
   },
   {
     number: "03",
+    shortTitle: "Zero-Spread Swaps",
     title: "Zero-Spread Liquidity Swaps",
     law: "Multilateral Fleet Rebalancing Matrix",
     summary:
       "Execute bilateral and multi-asset exchanges across whole-airframe, dry-lease, and fractional portfolios without traditional intermediary broker markups.",
     metric: "<0.02% Execution Drift",
     detail: "Direct Institutional Liquidity Pool",
+    theme: {
+      cardBg: "bg-[linear-gradient(145deg,#1a0f05_0%,#2a1909_35%,#3d250f_65%,#1c1005_100%)]",
+      borderColor: "border-amber-500/35 hover:border-amber-400/50",
+      glowShadow: "shadow-[0_25px_60px_rgba(245,158,11,0.14),inset_0_1px_2px_rgba(252,211,77,0.25)]",
+      accentText: "text-amber-400",
+      badgeClass: "bg-amber-950/70 border-amber-500/35 text-amber-300",
+      metricColor: "text-amber-300",
+      barColor: "bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.6)]",
+      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.12)_0%,rgba(245,158,11,0.03)_40%,transparent_75%)]",
+      tabActive: "bg-amber-950/80 text-amber-300 border-amber-400/60 shadow-[0_0_15px_rgba(251,191,36,0.25)]",
+    },
   },
   {
     number: "04",
+    shortTitle: "Algorithmic Pricing",
     title: "Algorithmic Valuation Index",
     law: "Live Global Sovereign Pricing Standard",
     summary:
       "Real-time airframe depreciation curves updated continuously against global fuel consumption telemetry, engine cycle depreciation, and component supply times.",
     metric: "Microsecond Pricing Refresh",
     detail: "Predictive Lifecycle Residual Valuation",
+    theme: {
+      cardBg: "bg-[linear-gradient(145deg,#051912_0%,#0a281e_35%,#0f3d2e_65%,#061a13_100%)]",
+      borderColor: "border-emerald-500/35 hover:border-emerald-400/50",
+      glowShadow: "shadow-[0_25px_60px_rgba(16,185,129,0.14),inset_0_1px_2px_rgba(110,231,183,0.25)]",
+      accentText: "text-emerald-400",
+      badgeClass: "bg-emerald-950/70 border-emerald-500/35 text-emerald-300",
+      metricColor: "text-emerald-300",
+      barColor: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.6)]",
+      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(52,211,153,0.12)_0%,rgba(16,185,129,0.03)_40%,transparent_75%)]",
+      tabActive: "bg-emerald-950/80 text-emerald-300 border-emerald-400/60 shadow-[0_0_15px_rgba(52,211,153,0.25)]",
+    },
   },
 ];
 
 // ── Highlighted Aircraft Listings ──
 const HIGHLIGHT_LISTINGS = [
+  {
+    id: "cj3plus",
+    model: "Cessna Citation CJ3+",
+    year: "2022",
+    category: "Super Mid-Size",
+    price: "$11,800,000 USD",
+    image: "/images/card-citation-cj3.jpg",
+    specs: {
+      range: "2,040 nm",
+      speed: "Mach 0.73",
+      hours: "190 hrs",
+      capacity: "9 Pax",
+    },
+    status: "Verified Seller",
+    featuredBadge: "FEATURED",
+  },
+  {
+    id: "phenom300e",
+    model: "Embraer Phenom 300E",
+    year: "2023",
+    category: "Super Mid-Size",
+    price: "$11,100,000 USD",
+    image: "/images/card-phenom-300e.jpg",
+    specs: {
+      range: "2,010 nm",
+      speed: "Mach 0.80",
+      hours: "140 hrs",
+      capacity: "10 Pax",
+    },
+    status: "Escrow Ready",
+    featuredBadge: "FEATURED",
+  },
+  {
+    id: "hondajet",
+    model: "HondaJet Elite II",
+    year: "2023",
+    category: "Super Mid-Size",
+    price: "$9,700,000 USD",
+    image: "/images/card-hondajet-elite.jpg",
+    specs: {
+      range: "1,547 nm",
+      speed: "Mach 0.72",
+      hours: "80 hrs",
+      capacity: "7 Pax",
+    },
+    status: "Turnkey Ready",
+    featuredBadge: "FEATURED",
+  },
+  {
+    id: "latitude",
+    model: "Cessna Citation Latitude",
+    year: "2021",
+    category: "Super Mid-Size",
+    price: "$21,600,000 USD",
+    image: "/images/card-citation-latitude.jpg",
+    specs: {
+      range: "2,700 nm",
+      speed: "Mach 0.80",
+      hours: "310 hrs",
+      capacity: "9 Pax",
+    },
+    status: "Fresh C-Check",
+    featuredBadge: "FEATURED",
+  },
+  {
+    id: "learjet75",
+    model: "Bombardier Learjet 75 Liberty",
+    year: "2020",
+    category: "Super Mid-Size",
+    price: "$19,000,000 USD",
+    image: "/images/article-3.jpg",
+    specs: {
+      range: "2,080 nm",
+      speed: "Mach 0.81",
+      hours: "520 hrs",
+      capacity: "8 Pax",
+    },
+    status: "Immediate Inspection",
+    featuredBadge: "FEATURED",
+  },
   {
     id: "g700",
     model: "Gulfstream G700",
@@ -330,7 +458,7 @@ const HIGHLIGHT_LISTINGS = [
       capacity: "19 Pax",
     },
     status: "Escrow Ready",
-    featuredBadge: "Flagship Delivery",
+    featuredBadge: "FEATURED",
   },
   {
     id: "global7500",
@@ -346,15 +474,15 @@ const HIGHLIGHT_LISTINGS = [
       capacity: "16 Pax",
     },
     status: "Immediate Inspection",
-    featuredBadge: "Audited by SAIOS",
+    featuredBadge: "FEATURED",
   },
   {
     id: "falcon10x",
     model: "Dassault Falcon 10X",
     year: "2025",
-    category: "New Allocation",
+    category: "Ultra Long Range",
     price: "$81,000,000 USD",
-    image: "/images/realistic-jet-oneliner.jpg",
+    image: "/images/card-falcon-2000s.jpg",
     specs: {
       range: "7,500 nm",
       speed: "Mach 0.925",
@@ -362,7 +490,7 @@ const HIGHLIGHT_LISTINGS = [
       capacity: "18 Pax",
     },
     status: "Production Slot",
-    featuredBadge: "Direct Allocation",
+    featuredBadge: "FEATURED",
   },
   {
     id: "praetor600",
@@ -378,7 +506,7 @@ const HIGHLIGHT_LISTINGS = [
       capacity: "12 Pax",
     },
     status: "Verified Seller",
-    featuredBadge: "Off-Market",
+    featuredBadge: "FEATURED",
   },
   {
     id: "g650er",
@@ -386,7 +514,7 @@ const HIGHLIGHT_LISTINGS = [
     year: "2022",
     category: "Ultra Long Range",
     price: "$49,500,000 USD",
-    image: "/images/article-2.jpg",
+    image: "/images/card-g650er.jpg",
     specs: {
       range: "7,500 nm",
       speed: "Mach 0.90",
@@ -394,23 +522,7 @@ const HIGHLIGHT_LISTINGS = [
       capacity: "16 Pax",
     },
     status: "Turnkey Ready",
-    featuredBadge: "Prime Provenance",
-  },
-  {
-    id: "longitude",
-    model: "Cessna Citation Longitude",
-    year: "2023",
-    category: "Super Mid-Size",
-    price: "$28,900,000 USD",
-    image: "/images/article-3.jpg",
-    specs: {
-      range: "3,500 nm",
-      speed: "Mach 0.84",
-      hours: "350 hrs",
-      capacity: "10 Pax",
-    },
-    status: "Fresh C-Check",
-    featuredBadge: "Turnkey Airframe",
+    featuredBadge: "FEATURED",
   },
 ];
 
@@ -424,10 +536,39 @@ const MARKETPLACE_STATS = [
 ];
 
 export default function MarketplacePage() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [activeLawIndex, setActiveLawIndex] = useState(0);
+  const [isLawPaused, setIsLawPaused] = useState(false);
+  const [lawProgress, setLawProgress] = useState(0);
   const bottomBlurRef = useRef<HTMLDivElement>(null);
   const bottomGradientRef = useRef<HTMLDivElement>(null);
   const heroOverlayRef = useRef<HTMLDivElement>(null);
+
+  // ── Auto-movement carousel for Marketplace Version 2.0 (12 seconds per feature) ──
+  useEffect(() => {
+    if (isLawPaused) return;
+
+    const intervalMs = 60;
+    const step = (intervalMs / 12000) * 100;
+
+    const timer = setInterval(() => {
+      setLawProgress((prev) => {
+        if (prev >= 100) {
+          setActiveLawIndex((curr) => (curr + 1) % V2_LAWS.length);
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [isLawPaused]);
+
+  const handleSelectLaw = (index: number) => {
+    setActiveLawIndex(index);
+    setLawProgress(0);
+    playSolidDockSound(1);
+  };
 
   // ── Scroll-reactive bottom blur & dissolve to black (matching main website hero) ──
   useEffect(() => {
@@ -471,9 +612,13 @@ export default function MarketplacePage() {
   }, []);
 
   const filteredListings =
-    activeCategory === "All"
+    activeCategory === "ALL"
       ? HIGHLIGHT_LISTINGS
-      : HIGHLIGHT_LISTINGS.filter((l) => l.category === activeCategory);
+      : HIGHLIGHT_LISTINGS.filter(
+          (l) =>
+            l.category.toUpperCase().includes(activeCategory.toUpperCase()) ||
+            activeCategory.toUpperCase().includes(l.category.toUpperCase())
+        );
 
   return (
     <div className="w-full flex flex-col items-center select-none bg-black text-white">
@@ -587,74 +732,135 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* ── 2. Version 2.0 Specifications & Laws Section ── */}
-      <section id="v2" className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
-        <div className="text-center mb-12 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-950 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
+      {/* ── 2. Version 2.0 Specifications & Laws Section (Balanced Feature Presentation) ── */}
+      <section id="v2" className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
+        <div className="text-center mb-10 sm:mb-12 space-y-3">
+          {/* <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-950 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
             Protocol Architecture
-          </div>
+          </div> */}
           <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white">
             Marketplace Version 2.0
           </h2>
-          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto font-light">
             Governed by autonomous execution laws engineered to eliminate broker arbitrage and
             guarantee institutional clearing speed.
           </p>
         </div>
 
-        {/* 4 Law Cards with Smooth, Diffused Metallic Gradients (Zero Sharp Lines) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {V2_LAWS.map((law) => (
-            <div
-              key={law.number}
-              className="relative rounded-3xl border border-white/15 p-7 sm:p-9 flex flex-col justify-between overflow-hidden bg-[linear-gradient(145deg,#0d1016_0%,#151a23_30%,#1f2633_60%,#283243_85%,#161b24_100%)] shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.25)] group hover:border-white/35 transition-all duration-300"
+        {/* Feature Navigation Tabs with Tilted Sharp Parallelograms (Matching CTA style) */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
+          {V2_LAWS.map((l, i) => (
+            <button
+              key={l.number}
+              onClick={() => handleSelectLaw(i)}
+              className={`px-4 sm:px-6 py-2.5 -skew-x-6 sm:-skew-x-12 text-xs font-mono tracking-wider uppercase transition-all duration-300 border select-none ${
+                i === activeLawIndex
+                  ? l.theme.tabActive
+                  : "bg-zinc-950/80 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
+              }`}
             >
-              {/* Soft, Diffused Ambient Light Sheen (Smooth radial fade without harsh edge cuts) */}
-              <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08)_0%,rgba(148,163,184,0.03)_40%,transparent_75%)] pointer-events-none" />
-              <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_50%,rgba(0,0,0,0.35)_100%)] pointer-events-none" />
-
-              <div className="relative z-10 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs sm:text-sm font-bold tracking-widest text-zinc-200">
-                    LAW {law.number}
-                  </span>
-                  <div className="px-3 py-1 rounded-full border border-white/20 bg-black/50 text-[10px] font-mono tracking-wider text-zinc-200 backdrop-blur-sm">
-                    Autonomous Protocol
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight">
-                    {law.title}
-                  </h3>
-                  <div className="text-xs font-mono text-zinc-300 tracking-wider mt-0.5 uppercase">
-                    {law.law}
-                  </div>
-                </div>
-
-                <p className="text-xs sm:text-sm text-zinc-200 font-light leading-relaxed">
-                  {law.summary}
-                </p>
-              </div>
-
-              <div className="relative z-10 pt-6 mt-6 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <span className="font-mono text-xs font-bold text-white tracking-wide">
-                  {law.metric}
-                </span>
-                <span className="text-[11px] font-mono text-zinc-300">
-                  {law.detail}
-                </span>
-              </div>
-            </div>
+              <span className="inline-block skew-x-6 sm:skew-x-12">{l.shortTitle}</span>
+            </button>
           ))}
         </div>
+
+        {/* Central Feature Card with Tilted Sharp Parallelogram Shape */}
+        {(() => {
+          const currentLaw = V2_LAWS[activeLawIndex];
+          const t = currentLaw.theme;
+
+          return (
+            <div
+              className="relative w-full max-w-3xl mx-auto px-2 sm:px-4"
+              onMouseEnter={() => setIsLawPaused(true)}
+              onMouseLeave={() => setIsLawPaused(false)}
+            >
+              {/* Tilted Parallelogram Card Container (sharp-edged, no rounded corners, tilted like CTA buttons) */}
+              <div
+                className={`relative -skew-x-6 sm:-skew-x-12 border ${t.borderColor} p-7 sm:p-11 flex flex-col justify-between overflow-hidden ${t.cardBg} ${t.glowShadow} transition-all duration-500 select-none shadow-2xl`}
+              >
+                {/* Subtle Top Progress Line following the slanted edge */}
+                <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-white/10 overflow-hidden">
+                  <div
+                    className={`h-full ${t.barColor} transition-[width] duration-100 ease-linear`}
+                    style={{ width: `${lawProgress}%` }}
+                  />
+                </div>
+
+                {/* Diffused Ambient Glow */}
+                <div className={`absolute inset-0 ${t.radialGlow} pointer-events-none`} />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_50%,rgba(0,0,0,0.4)_100%)] pointer-events-none" />
+
+                {/* Inner Content (un-skewed so text and layout remain perfectly upright) */}
+                <div className="relative z-10 skew-x-6 sm:skew-x-12 space-y-4 sm:space-y-5">
+                  {/* Top Bar: Law Badge & Autonomous Protocol indicator */}
+                  <div className="flex items-center justify-between">
+                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-widest uppercase ${t.accentText}`}>
+                      LAW {currentLaw.number}
+                    </span>
+
+                    {/* <div className={`flex items-center gap-2 px-3 py-1 -skew-x-6 sm:-skew-x-12 border text-[10px] font-mono tracking-wider ${t.badgeClass} backdrop-blur-sm`}>
+                      <span className="inline-flex items-center gap-2 skew-x-6 sm:skew-x-12">
+                        <span className={`w-1.5 h-1.5 rounded-full ${t.barColor} animate-pulse`} />
+                        <span>Autonomous Protocol</span>
+                      </span>
+                    </div> */}
+                  </div>
+
+                  {/* Title & Law Subtitle */}
+                  <div className="space-y-1">
+                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-light text-white tracking-tight leading-tight">
+                      {currentLaw.title}
+                    </h3>
+                    <div className={`text-xs font-mono tracking-widest uppercase font-medium ${t.accentText}`}>
+                      {currentLaw.law}
+                    </div>
+                  </div>
+
+                  {/* Body description */}
+                  <p className="text-sm sm:text-base text-zinc-200/90 font-light leading-relaxed">
+                    {currentLaw.summary}
+                  </p>
+
+                  {/* Bottom Metric & Specification Detail */}
+                  <div className="pt-5 mt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs sm:text-sm font-mono font-semibold tracking-wide ${t.metricColor}`}>
+                        ◆ {currentLaw.metric}
+                      </span>
+                    </div>
+                    <span className="text-xs font-mono text-zinc-400">
+                      {currentLaw.detail}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subtle Tilted Pagination Indicators */}
+              <div className="flex items-center justify-center gap-2.5 mt-6">
+                {V2_LAWS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSelectLaw(i)}
+                    aria-label={`Jump to feature ${i + 1}`}
+                    className={`h-1.5 -skew-x-6 sm:-skew-x-12 transition-all duration-300 ${
+                      i === activeLawIndex
+                        ? `w-8 ${t.barColor}`
+                        : "w-3 bg-zinc-800 hover:bg-zinc-600"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })()}
       </section>
 
       {/* ── 3. HIGHLIGHTED LISTINGS: Continuous Smooth Moving Carousel (Right to Left) ── */}
       <section id="highlights" className="relative z-20 w-full py-20 sm:py-28 overflow-hidden bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-950 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
               Curated Portfolio
             </div>
             <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white">
@@ -665,102 +871,97 @@ export default function MarketplacePage() {
             </p>
           </div>
 
-          {/* Category Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            {["All", "Ultra Long Range", "Super Mid-Size"].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  playSolidDockSound(1);
-                }}
-                className={`px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase transition-all ${
-                  activeCategory === cat
-                    ? "bg-white text-black font-bold shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                    : "bg-zinc-900 text-zinc-400 border border-zinc-800 hover:border-zinc-600 hover:text-white"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Category Filter Tabs & Navigation Arrow */}
+          <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              {["ALL", "ULTRA LONG RANGE", "SUPER MID-SIZE"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    playSolidDockSound(1);
+                  }}
+                  className={`px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase transition-all ${
+                    activeCategory === cat
+                      ? "bg-white text-black font-bold shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                      : "bg-zinc-900/90 text-zinc-400 border border-zinc-800/80 hover:border-zinc-600 hover:text-white"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Quick Explore / Next Arrow Button matching reference */}
+            <button
+              onClick={() => {
+                const el = document.getElementById("signup");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
+              aria-label="View All Listings"
+              className="w-8 h-8 rounded-full border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-all shadow-md ml-1"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* ── Continuous Moving Carousel Track (Right to Left) ── */}
         <div className="relative w-full overflow-hidden flex items-center group">
           {/* Subtle edge fade gradients */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-r from-black via-black/85 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 sm:w-36 bg-gradient-to-l from-black via-black/85 to-transparent z-10 pointer-events-none" />
 
           {/* Infinite Moving Marquee Line from Right to Left */}
           <div
-            className="flex items-center gap-6 sm:gap-8 w-max animate-marquee-rtl py-4 px-4 hover:[animation-play-state:paused]"
-            style={{ animationDuration: "55s" }}
+            className="flex items-center gap-5 sm:gap-7 w-max animate-marquee-rtl py-4 px-4 hover:[animation-play-state:paused]"
+            style={{ animationDuration: "50s" }}
           >
             {[...filteredListings, ...filteredListings, ...filteredListings].map((item, idx) => (
               <div
                 key={`listing-card-${item.id}-${idx}`}
-                className="relative w-[380px] sm:w-[460px] md:w-[500px] rounded-3xl border border-slate-400/40 p-6 sm:p-7 flex flex-col justify-between shrink-0 bg-[linear-gradient(135deg,#101318_0%,#1b2029_25%,#334155_50%,#cbd5e1_75%,#12151c_100%)] shadow-[0_25px_60px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(255,255,255,0.5)] transition-transform duration-300 hover:scale-[1.02] cursor-pointer"
+                onClick={() => {
+                  const el = document.getElementById("signup");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="group relative w-[260px] sm:w-[290px] md:w-[310px] h-[390px] sm:h-[430px] md:h-[460px] rounded-2xl sm:rounded-3xl overflow-hidden shrink-0 border border-white/10 hover:border-white/30 shadow-[0_20px_50px_rgba(0,0,0,0.85)] transition-all duration-500 hover:scale-[1.03] cursor-pointer select-none bg-[#0a0d14]"
               >
-                {/* Diagonal Specular Sheen */}
-                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.20)_0%,rgba(255,255,255,0.05)_25%,rgba(203,213,225,0.16)_48%,transparent_65%,rgba(255,255,255,0.10)_100%)] pointer-events-none" />
+                {/* 1. Full Frame Aircraft Photograph */}
+                <Image
+                  src={item.image}
+                  alt={item.model}
+                  fill
+                  sizes="(max-width: 768px) 290px, 320px"
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  unoptimized
+                />
 
-                <div className="relative z-10 space-y-4">
-                  {/* Top Header Badge & Status */}
-                  <div className="flex items-center justify-between">
-                    <div className="-skew-x-12 inline-flex items-center px-3.5 py-1 border border-zinc-700 bg-zinc-950 text-white shadow-sm">
-                      <span className="skew-x-12 text-[10px] font-mono font-bold tracking-widest uppercase">
-                        {item.featuredBadge}
-                      </span>
-                    </div>
-                    <span className="text-xs font-mono text-zinc-200">
-                      {item.status}
-                    </span>
-                  </div>
-
-                  {/* Jet Photograph (Significantly Enlarged) */}
-                  <div className="relative w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-zinc-900">
-                    <Image
-                      src={item.image}
-                      alt={item.model}
-                      fill
-                      sizes="(max-width: 768px) 380px, 500px"
-                      className="object-cover transition-transform duration-700 hover:scale-105"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                  </div>
-
-                  {/* Model & Year */}
-                  <div>
-                    <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
-                      {item.year} • {item.category}
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-white mt-0.5">
-                      {item.model}
-                    </h3>
-                  </div>
-
-                  {/* Asking Valuation Banner */}
-                  <div className="p-4 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
-                      Asking Valuation
-                    </span>
-                    <span className="text-xl sm:text-2xl font-mono font-bold text-white tracking-tight">
-                      {item.price}
-                    </span>
+                {/* 2. Top-Right Corner Featured Tag (Diagonal 45° Ribbon matching Image 2 reference) */}
+                <div className="absolute top-0 right-0 w-28 h-28 overflow-hidden pointer-events-none z-20">
+                  <div className="absolute transform rotate-45 bg-gradient-to-r from-[#e8c887] via-[#c8a97e] to-[#b38e55] text-zinc-950 font-black text-[10px] sm:text-[11px] py-1 right-[-32px] top-[18px] w-[125px] text-center tracking-[0.2em] uppercase shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
+                    FEATURED
                   </div>
                 </div>
 
-                {/* Inspect Action Button */}
-                <div className="relative z-10 pt-5 mt-4 border-t border-white/15">
-                  <ParallelogramButton
-                    href="#signup"
-                    variant="silver"
-                    className="w-full py-3.5 text-xs font-mono font-bold uppercase tracking-wider shadow-lg"
-                  >
-                    INSPECT TELEMETRY & BID
-                  </ParallelogramButton>
+                {/* 3. Bottom Overlay with Frosted Glass Blur Effect & Text within the Image */}
+                <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 flex flex-col justify-end bg-gradient-to-t from-black/95 via-black/75 to-transparent backdrop-blur-[8px] transition-all duration-300 group-hover:backdrop-blur-[12px]">
+                  {/* Aircraft Model Name */}
+                  <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white leading-snug drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                    {item.model}
+                  </h3>
+
+                  {/* Category & Asking Valuation Subtitle */}
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/10 text-[11px] font-mono">
+                    <span className="text-zinc-300 tracking-wider truncate mr-2">
+                      {item.year} • {item.category}
+                    </span>
+                    <span className="text-white font-bold shrink-0">
+                      {item.price}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}

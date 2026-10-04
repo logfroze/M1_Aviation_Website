@@ -27,8 +27,8 @@ const STEPS: AcquisitionStep[] = [
     deliverable: "Customized Airframe Feasibility Matrix",
     image: "/images/jet-evolution-1.png",
     x: 960, // Center Round Platform
-    y: 520, // Positioned so card (y:100, h:175) is 100% visible with plenty of breathing room
-    cardX: 720, // Center Card directly above
+    y: 520, // Positioned so card (y:80, h:220) is 100% visible with plenty of breathing room
+    cardX: 690, // Center Card directly above (width: 540 -> 960 - 270 = 690)
     cardSide: "center",
   },
   {
@@ -41,7 +41,7 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-2.png",
     x: 1620, // Spread outwards to the right edge
     y: 1100,
-    cardX: 70, // Card on Left (at same Y = 1100)
+    cardX: 50, // Card on Left (at same Y = 1100, width: 540)
     cardSide: "left",
   },
   {
@@ -54,7 +54,7 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-3.png",
     x: 300, // Spread outwards to the left edge
     y: 1680,
-    cardX: 1370, // Card on Right (at same Y = 1680)
+    cardX: 1330, // Card on Right (at same Y = 1680, width: 540 -> 1330 + 540 = 1870)
     cardSide: "right",
   },
   {
@@ -67,7 +67,7 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-4.png",
     x: 1620, // Spread outwards to the right edge
     y: 2260,
-    cardX: 70, // Card on Left (at same Y = 2260)
+    cardX: 50, // Card on Left (at same Y = 2260, width: 540)
     cardSide: "left",
   },
   {
@@ -80,7 +80,7 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-5.png",
     x: 300, // Spread outwards to the left edge
     y: 2840,
-    cardX: 1370, // Card on Right (at same Y = 2840)
+    cardX: 1330, // Card on Right (at same Y = 2840, width: 540)
     cardSide: "right",
   },
   {
@@ -93,7 +93,7 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-6.png",
     x: 1620, // Spread outwards to the right edge
     y: 3420,
-    cardX: 70, // Card on Left (at same Y = 3420)
+    cardX: 50, // Card on Left (at same Y = 3420, width: 540)
     cardSide: "left",
   },
   {
@@ -106,8 +106,110 @@ const STEPS: AcquisitionStep[] = [
     image: "/images/jet-evolution-7.png",
     x: 960, // Center Round Platform (Flagship Stage)
     y: 4000,
-    cardX: 720, // Centered directly BELOW platform
+    cardX: 690, // Centered directly BELOW platform (width: 540)
     cardSide: "center",
+  },
+];
+
+// ── Distinct Aerospace Color Signatures for Each of the 7 Acquisition Phases ──
+const PHASE_THEMES = [
+  {
+    // Phase 01: Electric Cyan
+    name: "Cyan",
+    activeBorder: "border-cyan-400",
+    activeBg: "bg-[linear-gradient(135deg,#061726_0%,#0c2e47_45%,#13476e_70%,#081e33_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(6,182,212,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(103,232,249,0.5)]",
+    activeDot: "bg-cyan-400 shadow-[0_0_12px_#22d3ee]",
+    accentText: "text-cyan-400",
+    tagBg: "bg-cyan-500/15 border-cyan-500/40 text-cyan-300",
+    deliverableColor: "text-cyan-200",
+    sheen: "rgba(34,211,238,0.25)",
+    inactiveBorder: "border-cyan-500/35 hover:border-cyan-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#040e17_0%,#091c2c_60%,#0f2e47_100%)]",
+  },
+  {
+    // Phase 02: Royal Violet / Purple
+    name: "Purple",
+    activeBorder: "border-purple-400",
+    activeBg: "bg-[linear-gradient(135deg,#19092c_0%,#2e124d_45%,#471b75_70%,#1c0b32_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(168,85,247,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(216,180,254,0.5)]",
+    activeDot: "bg-purple-400 shadow-[0_0_12px_#c084fc]",
+    accentText: "text-purple-400",
+    tagBg: "bg-purple-500/15 border-purple-500/40 text-purple-300",
+    deliverableColor: "text-purple-200",
+    sheen: "rgba(192,132,252,0.25)",
+    inactiveBorder: "border-purple-500/35 hover:border-purple-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#0f051c_0%,#1e0c33_60%,#2d124d_100%)]",
+  },
+  {
+    // Phase 03: Ice Sky Blue
+    name: "Sky",
+    activeBorder: "border-sky-400",
+    activeBg: "bg-[linear-gradient(135deg,#081d33_0%,#0e3559_45%,#164f82_70%,#0a243e_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(56,189,248,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(186,230,253,0.5)]",
+    activeDot: "bg-sky-400 shadow-[0_0_12px_#38bdf8]",
+    accentText: "text-sky-400",
+    tagBg: "bg-sky-500/15 border-sky-500/40 text-sky-300",
+    deliverableColor: "text-sky-200",
+    sheen: "rgba(56,189,248,0.25)",
+    inactiveBorder: "border-sky-500/35 hover:border-sky-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#05111e_0%,#0b233a_60%,#123759_100%)]",
+  },
+  {
+    // Phase 04: Tactical Emerald Mint
+    name: "Emerald",
+    activeBorder: "border-emerald-400",
+    activeBg: "bg-[linear-gradient(135deg,#051a14_0%,#0c3325_45%,#144e39_70%,#07241b_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(16,185,129,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(110,231,183,0.5)]",
+    activeDot: "bg-emerald-400 shadow-[0_0_12px_#34d399]",
+    accentText: "text-emerald-400",
+    tagBg: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300",
+    deliverableColor: "text-emerald-200",
+    sheen: "rgba(52,211,153,0.25)",
+    inactiveBorder: "border-emerald-500/35 hover:border-emerald-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#03110d_0%,#072219_60%,#0d3627_100%)]",
+  },
+  {
+    // Phase 05: Sovereign Amber Gold
+    name: "Amber",
+    activeBorder: "border-amber-400",
+    activeBg: "bg-[linear-gradient(135deg,#241606_0%,#3d270c_45%,#5c3a12_70%,#271806_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(245,158,11,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(252,211,77,0.5)]",
+    activeDot: "bg-amber-400 shadow-[0_0_12px_#fbbf24]",
+    accentText: "text-amber-400",
+    tagBg: "bg-amber-500/15 border-amber-500/40 text-amber-300",
+    deliverableColor: "text-amber-200",
+    sheen: "rgba(251,191,36,0.25)",
+    inactiveBorder: "border-amber-500/35 hover:border-amber-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#140d04_0%,#261909_60%,#3b260d_100%)]",
+  },
+  {
+    // Phase 06: Neon Rose / Magenta
+    name: "Rose",
+    activeBorder: "border-rose-400",
+    activeBg: "bg-[linear-gradient(135deg,#240817_0%,#40102b_45%,#611842_70%,#29091b_100%)]",
+    activeShadow: "shadow-[0_0_40px_rgba(244,63,94,0.35),0_20px_50px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(253,164,175,0.5)]",
+    activeDot: "bg-rose-400 shadow-[0_0_12px_#fb7185]",
+    accentText: "text-rose-400",
+    tagBg: "bg-rose-500/15 border-rose-500/40 text-rose-300",
+    deliverableColor: "text-rose-200",
+    sheen: "rgba(251,113,133,0.25)",
+    inactiveBorder: "border-rose-500/35 hover:border-rose-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#14050d_0%,#260a1a_60%,#3d1029_100%)]",
+  },
+  {
+    // Phase 07: Specular Platinum Silver
+    name: "Silver",
+    activeBorder: "border-white",
+    activeBg: "bg-[linear-gradient(135deg,#171d26_0%,#283241_45%,#425066_70%,#1b222d_100%)]",
+    activeShadow: "shadow-[0_0_45px_rgba(255,255,255,0.4),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(255,255,255,0.6)]",
+    activeDot: "bg-white shadow-[0_0_14px_#ffffff]",
+    accentText: "text-white",
+    tagBg: "bg-white/15 border-white/40 text-white",
+    deliverableColor: "text-white",
+    sheen: "rgba(255,255,255,0.25)",
+    inactiveBorder: "border-slate-500/35 hover:border-slate-400/60",
+    inactiveBg: "bg-[linear-gradient(135deg,#0d1015_0%,#191e26_60%,#262d3a_100%)]",
   },
 ];
 
@@ -549,7 +651,7 @@ export default function AcquisitionFlightRoadmap() {
           {(() => {
             const isActive = activeStepIndex === 0;
             const p1 = STEPS[0];
-            const cardBottom = 100 + 175; // card y=100, height=175 -> 275
+            const cardBottom = 80 + 220; // card y=80, height=220 -> 300
             const platformTop = p1.y - 78; // reduced platform top rim -> 442
 
             return (
@@ -579,7 +681,7 @@ export default function AcquisitionFlightRoadmap() {
             const actualIdx = idx + 1;
             const isActive = activeStepIndex === actualIdx;
             const platformSize = 280;
-            const cardWidth = 480;
+            const cardWidth = 540;
 
             let lineX1 = 0;
             let lineX2 = 0;
@@ -784,13 +886,14 @@ export default function AcquisitionFlightRoadmap() {
             );
           })}
 
-          {/* ── PHASE 01 DETAILS CARD (Positioned Fully Visible at y=100 with Depth Blur) ── */}
+          {/* ── PHASE 01 DETAILS CARD (Positioned Fully Visible at y=80 with Depth Blur) ── */}
           {(() => {
             const p1 = STEPS[0];
+            const theme = PHASE_THEMES[0];
             const isActive = activeStepIndex === 0;
-            const cardWidth = 480;
-            const cardHeight = 175;
-            const cardTop = 100;
+            const cardWidth = 540;
+            const cardHeight = 220;
+            const cardTop = 80;
 
             return (
               <foreignObject
@@ -804,44 +907,77 @@ export default function AcquisitionFlightRoadmap() {
               >
                 <div
                   onClick={() => jumpToStep(0)}
-                  className={`relative w-full h-full rounded-2xl border p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden ${
+                  className={`relative w-full h-full rounded-2xl border p-6 sm:p-7 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isActive
-                      ? "border-white bg-[linear-gradient(135deg,#101318_0%,#1f2530_45%,#3a4659_70%,#13171e_100%)] shadow-[0_0_35px_rgba(255,255,255,0.25),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(255,255,255,0.45)] scale-[1.02]"
-                      : "border-slate-700/60 bg-zinc-950/85 hover:border-white/50 shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100"
+                      ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
+                      : `${theme.inactiveBorder} ${theme.inactiveBg} shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100 hover:scale-[1.01]`
                   }`}
                 >
+                  {/* Subtle Top Aerospace Color Glow Line */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[2px] transition-all duration-300 pointer-events-none"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${theme.sheen}, transparent)`
+                    }}
+                  />
+
                   {/* Specular Sheen */}
                   {isActive && (
-                    <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(125deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.04)_30%,transparent_60%)] pointer-events-none" />
+                    <div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        background: `linear-gradient(125deg, ${theme.sheen} 0%, rgba(255,255,255,0.03) 35%, transparent 65%)`
+                      }}
+                    />
                   )}
 
                   {/* Top Row: Phase & Altitude */}
                   <div className="relative z-10 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-white shadow-[0_0_8px_#ffffff]" : "bg-slate-400"}`} />
-                      <span className={`font-mono text-xs font-bold tracking-[0.2em] uppercase ${isActive ? "text-white" : "text-zinc-400"}`}>
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                          isActive ? theme.activeDot : "bg-zinc-500"
+                        }`}
+                      />
+                      <span
+                        className={`px-2.5 py-0.5 rounded-md font-mono text-xs font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
+                          isActive
+                            ? `${theme.tagBg} shadow-sm`
+                            : "bg-zinc-900/80 border-zinc-700/60 text-zinc-400"
+                        }`}
+                      >
                         PHASE 01
                       </span>
                     </div>
-                    <span className="font-mono text-xs font-semibold text-zinc-400">
+                    <span className="font-mono text-xs sm:text-sm font-semibold text-zinc-400">
                       {p1.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className="relative z-10 space-y-1 my-auto">
-                    <h3 className={`text-xl font-light tracking-tight transition-colors line-clamp-1 ${isActive ? "text-white font-normal" : "text-zinc-200"}`}>
+                  <div className="relative z-10 space-y-1.5 my-auto">
+                    <h3
+                      className={`text-xl sm:text-2xl font-light tracking-tight transition-colors line-clamp-1 ${
+                        isActive ? "text-white font-normal" : "text-zinc-200"
+                      }`}
+                    >
                       {p1.title}
                     </h3>
-                    <p className="text-xs text-zinc-300 font-light leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed line-clamp-2">
                       {p1.description}
                     </p>
                   </div>
 
                   {/* Deliverable Footer */}
-                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs sm:text-sm font-mono text-zinc-400">
                     <span>Deliverable:</span>
-                    <span className="text-white font-semibold truncate max-w-[280px]">
+                    <span
+                      className={`font-semibold truncate max-w-[340px] px-2 py-0.5 rounded border transition-colors ${
+                        isActive
+                          ? `${theme.deliverableColor} ${theme.tagBg}`
+                          : "text-zinc-300 border-transparent"
+                      }`}
+                    >
                       {p1.deliverable}
                     </span>
                   </div>
@@ -853,10 +989,11 @@ export default function AcquisitionFlightRoadmap() {
           {/* ── MINIMALIST OPPOSITE-SIDE DETAILS CARDS (Phases 02 to 06 with Depth Blur) ── */}
           {STEPS.slice(1, 6).map((step, idx) => {
             const actualIdx = idx + 1;
+            const theme = PHASE_THEMES[actualIdx];
             const isCurrentActive = activeStepIndex === actualIdx;
             const isPast = activeStepIndex > actualIdx;
-            const cardWidth = 480;
-            const cardHeight = 190;
+            const cardWidth = 540;
+            const cardHeight = 220;
             const cardTop = step.y - cardHeight / 2;
 
             return (
@@ -871,63 +1008,84 @@ export default function AcquisitionFlightRoadmap() {
               >
                 <div
                   onClick={() => jumpToStep(actualIdx)}
-                  className={`relative w-full h-full rounded-2xl border p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden ${
+                  className={`relative w-full h-full rounded-2xl border p-6 sm:p-7 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isCurrentActive
-                      ? "border-white bg-[linear-gradient(135deg,#101318_0%,#1f2530_45%,#3a4659_70%,#13171e_100%)] shadow-[0_0_35px_rgba(255,255,255,0.25),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(255,255,255,0.45)] scale-[1.02]"
+                      ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
                       : isPast
-                      ? "border-slate-700/60 bg-zinc-950/85 hover:border-white/50 hover:bg-zinc-900/90 shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100"
-                      : "border-zinc-800 bg-zinc-950/70 hover:border-zinc-500 hover:bg-zinc-900/80 shadow-[0_10px_25px_rgba(0,0,0,0.7)] opacity-70 hover:opacity-100"
+                      ? `${theme.inactiveBorder} ${theme.inactiveBg} shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100 hover:scale-[1.01]`
+                      : `${theme.inactiveBorder} ${theme.inactiveBg} shadow-[0_10px_25px_rgba(0,0,0,0.7)] opacity-75 hover:opacity-100 hover:scale-[1.01]`
                   }`}
                 >
+                  {/* Subtle Top Aerospace Color Glow Line */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[2px] transition-all duration-300 pointer-events-none"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${theme.sheen}, transparent)`
+                    }}
+                  />
+
                   {/* Diagonal Specular Sheen for Active Phase */}
                   {isCurrentActive && (
-                    <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(125deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.04)_30%,transparent_60%)] pointer-events-none" />
+                    <div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        background: `linear-gradient(125deg, ${theme.sheen} 0%, rgba(255,255,255,0.03) 35%, transparent 65%)`
+                      }}
+                    />
                   )}
 
                   {/* Top Row: Phase & Altitude */}
                   <div className="relative z-10 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <span
-                        className={`w-2 h-2 rounded-full ${
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                           isCurrentActive
-                            ? "bg-white shadow-[0_0_8px_#ffffff]"
+                            ? theme.activeDot
                             : isPast
                             ? "bg-slate-400"
                             : "bg-zinc-600"
                         }`}
                       />
                       <span
-                        className={`font-mono text-xs font-bold tracking-[0.2em] uppercase ${
-                          isCurrentActive ? "text-white" : "text-zinc-400"
+                        className={`px-2.5 py-0.5 rounded-md font-mono text-xs font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
+                          isCurrentActive
+                            ? `${theme.tagBg} shadow-sm`
+                            : "bg-zinc-900/80 border-zinc-700/60 text-zinc-400"
                         }`}
                       >
                         PHASE {step.step}
                       </span>
                     </div>
 
-                    <span className="font-mono text-xs font-semibold text-zinc-400">
+                    <span className="font-mono text-xs sm:text-sm font-semibold text-zinc-400">
                       {step.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className="relative z-10 space-y-1 my-auto">
+                  <div className="relative z-10 space-y-1.5 my-auto">
                     <h3
-                      className={`text-xl font-light tracking-tight transition-colors line-clamp-1 ${
+                      className={`text-xl sm:text-2xl font-light tracking-tight transition-colors line-clamp-1 ${
                         isCurrentActive ? "text-white font-normal" : "text-zinc-200"
                       }`}
                     >
                       {step.title}
                     </h3>
-                    <p className="text-xs text-zinc-300 font-light leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed line-clamp-2">
                       {step.description}
                     </p>
                   </div>
 
                   {/* Minimalist Deliverable Footer */}
-                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs sm:text-sm font-mono text-zinc-400">
                     <span>Deliverable:</span>
-                    <span className="text-white font-semibold truncate max-w-[280px]">
+                    <span
+                      className={`font-semibold truncate max-w-[340px] px-2 py-0.5 rounded border transition-colors ${
+                        isCurrentActive
+                          ? `${theme.deliverableColor} ${theme.tagBg}`
+                          : "text-zinc-300 border-transparent"
+                      }`}
+                    >
                       {step.deliverable}
                     </span>
                   </div>
@@ -939,9 +1097,10 @@ export default function AcquisitionFlightRoadmap() {
           {/* ── PHASE 07 DETAILS CARD (Positioned Directly Below Platform 07 with Depth Blur) ── */}
           {(() => {
             const p7 = STEPS[6];
+            const theme = PHASE_THEMES[6];
             const isActive = activeStepIndex === 6;
-            const cardWidth = 480;
-            const cardHeight = 190;
+            const cardWidth = 540;
+            const cardHeight = 220;
             const cardTop = p7.y + 200; // Positioned directly below platform 07
 
             return (
@@ -956,44 +1115,77 @@ export default function AcquisitionFlightRoadmap() {
               >
                 <div
                   onClick={() => jumpToStep(6)}
-                  className={`relative w-full h-full rounded-2xl border p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden ${
+                  className={`relative w-full h-full rounded-2xl border p-6 sm:p-7 flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isActive
-                      ? "border-white bg-[linear-gradient(135deg,#101318_0%,#1f2530_45%,#3a4659_70%,#13171e_100%)] shadow-[0_0_35px_rgba(255,255,255,0.25),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(255,255,255,0.45)] scale-[1.02]"
-                      : "border-slate-700/60 bg-zinc-950/85 hover:border-white/50 hover:bg-zinc-900/90 shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100"
+                      ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
+                      : `${theme.inactiveBorder} ${theme.inactiveBg} shadow-[0_15px_35px_rgba(0,0,0,0.85)] opacity-85 hover:opacity-100 hover:scale-[1.01]`
                   }`}
                 >
+                  {/* Subtle Top Aerospace Color Glow Line */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[2px] transition-all duration-300 pointer-events-none"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${theme.sheen}, transparent)`
+                    }}
+                  />
+
                   {/* Diagonal Specular Sheen */}
                   {isActive && (
-                    <div className="absolute inset-0 rounded-2xl bg-[linear-gradient(125deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.04)_30%,transparent_60%)] pointer-events-none" />
+                    <div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        background: `linear-gradient(125deg, ${theme.sheen} 0%, rgba(255,255,255,0.03) 35%, transparent 65%)`
+                      }}
+                    />
                   )}
 
                   {/* Top Row: Phase & Altitude */}
                   <div className="relative z-10 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${isActive ? "bg-white shadow-[0_0_8px_#ffffff]" : "bg-slate-400"}`} />
-                      <span className={`font-mono text-xs font-bold tracking-[0.2em] uppercase ${isActive ? "text-white" : "text-zinc-400"}`}>
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                          isActive ? theme.activeDot : "bg-slate-400"
+                        }`}
+                      />
+                      <span
+                        className={`px-2.5 py-0.5 rounded-md font-mono text-xs font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
+                          isActive
+                            ? `${theme.tagBg} shadow-sm`
+                            : "bg-zinc-900/80 border-zinc-700/60 text-zinc-400"
+                        }`}
+                      >
                         PHASE 07
                       </span>
                     </div>
-                    <span className="font-mono text-xs font-semibold text-zinc-400">
+                    <span className="font-mono text-xs sm:text-sm font-semibold text-zinc-400">
                       {p7.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className="relative z-10 space-y-1 my-auto">
-                    <h3 className={`text-xl font-light tracking-tight transition-colors line-clamp-1 ${isActive ? "text-white font-normal" : "text-zinc-200"}`}>
+                  <div className="relative z-10 space-y-1.5 my-auto">
+                    <h3
+                      className={`text-xl sm:text-2xl font-light tracking-tight transition-colors line-clamp-1 ${
+                        isActive ? "text-white font-normal" : "text-zinc-200"
+                      }`}
+                    >
                       {p7.title}
                     </h3>
-                    <p className="text-xs text-zinc-300 font-light leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed line-clamp-2">
                       {p7.description}
                     </p>
                   </div>
 
                   {/* Deliverable Footer */}
-                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-xs sm:text-sm font-mono text-zinc-400">
                     <span>Deliverable:</span>
-                    <span className="text-white font-semibold truncate max-w-[280px]">
+                    <span
+                      className={`font-semibold truncate max-w-[340px] px-2 py-0.5 rounded border transition-colors ${
+                        isActive
+                          ? `${theme.deliverableColor} ${theme.tagBg}`
+                          : "text-zinc-300 border-transparent"
+                      }`}
+                    >
                       {p7.deliverable}
                     </span>
                   </div>

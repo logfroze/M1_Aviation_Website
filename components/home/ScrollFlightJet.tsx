@@ -90,16 +90,14 @@ export default function ScrollFlightJet() {
       const progressRaw = scrolled / flightDistance;
       const progress = Math.max(0, progressRaw);
 
-      // Active when flight starts, and stays active throughout the entire Vision section
-      const isActive = progress > 0.01 && visionRect.bottom > vh * 0.1;
-
-      if (!isActive) {
-        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0 } : prev));
-        return;
-      }
-
       // Flight progress (0 to 1 for the transition from Ecosystem to Vision)
       const flightP = Math.min(1, progress);
+
+      // ── Road Journey Scroll (Inside Vision Timeline) ──
+      // Tracks how far user has scrolled into Vision Timeline
+      const visionScrollable = visionRect.height - vh;
+      const roadScrolled = Math.max(0, landingThreshold - visionRect.top);
+      const roadProgress = visionScrollable > 0 ? Math.min(1, roadScrolled / visionScrollable) : 0;
 
       // =========================================================================
       // ✈️ 1. LANDING PLANE SIZE CONFIGURATION:
@@ -154,14 +152,20 @@ export default function ScrollFlightJet() {
       }
 
       // =========================================================================
-      // 📍 2. LANDING & FIXED STRING CONFIGURATION:
-      // - FIXED_STRING_LENGTH: Exact taut length of the towing cable (stays strictly constant)
-      // - landingX, landingY: Landing position aligned with road tow anchor
+      // 📍 2. LANDING & TOW STRING CONFIGURATION:
+      // - BASE_STRING_LENGTH: Exact taut length of the towing cable on touchdown (110px)
+      // - MAX_TOW_STRETCH: Small, subtle strain stretch under load when user begins scrolling (18px)
+      // - After stretching by this slight amount, length stays 100% intact and never stretches further!
       // =========================================================================
-      const FIXED_STRING_LENGTH = 110;
-      const landingX = hasValidAnchor ? (roadHookX - FIXED_STRING_LENGTH) - jetW * 0.16 : 500;
+      const BASE_STRING_LENGTH = 110;
+      const MAX_TOW_STRETCH = 18; // Stretch just a little bit (+18px max) under tow tension
+      const initialStrainProgress = Math.min(1, roadProgress / 0.035);
+      const currentStretch = initialStrainProgress * MAX_TOW_STRETCH;
+      const currentStringLength = BASE_STRING_LENGTH + currentStretch;
+
+      const landingX = hasValidAnchor ? (roadHookX - BASE_STRING_LENGTH) - jetW * 0.16 : 420;
       // Vertically aligns plane's tow hook (curY + jetH * 0.08) exactly with the road anchor (roadHookY)
-      const targetLevelY = hasValidAnchor ? roadHookY - jetH * 0.08 : vh * 0.42;
+      const targetLevelY = hasValidAnchor ? roadHookY - jetH * 0.08 : vh * 0.40;
       const landingY = targetLevelY;
 
       // Starting coordinate (center of Ecosystem platform jet in viewport)
@@ -180,30 +184,40 @@ export default function ScrollFlightJet() {
       const flightY = startY + (landingY - startY) * easeT;
 
       // ── Road Journey Scroll (Inside Vision Timeline) ──
-      // Once landed, the plane is physically hitched to the road anchor by the fixed-length cable.
-      // As the road moves to the left with scroll, the plane travels in absolute lockstep with
-      // the road anchor (#road-tow-anchor), ensuring the string stays at a fixed length and NEVER stretches.
+      // Once landed, plane is hitched to the road anchor at currentStringLength.
+      // As road anchor moves left with scroll, the plane travels in absolute lockstep with it,
+      // keeping the string completely intact at its fixed taut length without stretching further!
       const curX = flightP >= 1
-        ? (hasValidAnchor ? (roadHookX - FIXED_STRING_LENGTH) - jetW * 0.16 : landingX)
+        ? (hasValidAnchor ? (roadHookX - currentStringLength) - jetW * 0.16 : landingX)
         : flightX;
       const curY = flightP >= 1 ? targetLevelY : flightY;
+
+      const planeRightEdge = curX + jetW * 0.5;
+      // Plane is in frame as long as any part of it is within the viewport (including tail)
+      const isPlaneInFrame = planeRightEdge > -20;
+
+      // Only deactivate once plane has physically departed completely past the left screen edge
+      // and user has advanced past the initial towing entry (roadProgress > 0.28)
+      const isDeparted = flightP >= 1.0 && planeRightEdge < -40 && roadProgress > 0.25;
+      const isActive = progress > 0.01 && visionRect.bottom > vh * 0.1 && !isDeparted;
+
+      if (!isActive) {
+        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0, ropeVisible: false } : prev));
+        return;
+      }
 
       // ── Tow Rope Hook Coordinates ──
       const jetHookX = curX + jetW * 0.16;
       const jetHookY = curY + jetH * 0.08;
 
       // ── Animated Tow Rope Unwrap & Attachment ──
-      // String attaches ONLY once plane has landed at Step 01 (flightP >= 0.98),
-      // locks strictly to the real road anchor point without drifting,
-      // and stays consistently attached at a fixed length until the plane exits the frame
+      // String attaches upon touchdown (flightP >= 0.98), stays intact and connected
+      // as long as the plane is towing and hasn't completely exited past the left frame
       let ropeVisible = false;
       let ropeProgress = 0;
       let ropePath = "";
 
-      const planeRightEdge = curX + jetW * 0.5;
-      const isPlaneInFrame = planeRightEdge > -60;
-
-      if (flightP >= 0.98 && isPlaneInFrame && hasValidAnchor) {
+      if (flightP >= 0.98 && hasValidAnchor && !isDeparted) {
         ropeVisible = true;
         if (flightP < 1.0) {
           // Snappy smooth unwrap right on touchdown (0.98 -> 1.0)
@@ -216,7 +230,7 @@ export default function ScrollFlightJet() {
         const targetY = jetHookY + (roadHookY - jetHookY) * ropeProgress;
 
         // When pulling under tension, cable straightens taut
-        const sag = Math.max(0, 14 * (1 - ropeProgress));
+        const sag = Math.max(0, 14 * (1 - ropeProgress) - initialStrainProgress * 30);
         const midX = (jetHookX + targetX) / 2;
         const midY = (jetHookY + targetY) / 2 + sag;
 
@@ -235,17 +249,17 @@ export default function ScrollFlightJet() {
       // Opacity:
       // 1. Fades in on takeoff
       // 2. Full opacity (1.0) when landed at Step 01
-      // 3. Stays 100% visible (NO premature fading!) as it pulls the road to the left
-      // 4. Only disappears once it has actually moved outside the left frame
+      // 3. Stays 100% visible while any part of plane is inside the frame
+      // 4. Only fades out when the tail physically passes behind the left screen bezel
       let opacity = 1;
       if (flightP < 0.06) {
         opacity = flightP / 0.06;
       } else if (flightP >= 1.0) {
         if (planeRightEdge < 0) {
-          // Has crossed past the left screen edge
-          opacity = Math.max(0, 1 + planeRightEdge / 120);
+          // Smooth fade-out only as the tail physically passes behind the left screen bezel
+          opacity = Math.max(0, 1 + planeRightEdge / 40);
         } else {
-          // Solid 100% visible while towing on screen!
+          // Solid 100% visible while inside the frame!
           opacity = 1;
         }
       } else {

@@ -14,6 +14,8 @@ interface EcosystemNode {
   jetY: number;
   pathD: string;
   metric: string;
+  status: string;
+  details: { label: string; value: string }[];
 }
 
 // 4 Corner Nodes only (Requirement 4: 1st top-left, 2nd top-right, 3rd lower-right, 4th lower-left)
@@ -29,6 +31,12 @@ const NODES: EcosystemNode[] = [
     jetY: 340,
     pathD: "M 160 105 C 270 105 340 220 420 340",
     metric: "5,000+ Verified Airframes",
+    status: "ONLINE // VERIFIED",
+    details: [
+      { label: "Airframe Index", value: "Curated Global Fleet" },
+      { label: "Airworthiness", value: "Cryptographic Audit" },
+      { label: "Settlement", value: "Instant Escrow Telemetry" },
+    ],
   },
   {
     id: "operators",
@@ -41,30 +49,48 @@ const NODES: EcosystemNode[] = [
     jetY: 260,
     pathD: "M 1045 105 C 930 105 850 180 780 260",
     metric: "340+ Flight Operations",
+    status: "DISPATCH READY",
+    details: [
+      { label: "Active Network", value: "340+ Flight Operations" },
+      { label: "Fleet Intelligence", value: "Autonomous SAIOS" },
+      { label: "Dispatch Response", value: "< 4 Min SLA" },
+    ],
   },
   {
     id: "parts",
     number: "03",
     title: "PARTS",
-    subtitle: "Spare Parts & Supply Chain",
+    subtitle: "Spare Parts & Global Supply Chain",
     labelX: 1045,
     labelY: 550,
     jetX: 830,
     jetY: 450,
     pathD: "M 1045 550 C 960 550 900 490 830 450",
     metric: "Instant OEM Escrow",
+    status: "SUPPLY ONLINE",
+    details: [
+      { label: "Catalog Index", value: "140K+ Certified Parts" },
+      { label: "AOG Priority", value: "24/7 Rapid Response" },
+      { label: "Procurement", value: "Zero-Latency Settlement" },
+    ],
   },
   {
     id: "maintenance",
     number: "04",
     title: "MAINTENANCE",
-    subtitle: "MRO & Service Network",
+    subtitle: "MRO & Certified Repair Network",
     labelX: 160,
     labelY: 550,
     jetX: 500,
     jetY: 420,
     pathD: "M 160 550 C 270 550 380 470 500 420",
     metric: "12 Certified Repair Hubs",
+    status: "HUBS CONNECTED",
+    details: [
+      { label: "Facility Network", value: "12 Certified Hubs" },
+      { label: "Standard", value: "FAA & EASA Approved" },
+      { label: "Turnaround Time", value: "+42% Efficiency" },
+    ],
   },
 ];
 
@@ -288,24 +314,27 @@ export default function OneLiner() {
           />
         </div>
 
-        {/* 4 Corner Point Boxes (Details show on manual hover only) */}
+        {/* 4 Corner Point Boxes with Hover Popups (Box does not extend, popup appears above/below) */}
         {NODES.map((n) => {
           const isActive = activeNode === n.id;
           const isRight = n.labelX > 600;
+          const isBottom = n.labelY > 300;
+
           return (
             <div
               key={n.id}
               onMouseEnter={() => setActiveNode(n.id)}
               onMouseLeave={() => setActiveNode(null)}
-              className="absolute z-30 cursor-pointer transition-all duration-300 pointer-events-auto"
+              className="absolute z-30 cursor-pointer pointer-events-auto select-none"
               style={{
                 left: `${(n.labelX / 1200) * 100}%`,
                 top: `${(n.labelY / 680) * 100}%`,
                 transform: isRight ? "translate(0%, -50%)" : "translate(-100%, -50%)",
               }}
             >
+              {/* Compact Fixed-Width Sleek Aerospace Button (Never extends on hover!) */}
               <div
-                className="relative flex items-center gap-3.5 px-6 py-3.5 border transition-all duration-300 group"
+                className="relative flex items-center gap-3 px-5 py-3 border transition-all duration-300 group shadow-lg"
                 style={{
                   clipPath: "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
                   background: isActive
@@ -315,13 +344,13 @@ export default function OneLiner() {
                   boxShadow: isActive
                     ? "0 0 28px rgba(255, 255, 255, 0.35), 0 0 12px rgba(186, 230, 253, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)"
                     : "0 6px 20px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15)",
-                  transform: isActive ? "scale(1.06)" : "scale(1)",
+                  transform: isActive ? "scale(1.05)" : "scale(1)",
                   backdropFilter: "blur(14px)",
                 }}
               >
                 {/* Number */}
                 <span
-                  className="text-[13px] font-mono font-bold tracking-[0.25em] shrink-0 transition-colors"
+                  className="text-[12px] font-mono font-bold tracking-[0.25em] shrink-0 transition-colors"
                   style={{ color: isActive ? "#ffffff" : "#cbd5e1" }}
                 >
                   {n.number}
@@ -329,13 +358,13 @@ export default function OneLiner() {
 
                 {/* Divider */}
                 <span
-                  className="w-[1.5px] h-4.5 shrink-0 transition-colors"
+                  className="w-[1.5px] h-4 shrink-0 transition-colors"
                   style={{ background: isActive ? "rgba(255, 255, 255, 0.9)" : "rgba(148, 163, 184, 0.4)" }}
                 />
 
                 {/* Title */}
                 <span
-                  className="text-[17px] font-mono font-black tracking-[0.16em] whitespace-nowrap transition-colors"
+                  className="text-[15px] font-mono font-black tracking-[0.16em] whitespace-nowrap transition-colors"
                   style={{
                     color: isActive ? "#ffffff" : "#f1f5f9",
                     textShadow: isActive ? "0 0 14px rgba(255, 255, 255, 0.7)" : "0 1px 2px rgba(0, 0, 0, 0.8)",
@@ -344,20 +373,65 @@ export default function OneLiner() {
                   {n.title}
                 </span>
 
-                {/* Details shown ONLY when user manually hovers over the box */}
-                {isActive && (
-                  <span className="text-[12px] font-mono tracking-wider text-cyan-200 font-semibold whitespace-nowrap pl-2.5 border-l border-slate-500/80 ml-1 animate-in fade-in duration-200">
-                    {n.metric}
-                  </span>
-                )}
+                {/* Subtle Live Beacon Indicator */}
+                <span
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ml-1 ${
+                    isActive
+                      ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8] scale-125"
+                      : "bg-slate-500/60"
+                  }`}
+                />
               </div>
+
+              {/* Minimalist Professional Hover Card (1st & 2nd show downwards, 3rd & 4th show upwards) */}
+              {isActive && (() => {
+                const isTopRow = n.number === "01" || n.number === "02";
+                return (
+                  <div
+                    className={`absolute z-50 w-[340px] sm:w-[380px] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95 ${
+                      isTopRow ? "top-[calc(100%+12px)]" : "bottom-[calc(100%+12px)]"
+                    } ${isRight ? "left-0 sm:left-2" : "right-0 sm:right-2"}`}
+                  >
+                    <div className="relative p-4 sm:p-5 rounded-xl border border-zinc-700/70 bg-[#0c1017]/95 backdrop-blur-md shadow-2xl text-left space-y-2.5">
+                      {/* Directional Connector Arrow */}
+                      <div
+                        className={`absolute w-2.5 h-2.5 bg-[#0c1017] rotate-45 ${
+                          isTopRow
+                            ? `-top-1.5 border-t border-l border-zinc-700/70 ${isRight ? "left-10" : "right-10"}`
+                            : `-bottom-1.5 border-b border-r border-zinc-700/70 ${isRight ? "left-10" : "right-10"}`
+                        }`}
+                      />
+
+                      {/* Clean Header: Node & Status */}
+                      <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+                        <span className="text-xs font-mono font-semibold tracking-wider text-zinc-200 uppercase">
+                          {n.number} // {n.title}
+                        </span>
+                        <span className="text-[11px] font-mono text-zinc-400">
+                          {n.status}
+                        </span>
+                      </div>
+
+                      {/* Content: Metric & Subtitle */}
+                      <div className="space-y-1">
+                        <div className="text-base font-mono font-medium text-white tracking-tight">
+                          {n.metric}
+                        </div>
+                        <p className="text-xs text-zinc-400 font-light leading-relaxed">
+                          {n.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           );
         })}
       </div>
 
       {/* 4. Mobile Layout (First 4 cards) */}
-      <div className="lg:hidden relative max-w-xl mx-auto px-4 z-20 space-y-6">
+      <div className="lg:hidden relative max-w-xl mx-auto px-4 z-20 space-y-4">
         <div className="relative w-full max-w-md mx-auto aspect-[16/10] flex items-center justify-center">
           <div className="absolute inset-x-8 bottom-4 h-20 rounded-full bg-slate-400/10 blur-2xl pointer-events-none" />
           <Image
@@ -391,13 +465,32 @@ export default function OneLiner() {
                   <span className="w-px h-3 bg-slate-600 shrink-0" />
                   <span className="text-[13px] font-mono font-black text-white tracking-wider">{n.title}</span>
                 </div>
-                {isActive && (
-                  <span className="text-[10px] font-mono text-cyan-200 font-semibold">{n.metric}</span>
-                )}
               </div>
             );
           })}
         </div>
+
+        {/* Mobile Minimalist Card */}
+        {activeNode && (() => {
+          const n = NODES.find((item) => item.id === activeNode);
+          if (!n) return null;
+          return (
+            <div className="p-4 rounded-xl border border-zinc-700/70 bg-[#0c1017]/95 backdrop-blur-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-left space-y-2">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+                <span className="text-xs font-mono font-semibold tracking-wider text-zinc-200 uppercase">
+                  {n.number} // {n.title}
+                </span>
+                <span className="text-[11px] font-mono text-zinc-400">
+                  {n.status}
+                </span>
+              </div>
+              <div className="space-y-0.5">
+                <div className="text-sm font-medium text-white">{n.metric}</div>
+                <p className="text-xs text-zinc-400 font-light">{n.subtitle}</p>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </section>
   );
