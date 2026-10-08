@@ -8,10 +8,12 @@ import { ContactFormData } from "@/types";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState<ContactFormData>({
-    phone: "",
-    email: "",
     fullName: "",
-    reason: "partnership",
+    position: "",
+    email: "",
+    phone: "",
+    whatsappSignal: "",
+    objective: "M1 Marketplace Acquisition",
     description: "",
   });
 
@@ -21,7 +23,7 @@ export default function ContactSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.fullName) {
-      setErrorMessage("Please provide your name and a valid email address.");
+      setErrorMessage("Please provide your full name and a valid email address.");
       return;
     }
 
@@ -48,12 +50,6 @@ export default function ContactSection() {
       </div>
 
       <div className="text-center mb-6 relative z-10">
-        {/* <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-400">
-            Direct Flight Dispatch Protocol
-          </span>
-        </div> */}
         <h2 className="text-4xl md:text-5xl font-light tracking-tight text-white">
           Connect with M1
         </h2>
@@ -91,7 +87,7 @@ export default function ContactSection() {
         <div className="pb-6 mb-8 border-b border-zinc-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] font-mono text-zinc-500">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-black" />
-            <span className="font-semibold text-zinc-900 tracking-wider">M1 FLIGHT COMMS // CHANNEL 01</span>
+            <span className="font-semibold text-zinc-900 tracking-wider">M1 FLIGHT COMMS // INQUIRY DISPATCH</span>
           </div>
           <div className="tracking-widest uppercase text-zinc-400">
             TRANSMISSION SECURE • CYOO / OPPS LINK
@@ -104,10 +100,10 @@ export default function ContactSection() {
               ✓
             </div>
             <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-zinc-950">
-              Flight Advisory Dispatched
+              Inquiry Dispatched
             </h3>
             <p className="text-sm text-zinc-600 max-w-md mx-auto leading-relaxed">
-              Thank you, <span className="font-semibold text-zinc-900">{formData.fullName}</span>. Your dispatch manifest has been transmitted to our flight intelligence team. A senior aviation executive will connect at <span className="font-semibold text-zinc-900">{formData.email}</span> shortly.
+              Thank you, <span className="font-semibold text-zinc-900">{formData.fullName}</span>. Your inquiry has been transmitted to our flight team. An executive will connect at <span className="font-semibold text-zinc-900">{formData.email}</span> shortly.
             </p>
             <div className="pt-6">
               <ParallelogramButton
@@ -127,11 +123,11 @@ export default function ContactSection() {
               </div>
             )}
 
+            {/* Row 1: 1. Full name & 2. Position */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Full Name */}
               <div className="space-y-1.5">
                 <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
-                  Full Name & Title <span className="text-red-500">*</span>
+                  1. Full name <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">👤</span>
@@ -146,10 +142,28 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              {/* Email */}
               <div className="space-y-1.5">
                 <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
-                  Corporate / Operator Email <span className="text-red-500">*</span>
+                  2. Position
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">💼</span>
+                  <input
+                    type="text"
+                    value={formData.position}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                    placeholder="e.g. Fleet Director / Chief Executive"
+                    className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: 3. Email & 4. Phone */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                  3. Email <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">✉</span>
@@ -158,18 +172,15 @@ export default function ContactSection() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="name@aviation-charter.com"
+                    placeholder="name@aviation-operator.com"
                     className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Phone / WhatsApp / Signal */}
               <div className="space-y-1.5">
                 <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
-                  Phone / WhatsApp / Signal
+                  4. Phone
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">📞</span>
@@ -182,36 +193,55 @@ export default function ContactSection() {
                   />
                 </div>
               </div>
+            </div>
 
-              {/* Reason */}
+            {/* Row 3: 5. WhatsApp / Signal & 6. Objective */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
-                  Mission / Inquiry Objective
+                  5. WhatsApp / Signal
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">💬</span>
+                  <input
+                    type="text"
+                    value={formData.whatsappSignal}
+                    onChange={(e) => setFormData({ ...formData, whatsappSignal: e.target.value })}
+                    placeholder="+1 (555) 019-2834 or handle"
+                    className="w-full pl-10 pr-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all placeholder-zinc-400 font-normal"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
+                  6. Objective
                 </label>
                 <select
-                  value={formData.reason}
-                  onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+                  value={formData.objective}
+                  onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
                   className="w-full px-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all font-normal"
                 >
-                  <option value="partnership">M1 Industry Partner Program</option>
-                  <option value="saios">M1 SAIOS Fleet Integration & Pilot Program</option>
-                  <option value="marketplace">Aircraft Marketplace Verification & Listings</option>
-                  <option value="press">Aviation Times Editorial & Media</option>
-                  <option value="general">Executive Advisory Consultation</option>
+                  <option value="M1 Marketplace Acquisition">M1 Marketplace Acquisition</option>
+                  <option value="Aircraft Listings & Verification">Aircraft Listings & Verification</option>
+                  <option value="SIOS Fleet Integration & Pilot Program">SIOS Fleet Integration & Pilot Program</option>
+                  <option value="Avigram Early Access & Pre-signup">Avigram Early Access & Pre-signup</option>
+                  <option value="M1 Industry Partner Program">M1 Industry Partner Program</option>
+                  <option value="Executive Advisory Consultation">Executive Advisory Consultation</option>
                 </select>
               </div>
             </div>
 
-            {/* Description */}
+            {/* Row 4: 7. Discription */}
             <div className="space-y-1.5">
               <label className="text-xs font-mono uppercase tracking-wider text-zinc-700 block font-medium">
-                Fleet Profile / Operational Requirements
+                7. Discription
               </label>
               <textarea
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Specify your aircraft types (e.g. Gulfstream G650, Bombardier Global 7500), base airport, or fleet objectives..."
+                placeholder="Specify your requirements, aircraft fleet, or inquiry details..."
                 className="w-full px-4 py-3.5 text-sm bg-zinc-100 border border-zinc-300 rounded-xl text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none placeholder-zinc-400 font-normal"
               />
             </div>

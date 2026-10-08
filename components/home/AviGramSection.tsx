@@ -34,24 +34,26 @@ export default function AviGramSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-10 z-10">
         {/* ── Section Header ── */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-24 space-y-4">
-          {/* Tilted Sharp-Cornered Pill Badge (White/silver & magenta glow) */}
+          {/* Tilted Sharp-Cornered Pill Badge (M1 Presents) */}
           <div className="-skew-x-12 inline-flex items-center gap-2.5 px-5 py-2 border border-white/20 bg-white/5 backdrop-blur-md shadow-[0_0_25px_rgba(225,48,108,0.25)]">
-            <span className="skew-x-12 inline-block text-[11px] font-mono tracking-[0.50em] uppercase font-bold text-zinc-100">
-              M1 AVIGRAM EXCLUSIVE AERO NETWORK
+            <span className="skew-x-12 inline-block text-[11px] font-mono tracking-[0.40em] uppercase font-bold text-zinc-100">
+              M1 Presents
             </span>
           </div>
 
-          {/* Title: Silver & White with Magenta/Ruby (Zero yellow/gold) */}
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-extralight tracking-tight leading-tight">
-            The Instagram for{" "}
-            <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-[#e1306c] drop-shadow-[0_0_25px_rgba(225,48,108,0.3)]">
-              Aviation Royalty
-            </span>
+          {/* Heading: Avigram in Instagram 2010 retro cursive script font */}
+          <h2
+            className="text-6xl sm:text-8xl md:text-9xl tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-[#e1306c] drop-shadow-[0_0_25px_rgba(225,48,108,0.35)] py-1"
+            style={{
+              fontFamily: "'Grand Hotel', 'Brush Script MT', 'Segoe Script', cursive, sans-serif",
+              fontWeight: 400,
+            }}
+          >
+            Avigram
           </h2>
 
-          <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
-            The world’s dedicated visual ecosystem designed exclusively for verified jet captains, 
-            aerospace pioneers, private airframe owners and high-altitude connoisseurs.
+          <p className="text-lg sm:text-2xl text-zinc-200 font-light leading-relaxed tracking-wide">
+            Aviation needs its own socializing platform
           </p>
         </div>
 
@@ -154,11 +156,8 @@ export default function AviGramSection() {
                   <p className="text-xs text-zinc-200 leading-relaxed">
                     <span className="font-semibold text-white mr-1.5">Capt. Vance</span>
                     <br />
-                    Cruising at FL430 above the cloud blanket. <br />SAIOS auto-telemetry optimized our climb profile, saving 180kg of Jet-A.
+                    Cruising at FL430 above the cloud blanket. <br />SIOS auto-telemetry optimized our climb profile, saving 180kg of Jet-A.
                   </p>
-                  {/* <p className="text-[10px] font-mono text-zinc-400 tracking-wider">
-                    Gulfstream G700 • Geneva (LSGG) → Zurich (LSZH)
-                  </p> */}
                 </div>
               </div>
             </div>
@@ -167,7 +166,7 @@ export default function AviGramSection() {
           {/* Right Column: Platform Features & Access Invitation (Col 8-12) */}
           <div className="lg:col-span-5 space-y-6">
             
-            {/* Feature 1: Cockpit & Hangar Visual Feeds */}
+            {/* Feature 1: Opportunity Scrolling */}
             <div className="-skew-x-6 sm:-skew-x-12 p-6 bg-zinc-950/80 border border-white/15 hover:border-white/40 hover:bg-zinc-900/80 transition-all duration-300 group shadow-lg">
               <div className="skew-x-6 sm:skew-x-12">
                 <div className="flex items-center gap-3.5 mb-2.5">
@@ -175,16 +174,16 @@ export default function AviGramSection() {
                     <span className="skew-x-12">01</span>
                   </div>
                   <h3 className="text-lg font-medium text-white group-hover:text-slate-200 transition-colors">
-                    Cockpit & Hangar Visual Feeds
+                    Opportunity Scrolling
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed pl-12">
-                  Direct live visual streams from flight decks, maintenance bays, and private airfields. High-resolution imagery with real-time flight telemetric watermarks.
+                  Gain knowledge and explore opportunities while scrolling.
                 </p>
               </div>
             </div>
 
-            {/* Feature 2: Verified Aviator & Fleet Profiles */}
+            {/* Feature 2: Nerds Togethere */}
             <div className="-skew-x-6 sm:-skew-x-12 p-6 bg-zinc-950/80 border border-white/15 hover:border-white/40 hover:bg-zinc-900/80 transition-all duration-300 group shadow-lg">
               <div className="skew-x-6 sm:skew-x-12">
                 <div className="flex items-center gap-3.5 mb-2.5">
@@ -192,16 +191,16 @@ export default function AviGramSection() {
                     <span className="skew-x-12">02</span>
                   </div>
                   <h3 className="text-lg font-medium text-white group-hover:text-rose-200 transition-colors">
-                    Verified Aviator & Fleet Profiles
+                    Nerds Togethere
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed pl-12">
-                  Every member is cryptographically validated through pilot licenses, type ratings, or FAA/EASA airframe registrations. Zero noise, only verified aviators.
+                  Aviation community brought togethere.
                 </p>
               </div>
             </div>
 
-            {/* Feature 3: Global Aero Community Dispatch */}
+            {/* Feature 3: Aviation Exclusivity */}
             <div className="-skew-x-6 sm:-skew-x-12 p-6 bg-zinc-950/80 border border-white/15 hover:border-white/40 hover:bg-zinc-900/80 transition-all duration-300 group shadow-lg">
               <div className="skew-x-6 sm:skew-x-12">
                 <div className="flex items-center gap-3.5 mb-2.5">
@@ -209,32 +208,23 @@ export default function AviGramSection() {
                     <span className="skew-x-12">03</span>
                   </div>
                   <h3 className="text-lg font-medium text-white group-hover:text-slate-200 transition-colors">
-                    Global Aero Community Dispatch
+                    Aviation Exclusivity
                   </h3>
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed pl-12">
-                  Empty-leg charter notifications, specialized engineering problem rooms, and private hangar access invitations shared securely across the network.
+                  Made for you, built for you, built by M1. Features designed for aviation nerds specifically.
                 </p>
               </div>
             </div>
 
-            {/* CTA Box with Parallelogram Buttons */}
+            {/* CTA Box with Parallelogram Button */}
             <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
               <ParallelogramButton
-                href="https://www.instagram.com"
-                isExternal={true}
-                variant="white"
-                className="w-full sm:w-auto text-xs py-4 px-8 shadow-[0_0_30px_rgba(225,48,108,0.35)]"
-              >
-                REQUEST AVIATOR ACCESS
-              </ParallelogramButton>
-
-              <ParallelogramButton
                 href="/#contact"
-                variant="silver"
-                className="w-full sm:w-auto text-xs py-4 px-8"
+                variant="white"
+                className="w-full sm:w-auto text-xs py-4 px-10 shadow-[0_0_30px_rgba(225,48,108,0.35)] font-bold tracking-widest"
               >
-                INQUIRE FOR FLEETS
+                Pre-signup ↗
               </ParallelogramButton>
             </div>
           </div>

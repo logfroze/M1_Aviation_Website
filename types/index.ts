@@ -40,9 +40,11 @@ export interface Article {
 }
 
 export interface ContactFormData {
-  phone: string;
-  email: string;
   fullName: string;
-  reason: string;
+  position: string;
+  email: string;
+  phone: string;
+  whatsappSignal: string;
+  objective: string;
   description: string;
 }

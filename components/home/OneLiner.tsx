@@ -7,90 +7,81 @@ interface EcosystemNode {
   id: string;
   number: string;
   title: string;
-  subtitle: string;
+  description: string;
   labelX: number;
   labelY: number;
   jetX: number;
   jetY: number;
   pathD: string;
-  metric: string;
-  status: string;
-  details: { label: string; value: string }[];
 }
 
-// 4 Corner Nodes only (Requirement 4: 1st top-left, 2nd top-right, 3rd lower-right, 4th lower-left)
+// 6 Ecosystem Nodes (Exact copy from PDF Page 3)
 const NODES: EcosystemNode[] = [
   {
     id: "aircraft",
     number: "01",
     title: "AIRCRAFT",
-    subtitle: "Jet Inventory & Fleet Management",
+    description: "Acquire or sell an aircraft through M1 Marketplace.",
     labelX: 160,
-    labelY: 105,
+    labelY: 90,
     jetX: 420,
     jetY: 340,
-    pathD: "M 160 105 C 270 105 340 220 420 340",
-    metric: "5,000+ Verified Airframes",
-    status: "ONLINE // VERIFIED",
-    details: [
-      { label: "Airframe Index", value: "Curated Global Fleet" },
-      { label: "Airworthiness", value: "Cryptographic Audit" },
-      { label: "Settlement", value: "Instant Escrow Telemetry" },
-    ],
+    pathD: "M 160 90 C 270 90 340 220 420 340",
   },
   {
-    id: "operators",
+    id: "operations",
     number: "02",
-    title: "OPERATORS",
-    subtitle: "Charter, Management & Operations",
+    title: "OPERATIONS",
+    description: "Multidomain Operations, unified by M1 SIOS, via connecting multiple tools.",
+    labelX: 130,
+    labelY: 310,
+    jetX: 460,
+    jetY: 380,
+    pathD: "M 130 310 C 260 310 370 350 460 380",
+  },
+  {
+    id: "socialization",
+    number: "03",
+    title: "SOCIALIZATION",
+    description: "Stay connected with people like you via Avigram.",
+    labelX: 160,
+    labelY: 550,
+    jetX: 520,
+    jetY: 430,
+    pathD: "M 160 550 C 270 550 400 480 520 430",
+  },
+  {
+    id: "scheduling",
+    number: "04",
+    title: "SCHEDULING",
+    description: "SIOS manages your compliance and scheduling and does coherent record-keeping.",
     labelX: 1045,
-    labelY: 105,
+    labelY: 90,
     jetX: 780,
     jetY: 260,
-    pathD: "M 1045 105 C 930 105 850 180 780 260",
-    metric: "340+ Flight Operations",
-    status: "DISPATCH READY",
-    details: [
-      { label: "Active Network", value: "340+ Flight Operations" },
-      { label: "Fleet Intelligence", value: "Autonomous SAIOS" },
-      { label: "Dispatch Response", value: "< 4 Min SLA" },
-    ],
-  },
-  {
-    id: "parts",
-    number: "03",
-    title: "PARTS",
-    subtitle: "Spare Parts & Global Supply Chain",
-    labelX: 1045,
-    labelY: 550,
-    jetX: 830,
-    jetY: 450,
-    pathD: "M 1045 550 C 960 550 900 490 830 450",
-    metric: "Instant OEM Escrow",
-    status: "SUPPLY ONLINE",
-    details: [
-      { label: "Catalog Index", value: "140K+ Certified Parts" },
-      { label: "AOG Priority", value: "24/7 Rapid Response" },
-      { label: "Procurement", value: "Zero-Latency Settlement" },
-    ],
+    pathD: "M 1045 90 C 930 90 850 180 780 260",
   },
   {
     id: "maintenance",
-    number: "04",
+    number: "05",
     title: "MAINTENANCE",
-    subtitle: "MRO & Certified Repair Network",
-    labelX: 160,
+    description: "Make your MRO operations efficient with SIOS tool connectivity and hardware-to-software integration.",
+    labelX: 1075,
+    labelY: 310,
+    jetX: 820,
+    jetY: 360,
+    pathD: "M 1075 310 C 970 310 890 340 820 360",
+  },
+  {
+    id: "brokerage",
+    number: "06",
+    title: "BROKERAGE",
+    description: "Spot opportunities on M1 Marketplace by utilizing our intelligence features.",
+    labelX: 1045,
     labelY: 550,
-    jetX: 500,
-    jetY: 420,
-    pathD: "M 160 550 C 270 550 380 470 500 420",
-    metric: "12 Certified Repair Hubs",
-    status: "HUBS CONNECTED",
-    details: [
-      { label: "Facility Network", value: "12 Certified Hubs" },
-      { label: "Standard", value: "FAA & EASA Approved" },
-      { label: "Turnaround Time", value: "+42% Efficiency" },
-    ],
+    jetX: 800,
+    jetY: 450,
+    pathD: "M 1045 550 C 950 550 880 490 800 450",
   },
 ];
 
@@ -106,7 +97,7 @@ const AIR_STREAKS = [
 ];
 
 export default function OneLiner() {
-  // Details only show when user manually hovers over a box (Requirement 4)
+  // Details only show when user manually hovers over a box
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [jetHovered, setJetHovered] = useState(false);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
@@ -152,7 +143,7 @@ export default function OneLiner() {
             style={{ clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)" }}
           >
             <span className="text-[20px] font-mono tracking-[0.42em] text-zinc-300 uppercase font-semibold">
-              WHAT WE ARE
+              Entre
             </span>
           </div>
         </div>
@@ -160,7 +151,7 @@ export default function OneLiner() {
           MORE THAN A MARKETPLACE.
         </div>
         <h2
-          className="text-7xl sm:text-9xl md:text-[8rem] font-black tracking-[0.14em] sm:tracking-[0.18em] uppercase leading-none"
+          className="text-6xl sm:text-8xl md:text-[7.5rem] font-black tracking-[0.14em] sm:tracking-[0.18em] uppercase leading-none"
           style={{
             background: "linear-gradient(180deg,#ffffff 0%,#e2e8f0 30%,#94a3b8 70%,#475569 100%)",
             WebkitBackgroundClip: "text",
@@ -169,7 +160,7 @@ export default function OneLiner() {
             filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.9))",
           }}
         >
-          ECOSYSTEM
+          M1 ECOSYSTEM
         </h2>
         <p className="text-xs sm:text-sm font-mono tracking-[0.38em] text-zinc-400 font-medium uppercase">
           THE OPERATING LAYER CONNECTING AVIATION.
@@ -314,18 +305,21 @@ export default function OneLiner() {
           />
         </div>
 
-        {/* 4 Corner Point Boxes with Hover Popups (Box does not extend, popup appears above/below) */}
+        {/* 6 Point Buttons with Hover Popups */}
         {NODES.map((n) => {
           const isActive = activeNode === n.id;
+          const isFaded = activeNode !== null && !isActive;
           const isRight = n.labelX > 600;
-          const isBottom = n.labelY > 300;
+          const isTopRow = n.number === "01" || n.number === "04";
 
           return (
             <div
               key={n.id}
               onMouseEnter={() => setActiveNode(n.id)}
               onMouseLeave={() => setActiveNode(null)}
-              className="absolute z-30 cursor-pointer pointer-events-auto select-none"
+              className={`absolute z-30 cursor-pointer pointer-events-auto select-none transition-all duration-300 ease-out ${
+                isFaded ? "opacity-20 blur-[1.5px] scale-[0.96]" : "opacity-100 blur-0"
+              }`}
               style={{
                 left: `${(n.labelX / 1200) * 100}%`,
                 top: `${(n.labelY / 680) * 100}%`,
@@ -340,11 +334,11 @@ export default function OneLiner() {
                   background: isActive
                     ? "linear-gradient(135deg, rgba(38, 52, 72, 0.98) 0%, rgba(18, 26, 38, 0.98) 100%)"
                     : "linear-gradient(135deg, rgba(20, 24, 34, 0.92) 0%, rgba(10, 14, 20, 0.95) 100%)",
-                  borderColor: isActive ? "rgba(255, 255, 255, 0.95)" : "rgba(160, 185, 215, 0.4)",
+                  borderColor: isActive ? "rgba(255, 255, 255, 1)" : "rgba(160, 185, 215, 0.4)",
                   boxShadow: isActive
-                    ? "0 0 28px rgba(255, 255, 255, 0.35), 0 0 12px rgba(186, 230, 253, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)"
+                    ? "0 0 35px rgba(255, 255, 255, 0.45), 0 0 15px rgba(56, 189, 248, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.6)"
                     : "0 6px 20px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15)",
-                  transform: isActive ? "scale(1.05)" : "scale(1)",
+                  transform: isActive ? "scale(1.06)" : "scale(1)",
                   backdropFilter: "blur(14px)",
                 }}
               >
@@ -367,7 +361,7 @@ export default function OneLiner() {
                   className="text-[15px] font-mono font-black tracking-[0.16em] whitespace-nowrap transition-colors"
                   style={{
                     color: isActive ? "#ffffff" : "#f1f5f9",
-                    textShadow: isActive ? "0 0 14px rgba(255, 255, 255, 0.7)" : "0 1px 2px rgba(0, 0, 0, 0.8)",
+                    textShadow: isActive ? "0 0 14px rgba(255, 255, 255, 0.8)" : "0 1px 2px rgba(0, 0, 0, 0.8)",
                   }}
                 >
                   {n.title}
@@ -377,68 +371,53 @@ export default function OneLiner() {
                 <span
                   className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ml-1 ${
                     isActive
-                      ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8] scale-125"
+                      ? "bg-cyan-400 shadow-[0_0_10px_#38bdf8] scale-125"
                       : "bg-slate-500/60"
                   }`}
                 />
               </div>
 
-              {/* Tilted Sharp-Edged Aerospace Hover Card (Moved inwards, reduced length, increased height) */}
-              {isActive && (() => {
-                const isTopRow = n.number === "01" || n.number === "02";
-                return (
+              {/* Tilted Sharp-Edged Aerospace Hover Card (Wider, fits text cleanly without extra sample fields) */}
+              {isActive && (
+                <div
+                  className={`absolute z-50 w-[330px] sm:w-[360px] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95 ${
+                    isTopRow ? "top-[calc(100%+14px)]" : "bottom-[calc(100%+14px)]"
+                  } ${isRight ? "right-0" : "left-0"}`}
+                >
+                  {/* Tilted Sharp-Edged Outer Border Container */}
                   <div
-                    className={`absolute z-50 w-[265px] sm:w-[275px] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95 ${
-                      isTopRow ? "top-[calc(100%+14px)]" : "bottom-[calc(100%+14px)]"
-                    } ${isRight ? "right-4 sm:right-8" : "left-4 sm:left-8"}`}
+                    className="relative p-[1.5px] shadow-[0_20px_45px_rgba(0,0,0,0.98)]"
+                    style={{
+                      clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(148, 163, 184, 0.4) 45%, rgba(56, 189, 248, 0.75) 100%)",
+                    }}
                   >
-                    {/* Tilted Sharp-Edged Outer Border Container */}
+                    {/* Tilted Sharp-Edged Inner Card Body */}
                     <div
-                      className="relative p-[1.5px] shadow-[0_16px_36px_rgba(0,0,0,0.95)]"
+                      className="relative w-full p-5 backdrop-blur-2xl text-left"
                       style={{
-                        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
-                        background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(148, 163, 184, 0.35) 45%, rgba(56, 189, 248, 0.7) 100%)",
+                        clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                        background: "linear-gradient(135deg, rgba(16, 24, 36, 0.98) 0%, rgba(8, 12, 18, 0.99) 100%)",
                       }}
                     >
-                      {/* Tilted Sharp-Edged Inner Card Body */}
-                      <div
-                        className="relative w-full min-h-[175px] p-5 flex flex-col justify-between backdrop-blur-xl text-left"
-                        style={{
-                          clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
-                          background: "linear-gradient(135deg, rgba(20, 28, 40, 0.98) 0%, rgba(10, 14, 22, 0.98) 100%)",
-                        }}
-                      >
-                        {/* Header: Node & Live Status */}
-                        <div className="flex items-center justify-between pb-2.5 border-b border-zinc-800/80">
-                          <span className="text-[11px] font-mono font-bold tracking-[0.2em] text-cyan-300 uppercase">
-                            {n.number} // {n.title}
-                          </span>
-                          <span className="text-[10px] font-mono tracking-wider text-emerald-400 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-                            {n.status}
-                          </span>
-                        </div>
+                      {/* Header: Node & Glowing Beacon */}
+                      <div className="flex items-center justify-between pb-2.5 border-b border-zinc-700/60">
+                        <span className="text-[11px] font-mono font-bold tracking-[0.25em] text-cyan-300 uppercase">
+                          {n.number} // {n.title}
+                        </span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+                      </div>
 
-                        {/* Content: Metric & Subtitle */}
-                        <div className="space-y-1.5 my-2">
-                          <div className="text-[15px] font-mono font-bold text-white tracking-tight leading-snug">
-                            {n.metric}
-                          </div>
-                          <p className="text-[11px] text-zinc-400 font-light leading-relaxed">
-                            {n.subtitle}
-                          </p>
-                        </div>
-
-                        {/* Telemetry Footer */}
-                        <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-500">
-                          <span className="uppercase tracking-widest">{n.details[0]?.label || "TELEMETRY"}</span>
-                          <span className="text-zinc-300 font-semibold">{n.details[0]?.value || "ACTIVE"}</span>
-                        </div>
+                      {/* Exact text from PDF */}
+                      <div className="pt-3 pb-1">
+                        <p className="text-xs sm:text-[13px] text-zinc-100 font-normal leading-relaxed tracking-wide">
+                          {n.description}
+                        </p>
                       </div>
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+              )}
             </div>
           );
         })}
@@ -457,7 +436,7 @@ export default function OneLiner() {
             style={{ filter: "brightness(1.08) contrast(1.04) drop-shadow(0 20px 40px rgba(0,0,0,0.95))" }}
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {NODES.map((n) => {
             const isActive = activeNode === n.id;
             return (
@@ -497,28 +476,19 @@ export default function OneLiner() {
               }}
             >
               <div
-                className="p-5 flex flex-col justify-between min-h-[160px] text-left space-y-2 backdrop-blur-xl"
+                className="p-5 flex flex-col text-left space-y-2.5 backdrop-blur-xl"
                 style={{
                   clipPath: "polygon(11.5px 0%, 100% 0%, calc(100% - 11.5px) 100%, 0% 100%)",
                   background: "linear-gradient(135deg, rgba(20, 28, 40, 0.98) 0%, rgba(10, 14, 22, 0.98) 100%)",
                 }}
               >
-                <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-700/60">
                   <span className="text-xs font-mono font-semibold tracking-wider text-cyan-300 uppercase">
                     {n.number} // {n.title}
                   </span>
-                  <span className="text-[11px] font-mono text-emerald-400">
-                    {n.status}
-                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
                 </div>
-                <div className="space-y-1">
-                  <div className="text-base font-mono font-bold text-white">{n.metric}</div>
-                  <p className="text-xs text-zinc-400 font-light">{n.subtitle}</p>
-                </div>
-                <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-500">
-                  <span className="uppercase">{n.details[0]?.label || "TELEMETRY"}</span>
-                  <span className="text-zinc-300 font-semibold">{n.details[0]?.value || "ACTIVE"}</span>
-                </div>
+                <p className="text-xs text-zinc-100 font-normal leading-relaxed">{n.description}</p>
               </div>
             </div>
           );

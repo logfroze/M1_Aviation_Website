@@ -14,6 +14,8 @@ interface MilestoneItem {
   roadY: number;
   cardX: number;
   cardY: number;
+  cardW?: number;
+  cardH?: number;
   icon: React.ReactNode;
 }
 
@@ -30,13 +32,15 @@ export const MILESTONES: MilestoneItem[] = [
   {
     year: "2027",
     phase: "PHASE 01",
-    title: "Marketplace Data",
+    title: "Marketplace",
     statement: VISION_MILESTONES[0].statement,
     side: "right", // Above the road
     roadX: 420,
     roadY: 198,
-    cardX: 270,
-    cardY: -160, // Elevated with generous clearance above the road
+    cardX: 230,
+    cardY: -180, // Elevated with generous clearance above the road
+    cardW: 600,
+    cardH: 260,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
@@ -49,13 +53,15 @@ export const MILESTONES: MilestoneItem[] = [
   {
     year: "2028",
     phase: "PHASE 02",
-    title: "SAIOS Launch",
+    title: "Avigram",
     statement: VISION_MILESTONES[1].statement,
     side: "left", // Below the road
     roadX: 900,
     roadY: 265,
-    cardX: 1120,
-    cardY: -10,
+    cardX: 1150,
+    cardY: -50,
+    cardW: 600,
+    cardH: 260,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
@@ -69,13 +75,15 @@ export const MILESTONES: MilestoneItem[] = [
   {
     year: "2029",
     phase: "PHASE 03",
-    title: "Enterprise Liquidity",
+    title: "SIOS",
     statement: VISION_MILESTONES[2].statement,
     side: "right", // Outside right bend
     roadX: 1350,
     roadY: 560,
     cardX: 1470,
-    cardY: 520,
+    cardY: 450,
+    cardW: 620,
+    cardH: 300,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <line x1="12" x2="12" y1="20" y2="10" />
@@ -86,15 +94,17 @@ export const MILESTONES: MilestoneItem[] = [
     ),
   },
   {
-    year: "2030",
+    year: "2031",
     phase: "PHASE 04",
-    title: "Global Fleet Scale",
+    title: "Super Scale",
     statement: VISION_MILESTONES[3].statement,
     side: "left", // Outside left bend
     roadX: 640,
     roadY: 730,
-    cardX: 10,
-    cardY: 600,
+    cardX: -100,
+    cardY: 560,
+    cardW: 620,
+    cardH: 320,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
@@ -107,13 +117,15 @@ export const MILESTONES: MilestoneItem[] = [
   {
     year: "2035",
     phase: "PHASE 05",
-    title: "Autonomous Network",
+    title: "A new era",
     statement: VISION_MILESTONES[4].statement,
     side: "right", // Above the road
     roadX: 1240,
     roadY: 980,
-    cardX: 830,
-    cardY: 1070,
+    cardX: 650,
+    cardY: 1100,
+    cardW: 620,
+    cardH: 320,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
@@ -125,13 +137,15 @@ export const MILESTONES: MilestoneItem[] = [
   {
     year: "2037",
     phase: "PHASE 06",
-    title: "Unicorn Ecosystem",
+    title: "Preparation for next evolution.",
     statement: VISION_MILESTONES[5].statement,
     side: "left", // Below the road
     roadX: 1760,
     roadY: 1030,
-    cardX: 1500,
-    cardY: 1080,
+    cardX: 1470,
+    cardY: 1200,
+    cardW: 640,
+    cardH: 340,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
         <circle cx="12" cy="12" r="10" />
@@ -153,7 +167,7 @@ export default function VisionTimeline() {
   const currentProgressRef = useRef(0);
   const [smoothProgress, setSmoothProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [fillerHead, setFillerHead] = useState({ x: 60, y: 160 });
+  const [fillerHead, setFillerHead] = useState({ x: 60, y: 160, angle: 5 });
 
   // Smooth lerp loop for scroll progress
   useEffect(() => {
@@ -176,13 +190,19 @@ export default function VisionTimeline() {
       const prog = currentProgressRef.current;
       setSmoothProgress(prog);
 
-      // Track exact (x, y) coordinates of the silver fill head along the curved road
+      // Track exact (x, y) coordinates and tangent angle of the silver fill head along the curved road
       if (roadPathRef.current) {
         try {
           const totalLength = roadPathRef.current.getTotalLength();
           const currentLen = totalLength * Math.min(1, Math.max(0, prog));
           const pt = roadPathRef.current.getPointAtLength(currentLen);
-          setFillerHead({ x: pt.x, y: pt.y });
+          const sampleDelta = 2;
+          const ptAhead = roadPathRef.current.getPointAtLength(Math.min(totalLength, currentLen + sampleDelta));
+          const ptBehind = roadPathRef.current.getPointAtLength(Math.max(0, currentLen - sampleDelta));
+          const dx = ptAhead.x - ptBehind.x;
+          const dy = ptAhead.y - ptBehind.y;
+          const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+          setFillerHead({ x: pt.x, y: pt.y, angle });
         } catch {
           // ignore before SVG mount
         }
@@ -262,14 +282,14 @@ export default function VisionTimeline() {
       <div className="relative z-30 pt-14 sm:pt-20 pb-4 px-6 max-w-5xl mx-auto text-center pointer-events-none">
         <div className="inline-flex items-center px-3 py-1 rounded bg-zinc-900 border border-zinc-700/80 mb-2">
           <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-zinc-300 font-semibold">
-            Strategic Flight Horizon
+            Let's Travel together:
           </span>
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white">
-          The 10-Year Vision
+          10 years long Vision.
         </h2>
-        <p className="text-xs sm:text-sm font-mono uppercase tracking-[0.24em] text-zinc-400 mt-1">
-          Chronological Trajectory • Scroll to Travel Along Road
+        <p className="text-xs sm:text-sm font-mono tracking-wide text-zinc-400 mt-1">
+          A journey towards the next era of Aviation.
         </p>
       </div>
 
@@ -278,23 +298,6 @@ export default function VisionTimeline() {
         {/* Subtle Dark Matte Background */}
         <div className="absolute inset-0 pointer-events-none z-0 bg-[#04060a]">
           <div className="absolute inset-0 bg-gradient-to-b from-[#04060a] via-[#080b10] to-[#04060a]" />
-        </div>
-
-        {/* ── Minimalist Viewport Telemetry: Live Percentage Readout ── */}
-        <div className="absolute top-6 right-6 sm:right-10 z-30 flex items-center gap-3 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-950/80 backdrop-blur-md shadow-xl pointer-events-none">
-          <div
-            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-              isRecharged
-                ? "bg-cyan-400 shadow-[0_0_8px_#38bdf8]"
-                : "bg-white shadow-[0_0_8px_#ffffff]"
-            }`}
-          />
-          <span className="text-xs font-mono tracking-widest text-zinc-300 uppercase font-semibold">
-            Road Completion
-          </span>
-          <span className="text-sm sm:text-base font-mono font-black text-white tracking-wider">
-            {percentage}%
-          </span>
         </div>
 
         {/* ── Road Scene along the Wavy Serpentine Path ── */}
@@ -419,7 +422,7 @@ export default function VisionTimeline() {
                   transform={`translate(${fillerHead.x}, ${fillerHead.y})`}
                   className="pointer-events-none transition-transform duration-75"
                 >
-                  {/* Razor-sharp cut bar across the roadbed at the fill head */}
+                  {/* Razor-sharp cut bar across the roadbed at the fill head, rotated to match road curvature normal */}
                   <line
                     x1="0"
                     y1="-36"
@@ -428,6 +431,7 @@ export default function VisionTimeline() {
                     stroke="#ffffff"
                     strokeWidth="4"
                     strokeLinecap="butt"
+                    transform={`rotate(${fillerHead.angle + 90})`}
                   />
                   <rect
                     x="-4"
@@ -440,13 +444,13 @@ export default function VisionTimeline() {
                   />
 
                   {/* Floating Sharp Solid Percentage Badge */}
-                  <g transform="translate(0, -50)">
+                  <g transform="translate(0, -52)">
                     {/* Sharp Solid Connection Stalk */}
                     <line
                       x1="0"
                       y1="22"
                       x2="0"
-                      y2="44"
+                      y2="48"
                       stroke="#ffffff"
                       strokeWidth="2.2"
                       strokeLinecap="butt"
@@ -462,6 +466,7 @@ export default function VisionTimeline() {
                       fill="#06090e"
                       stroke="#ffffff"
                       strokeWidth="2.5"
+                      style={{ filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.95))" }}
                     />
 
                     {/* Prominent Large Percentage Word & Value */}
@@ -503,7 +508,7 @@ export default function VisionTimeline() {
                         x={
                           m.year === "2029"
                             ? m.roadX - 32
-                            : m.year === "2030"
+                            : m.year === "2031"
                             ? m.roadX + 32
                             : m.roadX
                         }
@@ -517,7 +522,7 @@ export default function VisionTimeline() {
                         textAnchor={
                           m.year === "2029"
                             ? "end"
-                            : m.year === "2030"
+                            : m.year === "2031"
                             ? "start"
                             : "middle"
                         }
@@ -727,8 +732,8 @@ export default function VisionTimeline() {
                 const isRight = m.side === "right";
 
                 // Enlarged card dimensions (longer cards for better readability)
-                const cardW = 540;
-                const cardH = 250;
+                const cardW = m.cardW || 540;
+                const cardH = m.cardH || 250;
                 const slant = 28;
 
                 // Dedicated, clean leader line attachment coordinates per milestone card
@@ -767,7 +772,7 @@ export default function VisionTimeline() {
                       path: `M ${m.roadX} ${m.roadY} C ${midX} ${m.roadY}, ${midX} ${attachY}, ${attachX} ${attachY}`,
                     };
                   }
-                  if (m.year === "2030") {
+                  if (m.year === "2031") {
                     // Step 04: Card is to the left of the road curve -> attaches to SLANTED RIGHT EDGE
                     const t = 0.45;
                     const attachX = m.cardX + cardW - slant * t;
@@ -816,13 +821,15 @@ export default function VisionTimeline() {
                 const connection = getCardConnection();
                 const dist = Math.abs(idx - activeIndex);
                 const isNearby = dist <= 1;
+                const cardOpacity = isActive ? 1 : isNearby ? 0.52 : 0.22;
+                const cardScale = isActive ? 1.25 : 0.86;
 
                 return (
                   <g
                     key={m.year}
-                    className="group transition-opacity duration-400"
+                    className="group transition-opacity duration-500"
                     style={{
-                      opacity: isActive ? 1 : isNearby ? 0.75 : 0,
+                      opacity: cardOpacity,
                       pointerEvents: isNearby ? "auto" : "none",
                     }}
                   >
@@ -830,134 +837,115 @@ export default function VisionTimeline() {
                     <path
                       d={connection.path}
                       fill="none"
-                      stroke={isActive ? "#ffffff" : "#64748b"}
-                      strokeWidth={isActive ? 2.4 : 1.6}
-                      strokeDasharray={isActive ? "none" : "6 4"}
+                      stroke={isActive ? "#38bdf8" : "#64748b"}
+                      strokeWidth={isActive ? 2.5 : 1.2}
+                      strokeDasharray={isActive ? "none" : "5 4"}
                       strokeLinecap="butt"
                       className="transition-all duration-300"
                     />
 
                     {/* 2. Small Precision Terminal Square where Leader Line touches Card Border */}
                     <rect
-                      x={connection.attachX - 3.5}
-                      y={connection.attachY - 3.5}
-                      width="7"
-                      height="7"
-                      fill={isActive ? "#ffffff" : "#94a3b8"}
+                      x={connection.attachX - (isActive ? 4 : 2.5)}
+                      y={connection.attachY - (isActive ? 4 : 2.5)}
+                      width={isActive ? 8 : 5}
+                      height={isActive ? 8 : 5}
+                      fill={isActive ? "#38bdf8" : "#64748b"}
                     />
 
-                    {/* 4. Milestone Card Slanted Parallelogram with Highly Visible 4-Sided Borders (Top, Right, Bottom, Left) */}
-                    <g className="transition-all duration-300">
-                      {/* Full 4-sided Parallelogram Body Surface */}
+                    {/* 3. Milestone Card Slanted Parallelogram with Dynamic Focus Scale */}
+                    <g
+                      transform={`translate(${connection.attachX}, ${connection.attachY}) scale(${cardScale}) translate(-${connection.attachX}, -${connection.attachY})`}
+                      className="transition-transform duration-500 ease-out"
+                    >
+                      {/* Full Parallelogram Body Surface */}
                       <polygon
                         points={`${m.cardX + slant},${m.cardY} ${m.cardX + cardW},${m.cardY} ${m.cardX + cardW - slant},${m.cardY + cardH} ${m.cardX},${m.cardY + cardH}`}
                         fill="#050811"
-                        stroke={isActive ? "#ffffff" : "#475569"}
-                        strokeWidth={isActive ? 2.5 : 1.8}
+                        stroke={isActive ? "#ffffff" : "#334155"}
+                        strokeWidth={isActive ? 2.5 : 1.2}
                         className="transition-all duration-300"
                         style={{
                           filter: isActive
-                            ? "drop-shadow(0 0 24px rgba(255,255,255,0.45)) drop-shadow(0 16px 36px rgba(0,0,0,0.98))"
-                            : "drop-shadow(0 10px 28px rgba(0,0,0,0.95))",
+                            ? "drop-shadow(0 0 24px rgba(56, 189, 248, 0.4)) drop-shadow(0 18px 40px rgba(0,0,0,0.98))"
+                            : "drop-shadow(0 6px 18px rgba(0,0,0,0.85))",
                         }}
                       />
 
-                      {/* Side 1: Top Visible Border Accent */}
+                      {/* Clean Minimalist Top Accent Highlight Line */}
                       <line
                         x1={m.cardX + slant}
                         y1={m.cardY}
                         x2={m.cardX + cardW}
                         y2={m.cardY}
-                        stroke={isActive ? "#ffffff" : "#cbd5e1"}
-                        strokeWidth={isActive ? 3 : 2}
+                        stroke={isActive ? "#38bdf8" : "#475569"}
+                        strokeWidth={isActive ? 3 : 1.5}
                         strokeLinecap="round"
-                        opacity={isActive ? 1 : 0.9}
+                        opacity={isActive ? 1 : 0.5}
+                        className="transition-all duration-300"
                       />
 
-                      {/* Side 2: Right Slanted Visible Border Accent */}
-                      <line
-                        x1={m.cardX + cardW}
-                        y1={m.cardY}
-                        x2={m.cardX + cardW - slant}
-                        y2={m.cardY + cardH}
-                        stroke={isActive ? "#ffffff" : "#cbd5e1"}
-                        strokeWidth={isActive ? 3 : 2}
-                        strokeLinecap="round"
-                        opacity={isActive ? 1 : 0.9}
-                      />
-
-                      {/* Side 3: Bottom Visible Border Accent */}
-                      <line
-                        x1={m.cardX}
-                        y1={m.cardY + cardH}
-                        x2={m.cardX + cardW - slant}
-                        y2={m.cardY + cardH}
-                        stroke={isActive ? "#ffffff" : "#cbd5e1"}
-                        strokeWidth={isActive ? 3 : 2}
-                        strokeLinecap="round"
-                        opacity={isActive ? 1 : 0.9}
-                      />
-
-                      {/* Side 4: Left Slanted Visible Border Accent */}
-                      <line
-                        x1={m.cardX}
-                        y1={m.cardY + cardH}
-                        x2={m.cardX + slant}
-                        y2={m.cardY}
-                        stroke={isActive ? "#ffffff" : "#cbd5e1"}
-                        strokeWidth={isActive ? 3 : 2}
-                        strokeLinecap="round"
-                        opacity={isActive ? 1 : 0.9}
-                      />
-
-                      {/* Text & Icon Content inside ForeignObject (Clean layout, enhanced typography) */}
+                      {/* Text & Icon Content inside ForeignObject (Clean layout, large readable typography) */}
                       <foreignObject
                         x={m.cardX + 16}
                         y={m.cardY + 8}
                         width={cardW - 32}
                         height={cardH - 16}
-                        className="pointer-events-none overflow-visible"
+                        className="pointer-events-none overflow-hidden"
                       >
-                        <div className="p-6 space-y-4 select-none">
-                          {/* Header: Phase & Icon */}
-                          <div className="flex items-center justify-between gap-3">
-                            <span
-                              className={`text-base sm:text-lg font-mono font-black tracking-[0.28em] uppercase transition-colors ${
-                                isActive
-                                  ? "text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]"
-                                  : "text-zinc-200 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
-                              }`}
-                            >
-                              {m.phase}
-                            </span>
-                            <span
-                              className={`transition-colors p-2 rounded bg-zinc-900/90 border ${
-                                isActive
-                                  ? "text-white border-white shadow-[0_0_14px_rgba(255,255,255,0.5)]"
-                                  : "text-zinc-200 border-zinc-500/70"
-                              }`}
-                            >
-                              {m.icon}
-                            </span>
-                          </div>
+                        <div className="p-6 space-y-4 select-none flex flex-col justify-between h-full">
+                          <div>
+                            {/* Minimalist Header: Phase Badge + Year + Icon */}
+                            <div className="flex items-center justify-between gap-3 mb-3">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className={`text-xs sm:text-sm font-mono font-bold tracking-[0.25em] uppercase px-2.5 py-1 rounded transition-colors ${
+                                    isActive
+                                      ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/35"
+                                      : "bg-zinc-800/60 text-zinc-400 border border-zinc-700/40"
+                                  }`}
+                                >
+                                  {m.phase}
+                                </span>
+                                <span className="text-xs font-mono text-zinc-600">//</span>
+                                <span
+                                  className={`text-xs sm:text-sm font-mono font-semibold tracking-wider ${
+                                    isActive ? "text-cyan-200" : "text-zinc-500"
+                                  }`}
+                                >
+                                  {m.year}
+                                </span>
+                              </div>
 
-                          {/* Title */}
-                          <h4
-                            className={`text-xl sm:text-2xl font-mono font-black tracking-wide leading-snug transition-colors ${
-                              isActive
-                                ? "text-white drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]"
-                                : "text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]"
-                            }`}
-                          >
-                            {m.title}
-                          </h4>
+                              <span
+                                className={`p-1.5 rounded transition-colors ${
+                                  isActive
+                                    ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"
+                                    : "bg-zinc-900/80 text-zinc-400 border border-zinc-700/40"
+                                }`}
+                              >
+                                {m.icon}
+                              </span>
+                            </div>
+
+                            {/* Title */}
+                            <h4
+                              className={`text-2xl sm:text-[26px] font-mono font-bold tracking-tight leading-snug transition-colors ${
+                                isActive
+                                  ? "text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.4)]"
+                                  : "text-zinc-300"
+                              }`}
+                            >
+                              {m.title}
+                            </h4>
+                          </div>
 
                           {/* Statement */}
                           <p
-                            className={`text-sm sm:text-base font-mono font-normal leading-relaxed transition-colors ${
+                            className={`text-[17px] sm:text-[18px] font-mono leading-relaxed transition-colors ${
                               isActive
-                                ? "text-zinc-100 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                                : "text-zinc-200"
+                                ? "text-zinc-100 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
+                                : "text-zinc-400"
                             }`}
                           >
                             {m.statement}

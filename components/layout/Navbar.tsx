@@ -77,7 +77,7 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* 2. Aviation */}
+            {/* 2. AVI Times */}
             <Link
               href="/aviation-times"
               className={`whitespace-nowrap transition-all duration-200 px-3.5 py-1 rounded-full font-bold tracking-[0.16em] ${
@@ -86,7 +86,7 @@ export default function Navbar() {
                   : "text-zinc-200 hover:text-white border border-transparent hover:border-white/20 hover:bg-white/10"
               }`}
             >
-              <span>Aviation</span>
+              <span>AVI Times</span>
             </Link>
 
             {/* 3. Marketplace */}
@@ -189,11 +189,11 @@ export default function Navbar() {
           <nav className="flex flex-col space-y-3.5">
             {[
               { href: "/",                 label: "Home",                 sub: "Overview" },
-              { href: "/aviation-times",   label: "Aviation Times",       sub: "Journal" },
+              { href: "/aviation-times",   label: "AVI Times",            sub: "Journal" },
               { href: "/marketplace",      label: "Marketplace",          sub: "Exchange" },
               { href: "/industry-partner", label: "Industry Partner",     sub: "Alliance" },
-              { href: "/saios",            label: "SAIOS Core",           sub: "Flight OS" },
-              { href: "/#contact",         label: "Contact & Advisory",   sub: "Dispatch" },
+              { href: "/saios",            label: "SIOS",                 sub: "Flight OS" },
+              { href: "/#contact",         label: "Contact",              sub: "Dispatch" },
             ].map(({ href, label, sub }) => (
               <Link
                 key={href}

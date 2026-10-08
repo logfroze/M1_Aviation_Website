@@ -9,6 +9,7 @@ import {
   SUPPORT_EMAIL,
   LINKEDIN_URL,
   X_URL,
+  INSTAGRAM_URL,
 } from "@/data/navigation";
 
 // ── Supersonic Afterburner Thrust Fire Effect on Mouse Hover ──
@@ -302,6 +303,15 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col space-y-3 text-sm sm:text-base text-zinc-300">
               <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors flex items-center gap-1.5"
+              >
+                <span>Instagram</span>
+                <span className="text-xs text-zinc-400">↗</span>
+              </a>
+              <a
                 href={LINKEDIN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -316,16 +326,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors flex items-center gap-1.5"
               >
-                <span>X (Twitter)</span>
-                <span className="text-xs text-zinc-400">↗</span>
-              </a>
-              <a
-                href="https://app.m-1.tech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors flex items-center gap-1.5 text-zinc-200"
-              >
-                <span>M1 Portal</span>
+                <span>X</span>
                 <span className="text-xs text-zinc-400">↗</span>
               </a>
             </div>
@@ -336,9 +337,9 @@ export default function Footer() {
         <div className="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-zinc-400 font-mono">
           <div>© {new Date().getFullYear()} M1 Aviation Ecosystem. All rights reserved.</div>
           <div className="flex items-center gap-6">
-            <Link href="/saios" className="hover:text-zinc-200 transition-colors">SAIOS Core</Link>
+            <Link href="/saios" className="hover:text-zinc-200 transition-colors">SIOS</Link>
             <Link href="/industry-partner" className="hover:text-zinc-200 transition-colors">Partner Program</Link>
-            <Link href="/aviation-times" className="hover:text-zinc-200 transition-colors">Aviation Times</Link>
+            <Link href="/aviation-times" className="hover:text-zinc-200 transition-colors">AVI Times</Link>
           </div>
         </div>
       </div>

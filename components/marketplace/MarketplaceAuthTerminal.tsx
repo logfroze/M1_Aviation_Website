@@ -87,9 +87,9 @@ export default function MarketplaceAuthTerminal() {
           {/* Center Call-to-Action */}
           <div className="my-auto py-8 text-center sm:text-left space-y-6">
             <div className="space-y-2">
-              <div className="inline-block font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
+              {/* <div className="inline-block font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-400">
                 Institutional Terminal
-              </div>
+              </div> */}
               <h3 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
                 M1 Marketplace Terminal
               </h3>
@@ -131,16 +131,16 @@ export default function MarketplaceAuthTerminal() {
                 </span>
               </a>
 
-              <p className="text-center font-mono text-[10px] text-zinc-500 mt-3">
+              {/* <p className="text-center font-mono text-[10px] text-zinc-500 mt-3">
                 Secure gateway • Redirects to app.m-1.tech
-              </p>
+              </p> */}
             </div>
           </div>
 
           {/* Bottom Security Footer */}
-          <div className="pt-4 border-t border-white/10 text-center font-mono text-[10px] text-zinc-400">
+          {/* <div className="pt-4 border-t border-white/10 text-center font-mono text-[10px] text-zinc-400">
             Account registration and single sign-on authentication are handled securely on the official terminal.
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
