@@ -265,7 +265,7 @@ export default function OneLiner() {
         {/* Aircraft centered directly on top of metallic platform */}
         <div
           id="ecosystem-jet-source"
-          className="absolute top-[80%] left-[85%] -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[920px] z-20 cursor-pointer pointer-events-auto"
+          className="absolute top-[80%] left-[87%] -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[920px] z-20 cursor-pointer pointer-events-auto"
           onMouseEnter={() => setJetHovered(true)}
           onMouseLeave={() => setJetHovered(false)}
           style={{
@@ -383,43 +383,57 @@ export default function OneLiner() {
                 />
               </div>
 
-              {/* Minimalist Professional Hover Card (1st & 2nd show downwards, 3rd & 4th show upwards) */}
+              {/* Tilted Sharp-Edged Aerospace Hover Card (Moved inwards, reduced length, increased height) */}
               {isActive && (() => {
                 const isTopRow = n.number === "01" || n.number === "02";
                 return (
                   <div
-                    className={`absolute z-50 w-[340px] sm:w-[380px] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95 ${
-                      isTopRow ? "top-[calc(100%+12px)]" : "bottom-[calc(100%+12px)]"
-                    } ${isRight ? "left-0 sm:left-2" : "right-0 sm:right-2"}`}
+                    className={`absolute z-50 w-[265px] sm:w-[275px] pointer-events-none transition-all duration-200 animate-in fade-in zoom-in-95 ${
+                      isTopRow ? "top-[calc(100%+14px)]" : "bottom-[calc(100%+14px)]"
+                    } ${isRight ? "right-4 sm:right-8" : "left-4 sm:left-8"}`}
                   >
-                    <div className="relative p-4 sm:p-5 rounded-xl border border-zinc-700/70 bg-[#0c1017]/95 backdrop-blur-md shadow-2xl text-left space-y-2.5">
-                      {/* Directional Connector Arrow */}
+                    {/* Tilted Sharp-Edged Outer Border Container */}
+                    <div
+                      className="relative p-[1.5px] shadow-[0_16px_36px_rgba(0,0,0,0.95)]"
+                      style={{
+                        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                        background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(148, 163, 184, 0.35) 45%, rgba(56, 189, 248, 0.7) 100%)",
+                      }}
+                    >
+                      {/* Tilted Sharp-Edged Inner Card Body */}
                       <div
-                        className={`absolute w-2.5 h-2.5 bg-[#0c1017] rotate-45 ${
-                          isTopRow
-                            ? `-top-1.5 border-t border-l border-zinc-700/70 ${isRight ? "left-10" : "right-10"}`
-                            : `-bottom-1.5 border-b border-r border-zinc-700/70 ${isRight ? "left-10" : "right-10"}`
-                        }`}
-                      />
-
-                      {/* Clean Header: Node & Status */}
-                      <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-                        <span className="text-xs font-mono font-semibold tracking-wider text-zinc-200 uppercase">
-                          {n.number} // {n.title}
-                        </span>
-                        <span className="text-[11px] font-mono text-zinc-400">
-                          {n.status}
-                        </span>
-                      </div>
-
-                      {/* Content: Metric & Subtitle */}
-                      <div className="space-y-1">
-                        <div className="text-base font-mono font-medium text-white tracking-tight">
-                          {n.metric}
+                        className="relative w-full min-h-[175px] p-5 flex flex-col justify-between backdrop-blur-xl text-left"
+                        style={{
+                          clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                          background: "linear-gradient(135deg, rgba(20, 28, 40, 0.98) 0%, rgba(10, 14, 22, 0.98) 100%)",
+                        }}
+                      >
+                        {/* Header: Node & Live Status */}
+                        <div className="flex items-center justify-between pb-2.5 border-b border-zinc-800/80">
+                          <span className="text-[11px] font-mono font-bold tracking-[0.2em] text-cyan-300 uppercase">
+                            {n.number} // {n.title}
+                          </span>
+                          <span className="text-[10px] font-mono tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                            {n.status}
+                          </span>
                         </div>
-                        <p className="text-xs text-zinc-400 font-light leading-relaxed">
-                          {n.subtitle}
-                        </p>
+
+                        {/* Content: Metric & Subtitle */}
+                        <div className="space-y-1.5 my-2">
+                          <div className="text-[15px] font-mono font-bold text-white tracking-tight leading-snug">
+                            {n.metric}
+                          </div>
+                          <p className="text-[11px] text-zinc-400 font-light leading-relaxed">
+                            {n.subtitle}
+                          </p>
+                        </div>
+
+                        {/* Telemetry Footer */}
+                        <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-500">
+                          <span className="uppercase tracking-widest">{n.details[0]?.label || "TELEMETRY"}</span>
+                          <span className="text-zinc-300 font-semibold">{n.details[0]?.value || "ACTIVE"}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -470,23 +484,41 @@ export default function OneLiner() {
           })}
         </div>
 
-        {/* Mobile Minimalist Card */}
+        {/* Mobile Tilted Sharp-Edged Card */}
         {activeNode && (() => {
           const n = NODES.find((item) => item.id === activeNode);
           if (!n) return null;
           return (
-            <div className="p-4 rounded-xl border border-zinc-700/70 bg-[#0c1017]/95 backdrop-blur-md shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-left space-y-2">
-              <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
-                <span className="text-xs font-mono font-semibold tracking-wider text-zinc-200 uppercase">
-                  {n.number} // {n.title}
-                </span>
-                <span className="text-[11px] font-mono text-zinc-400">
-                  {n.status}
-                </span>
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-sm font-medium text-white">{n.metric}</div>
-                <p className="text-xs text-zinc-400 font-light">{n.subtitle}</p>
+            <div
+              className="relative p-[1.5px] shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+              style={{
+                clipPath: "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
+                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(148, 163, 184, 0.35) 45%, rgba(56, 189, 248, 0.7) 100%)",
+              }}
+            >
+              <div
+                className="p-5 flex flex-col justify-between min-h-[160px] text-left space-y-2 backdrop-blur-xl"
+                style={{
+                  clipPath: "polygon(11.5px 0%, 100% 0%, calc(100% - 11.5px) 100%, 0% 100%)",
+                  background: "linear-gradient(135deg, rgba(20, 28, 40, 0.98) 0%, rgba(10, 14, 22, 0.98) 100%)",
+                }}
+              >
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
+                  <span className="text-xs font-mono font-semibold tracking-wider text-cyan-300 uppercase">
+                    {n.number} // {n.title}
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-400">
+                    {n.status}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-base font-mono font-bold text-white">{n.metric}</div>
+                  <p className="text-xs text-zinc-400 font-light">{n.subtitle}</p>
+                </div>
+                <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-500">
+                  <span className="uppercase">{n.details[0]?.label || "TELEMETRY"}</span>
+                  <span className="text-zinc-300 font-semibold">{n.details[0]?.value || "ACTIVE"}</span>
+                </div>
               </div>
             </div>
           );

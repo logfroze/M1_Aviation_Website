@@ -16,8 +16,18 @@ export interface Partner {
   category: string;
 }
 
+export interface ArticleSection {
+  heading?: string;
+  subheading?: string;
+  quote?: string;
+  content: string[];
+  imageUrl?: string;
+  imageCaption?: string;
+}
+
 export interface Article {
   id: string;
+  editionNumber?: number;
   title: string;
   summary: string;
   category: string;
@@ -26,6 +36,7 @@ export interface Article {
   thumbBg: string;
   readTime: string;
   imageUrl?: string;
+  sections?: ArticleSection[];
 }
 
 export interface ContactFormData {
