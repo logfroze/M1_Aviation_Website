@@ -1,12 +1,35 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import M1Logo from "@/components/ui/M1Logo";
 import { playSolidDockSound } from "@/lib/audio";
 
 export default function MarketplaceAuthTerminal() {
   const [isMuted, setIsMuted] = useState(true);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldLoadVideo(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: "600px" } // Begin buffering 600px before user reaches the terminal
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -16,7 +39,11 @@ export default function MarketplaceAuthTerminal() {
   };
 
   return (
-    <section id="signup" className="relative w-full py-20 sm:py-28 px-4 sm:px-6 flex flex-col items-center bg-black overflow-hidden">
+    <section
+      ref={sectionRef}
+      id="signup"
+      className="relative w-full py-20 sm:py-28 px-4 sm:px-6 flex flex-col items-center bg-black overflow-hidden"
+    >
       {/* Background Ambience Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-slate-800/10 blur-[130px] rounded-full pointer-events-none" />
 
@@ -37,15 +64,20 @@ export default function MarketplaceAuthTerminal() {
       <div className="relative z-10 w-full max-w-4xl rounded-2xl sm:rounded-3xl border border-white/15 bg-[#121419] shadow-[0_30px_90px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.15)] overflow-hidden grid grid-cols-1 md:grid-cols-2">
         {/* ── Left Pane: Historical Aviation Footage Video ── */}
         <div className="relative min-h-[300px] md:min-h-[520px] bg-black overflow-hidden flex flex-col justify-end p-6 border-b md:border-b-0 md:border-r border-white/10">
-          <video
-            ref={videoRef}
-            src="/videos/auth-preview.mp4"
-            autoPlay
-            loop
-            muted={isMuted}
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-80"
-          />
+          {shouldLoadVideo ? (
+            <video
+              ref={videoRef}
+              src="/videos/auth-preview.mp4"
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 w-full h-full object-cover opacity-80"
+            />
+          ) : (
+            <div className="absolute inset-0 w-full h-full bg-zinc-950/80" />
+          )}
           {/* Subtle Contrast Gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
 

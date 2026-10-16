@@ -1,5 +1,7 @@
 import { Article } from "@/types";
 
+export const ARTICLES_DATA_VERSION = "2026-10-16-v2";
+
 export const SAMPLE_ARTICLES: Article[] = [
   // ── Article 3: Most Recent (Top) ──
   {

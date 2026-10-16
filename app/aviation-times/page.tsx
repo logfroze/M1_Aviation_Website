@@ -544,6 +544,7 @@ export default function AviationTimesPage() {
                         alt={article.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 440px"
+                        priority={filteredArticles.indexOf(article) === 0}
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                     ) : (
