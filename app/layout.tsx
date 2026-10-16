@@ -17,9 +17,67 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "M1 Aviation | Business Aviation Digital Ecosystem",
+  metadataBase: new URL("https://m1-aviation-website.vercel.app"),
+  title: {
+    default: "M1 Aviation | Business Aviation Digital Ecosystem",
+    template: "%s | M1 Aviation",
+  },
   description:
-    "The premier digital ecosystem for business aviation: M1 Marketplace, SAIOS operating intelligence, and industry partner network.",
+    "The premier digital ecosystem for business aviation: M1 Marketplace, SIOS autonomous operating intelligence, and vetted industry partner alliance.",
+  keywords: [
+    "business aviation",
+    "private jet marketplace",
+    "aircraft acquisition",
+    "SIOS",
+    "pre-owned private jets",
+    "aircraft maintenance intelligence",
+    "aviation operating system",
+    "M1 Aviation",
+    "aircraft escrow",
+    "business jet pre-purchase inspection",
+  ],
+  authors: [{ name: "M1 Aviation" }],
+  creator: "M1 Aviation",
+  publisher: "M1 Aviation",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "M1 Aviation | Business Aviation Digital Ecosystem",
+    description:
+      "The premier digital ecosystem for business aviation: M1 Marketplace, SIOS autonomous operating intelligence, and vetted industry partner alliance.",
+    url: "https://m1-aviation-website.vercel.app",
+    siteName: "M1 Aviation",
+    images: [
+      {
+        url: "/m1-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "M1 Aviation Digital Ecosystem",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "M1 Aviation | Business Aviation Digital Ecosystem",
+    description:
+      "The premier digital ecosystem for business aviation: M1 Marketplace, SIOS autonomous operating intelligence, and vetted industry partner alliance.",
+    images: ["/m1-logo.png"],
+    creator: "@m1_aviation",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/icon.png", type: "image/png" },
@@ -28,6 +86,119 @@ export const metadata: Metadata = {
     shortcut: "/icon.png",
     apple: "/icon.png",
   },
+};
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://m1-aviation-website.vercel.app/#organization",
+      "name": "M1 Aviation",
+      "url": "https://m1-aviation-website.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://m1-aviation-website.vercel.app/m1-logo.png",
+      },
+      "description":
+        "M1 Aviation is the unified digital ecosystem for business aviation: verified aircraft marketplace, SIOS operating intelligence, and premier industry partner alliance.",
+      "foundingDate": "2026",
+      "founder": {
+        "@type": "Person",
+        "name": "Rayyan Shuja",
+      },
+      "sameAs": [
+        "https://linkedin.com/company/m1-aviation",
+        "https://x.com/m1_aviation",
+        "https://instagram.com/m1_aviation",
+        "https://app.m-1.tech",
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "contact@m-1.tech",
+        "contactType": "Customer Support & Brokerage Inquiries",
+        "url": "https://cal.com/m1-aviation",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://m1-aviation-website.vercel.app/#website",
+      "url": "https://m1-aviation-website.vercel.app",
+      "name": "M1 Aviation",
+      "publisher": {
+        "@id": "https://m1-aviation-website.vercel.app/#organization",
+      },
+      "description":
+        "Verified business jet marketplace, 7-step assisted acquisition, and SIOS autonomous operating intelligence.",
+    },
+    {
+      "@type": "Service",
+      "@id": "https://m1-aviation-website.vercel.app/#marketplace",
+      "name": "M1 Marketplace & 7-Step Assisted Acquisition",
+      "provider": {
+        "@id": "https://m1-aviation-website.vercel.app/#organization",
+      },
+      "serviceType": "Aircraft Brokerage & Transaction Advisory",
+      "description":
+        "Verified private aircraft marketplace offering 100% verified listings, neutral escrow protection, Part 145 inspection oversight, and a structured 7-step acquisition process.",
+      "url": "https://m1-aviation-website.vercel.app/marketplace",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://m1-aviation-website.vercel.app/#sios",
+      "name": "SIOS (Super Intelligent Operating System)",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Cloud / Avionics Telemetry Integration",
+      "description":
+        "Autonomous operating intelligence for business aviation that unifies telemetry, predictive maintenance, and digital provenance.",
+      "url": "https://m1-aviation-website.vercel.app/saios",
+      "creator": {
+        "@id": "https://m1-aviation-website.vercel.app/#organization",
+      },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://m1-aviation-website.vercel.app/#faqs",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is M1 Aviation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "M1 Aviation is a unified business aviation digital ecosystem uniting an AI-driven pre-owned aircraft marketplace, SIOS (Super Intelligent Operating System) for proactive maintenance and telemetry, and an accredited network of industry partners including BN Aviation, Velari Jets, and 7IVS.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "How does the M1 Marketplace 7-Step Assisted Acquisition work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "The 7-step process guides buyers safely from preliminary mission fit assessment, logbook provenance audit, and secure escrow deposit, through to Part 145 pre-purchase inspection, Cape Town Convention legal clearing, acceptance flight, and post-delivery onboarding onto SIOS.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "What is SIOS in aviation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "SIOS stands for Super Intelligent Operating System. It is an autonomous software intelligence layer for business jets that automatically captures flight telemetry, forecasts predictive maintenance, monitors FAA/EASA airworthiness directives, and maintains an immutable digital airframe provenance.",
+          },
+        },
+        {
+          "@type": "Question",
+          "name": "How is M1 Aviation different from legacy aviation software like Flightdocs or TRAX?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "Unlike legacy tools that rely on manual data entry and siloed maintenance binders, M1 provides a closed-loop ecosystem uniting marketplace transactions, autonomous operating intelligence (SIOS), and a collaborative partner deal room.",
+          },
+        },
+      ],
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -41,6 +212,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} bg-black text-[#f5efeb] antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-black text-[#f5efeb] selection:bg-zinc-800 selection:text-white relative">
         <SmoothScroll>
           <CustomCursor />

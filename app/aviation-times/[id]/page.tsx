@@ -7,8 +7,6 @@ import { useParams } from "next/navigation";
 import { SAMPLE_ARTICLES } from "@/data/articles";
 import { Article } from "@/types";
 import { findArticleById, getAllArticles } from "@/lib/articleStorage";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 
 export default function FullArticlePage() {
   const params = useParams();
@@ -41,8 +39,7 @@ export default function FullArticlePage() {
 
   if (!article) {
     return (
-      <div className="w-full min-h-screen bg-black text-white flex flex-col justify-between">
-        <Navbar />
+      <div className="w-full min-h-[60vh] bg-black text-white flex flex-col justify-center">
         <div className="max-w-xl mx-auto text-center py-40 px-4 space-y-6">
           <div
             className="p-[1.5px] inline-block shadow-lg"
@@ -76,7 +73,6 @@ export default function FullArticlePage() {
             </Link>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -87,9 +83,7 @@ export default function FullArticlePage() {
   const prevArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 
   return (
-    <div className="w-full min-h-screen bg-black text-white selection:bg-cyan-500/30">
-      <Navbar />
-
+    <div className="w-full bg-black text-white selection:bg-cyan-500/30">
       <main className="pt-28 pb-32">
         <article className="max-w-6xl xl:max-w-7xl 2xl:max-w-[1520px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
           {/* ── Breadcrumb & Navigation Bar: Tilted Sharp Edged ── */}
@@ -183,75 +177,220 @@ export default function FullArticlePage() {
             </div>
           )}
 
-          {/* ── Article Content Sections: Tilted Sharp Edged Quotes & Figures ── */}
+          {/* ── Article Content Sections: Editorial Wrap & Dynamic Figures ── */}
           <div className="space-y-14 text-zinc-300 leading-relaxed font-light text-base sm:text-lg md:text-xl">
-            {article.sections?.map((section, idx) => (
-              <section key={`sec-${idx}`} className="space-y-6">
-                {section.heading && (
-                  <h2 className="text-2xl sm:text-3xl font-normal text-white tracking-tight pt-4 border-t border-zinc-900">
-                    {section.heading}
-                  </h2>
-                )}
+            {article.sections?.map((section, idx) => {
+              // Match sample article to ensure layout and dual images are present even if overrides exist
+              const sampleMatch = SAMPLE_ARTICLES.find((a) => a.id === article.id)?.sections?.[idx];
+              const layout =
+                section.layout ||
+                sampleMatch?.layout ||
+                (section.images && section.images.length > 0
+                  ? "dual"
+                  : section.imageUrl
+                  ? (idx % 2 === 0 ? "wrap-right" : "wrap-left")
+                  : "full");
 
-                {section.subheading && (
-                  <h3 className="text-xl font-medium text-cyan-300 tracking-tight">
-                    {section.subheading}
-                  </h3>
-                )}
+              const imagesList =
+                section.images && section.images.length > 0
+                  ? section.images
+                  : sampleMatch?.images && sampleMatch.images.length > 0
+                  ? sampleMatch.images
+                  : [];
 
-                {section.quote && (
-                  <blockquote
-                    className="my-6 p-6 sm:p-8 border-l-4 border-cyan-400 bg-zinc-900/70 text-lg sm:text-xl italic font-serif text-white shadow-lg"
-                    style={{
-                      clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-                    }}
-                  >
-                    {section.quote}
-                  </blockquote>
-                )}
+              return (
+                <section key={`sec-${idx}`} className="flow-root clear-both">
+                  {/* Section Heading */}
+                  {section.heading && (
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-normal text-white tracking-tight pt-6 pb-4 mb-6 border-t border-zinc-800/80 clear-both">
+                      {section.heading}
+                    </h2>
+                  )}
 
-                <div className="space-y-4">
+                  {/* Subheading */}
+                  {section.subheading && (
+                    <h3 className="text-xl sm:text-2xl font-medium text-cyan-300 tracking-tight mb-4 clear-both">
+                      {section.subheading}
+                    </h3>
+                  )}
+
+                  {/* Prominent Editorial Quote Banner */}
+                  {section.quote && (
+                    <div className="my-8 clear-both">
+                      <div className="py-5 px-4 sm:px-8 border-y border-zinc-800 bg-gradient-to-r from-transparent via-zinc-900/60 to-transparent text-center">
+                        <blockquote className="text-lg sm:text-2xl md:text-3xl font-serif italic text-white/95 leading-relaxed tracking-wide">
+                          {section.quote}
+                        </blockquote>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── Floated Wrap Right Image ── */}
+                  {layout === "wrap-right" && section.imageUrl && (
+                    <div className="w-full sm:float-right sm:w-[48%] md:w-[45%] lg:w-[42%] max-w-[520px] sm:ml-8 sm:mb-6 mb-6 clear-none">
+                      <figure className="space-y-2 group">
+                        <div
+                          className="relative p-[1.5px] shadow-2xl transition-all duration-300 group-hover:border-cyan-500/30"
+                          style={{
+                            clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                            background:
+                              "linear-gradient(135deg, rgba(82, 82, 91, 0.7) 0%, rgba(39, 39, 42, 0.8) 100%)",
+                          }}
+                        >
+                          <div
+                            className="relative w-full aspect-[4/3] sm:aspect-[16/11] overflow-hidden bg-zinc-950"
+                            style={{
+                              clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                            }}
+                          >
+                            <Image
+                              src={section.imageUrl}
+                              alt={section.imageCaption || section.heading || "Article visual"}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 550px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                              unoptimized={section.imageUrl.startsWith("data:")}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                          </div>
+                        </div>
+                        {section.imageCaption && (
+                          <figcaption className="text-xs sm:text-sm font-mono text-zinc-400 italic">
+                            ↳ {section.imageCaption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    </div>
+                  )}
+
+                  {/* ── Floated Wrap Left Image ── */}
+                  {layout === "wrap-left" && section.imageUrl && (
+                    <div className="w-full sm:float-left sm:w-[48%] md:w-[45%] lg:w-[42%] max-w-[520px] sm:mr-8 sm:mb-6 mb-6 clear-none">
+                      <figure className="space-y-2 group">
+                        <div
+                          className="relative p-[1.5px] shadow-2xl transition-all duration-300 group-hover:border-cyan-500/30"
+                          style={{
+                            clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                            background:
+                              "linear-gradient(135deg, rgba(82, 82, 91, 0.7) 0%, rgba(39, 39, 42, 0.8) 100%)",
+                          }}
+                        >
+                          <div
+                            className="relative w-full aspect-[4/3] sm:aspect-[16/11] overflow-hidden bg-zinc-950"
+                            style={{
+                              clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                            }}
+                          >
+                            <Image
+                              src={section.imageUrl}
+                              alt={section.imageCaption || section.heading || "Article visual"}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 550px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                              unoptimized={section.imageUrl.startsWith("data:")}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                          </div>
+                        </div>
+                        {section.imageCaption && (
+                          <figcaption className="text-xs sm:text-sm font-mono text-zinc-400 italic">
+                            ↳ {section.imageCaption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    </div>
+                  )}
+
+                  {/* ── Paragraph Content (Flows naturally alongside & underneath floated images) ── */}
                   {section.content.map((p, pIdx) => (
-                    <p key={`p-${idx}-${pIdx}`} className="leading-relaxed text-zinc-300">
+                    <p
+                      key={`p-${idx}-${pIdx}`}
+                      className="leading-relaxed text-zinc-300 mb-5 whitespace-pre-line"
+                    >
                       {p}
                     </p>
                   ))}
-                </div>
 
-                {section.imageUrl && (
-                  <figure className="my-8 space-y-3">
-                    <div
-                      className="relative p-[1.5px] shadow-lg"
-                      style={{
-                        clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
-                        background: "linear-gradient(135deg, rgba(82, 82, 91, 0.7) 0%, rgba(39, 39, 42, 0.8) 100%)",
-                      }}
-                    >
+                  {/* ── Dual Side-by-Side Images Gallery ── */}
+                  {layout === "dual" && imagesList.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 my-8 clear-both">
+                      {imagesList.map((img, imgIdx) => (
+                        <figure key={`dual-${idx}-${imgIdx}`} className="space-y-2 group">
+                          <div
+                            className="relative p-[1.5px] shadow-xl"
+                            style={{
+                              clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                              background:
+                                "linear-gradient(135deg, rgba(82, 82, 91, 0.7) 0%, rgba(39, 39, 42, 0.8) 100%)",
+                            }}
+                          >
+                            <div
+                              className="relative w-full aspect-[16/10] overflow-hidden bg-zinc-950"
+                              style={{
+                                clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                              }}
+                            >
+                              <Image
+                                src={img.url}
+                                alt={img.caption || "Article visual"}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 750px"
+                                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                unoptimized={img.url.startsWith("data:")}
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                            </div>
+                          </div>
+                          {img.caption && (
+                            <figcaption className="text-xs sm:text-sm font-mono text-zinc-400 italic">
+                              ↳ {img.caption}
+                            </figcaption>
+                          )}
+                        </figure>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* ── Full Width Wide Image ── */}
+                  {layout === "full" && section.imageUrl && (
+                    <figure className="my-8 space-y-3 clear-both group">
                       <div
-                        className="relative w-full aspect-[16/10] sm:aspect-[16/9] overflow-hidden bg-zinc-950"
+                        className="relative p-[1.5px] shadow-2xl"
                         style={{
-                          clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                          clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
+                          background:
+                            "linear-gradient(135deg, rgba(82, 82, 91, 0.7) 0%, rgba(39, 39, 42, 0.8) 100%)",
                         }}
                       >
-                        <Image
-                          src={section.imageUrl}
-                          alt={section.imageCaption || section.heading || "Article visual"}
-                          fill
-                          sizes="(max-width: 1536px) 100vw, 1500px"
-                          className="object-cover hover:scale-105 transition-transform duration-700 ease-out"
-                          unoptimized={section.imageUrl.startsWith("data:")}
-                        />
+                        <div
+                          className="relative w-full aspect-[16/9] sm:aspect-[21/9] overflow-hidden bg-zinc-950"
+                          style={{
+                            clipPath: "polygon(13.5px 0%, 100% 0%, calc(100% - 13.5px) 100%, 0% 100%)",
+                          }}
+                        >
+                          <Image
+                            src={section.imageUrl}
+                            alt={section.imageCaption || section.heading || "Article visual"}
+                            fill
+                            sizes="(max-width: 1536px) 100vw, 1500px"
+                            className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                            unoptimized={section.imageUrl.startsWith("data:")}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    {section.imageCaption && (
-                      <figcaption className="text-xs sm:text-sm font-mono text-zinc-400 text-center sm:text-left italic">
-                        ↳ {section.imageCaption}
-                      </figcaption>
-                    )}
-                  </figure>
-                )}
-              </section>
-            ))}
+                      {section.imageCaption && (
+                        <figcaption className="text-xs sm:text-sm font-mono text-zinc-400 italic text-center sm:text-left">
+                          ↳ {section.imageCaption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  )}
+
+                  {/* Clean boundary */}
+                  <div className="clear-both" />
+                </section>
+              );
+            })}
           </div>
 
           {/* ── Author / Editorial Footer Sign-off: Tilted Sharp Edged ── */}
@@ -328,8 +467,6 @@ export default function FullArticlePage() {
           </nav>
         </article>
       </main>
-
-      <Footer />
     </div>
   );
 }

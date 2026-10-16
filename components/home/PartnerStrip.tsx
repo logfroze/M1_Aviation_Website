@@ -11,32 +11,14 @@ export interface PartnerLogo {
 }
 
 export const ALL_LOGOS: PartnerLogo[] = [
-  // Newly Added Verified Industry Partners:
-  { id: "p-7ivs",        src: "/images/partners/7ivs.png",        alt: "7IVS",              href: "https://www.7ivs.com" },
-  { id: "p-velari",      src: "/images/partners/velari-jets.png", alt: "Velari Jets",        href: "https://velarijets.co" },
-  { id: "p-bn-aviation", src: "/images/partners/bn-aviation.png", alt: "BN Aviation",        href: "https://britten-norman.com" },
-  // Row 1 Reference Partners:
-  { id: "r1-askari",     src: "/images/partners/row1_5.png",      alt: "Askari Bank",       href: "https://askaribank.com" },
-  { id: "r1-bugatocare", src: "/images/partners/row1_6.png",      alt: "BugatoCare",        href: "https://bugatocare.com" },
-  { id: "r1-rsi",        src: "/images/partners/row1_7.png",      alt: "RSI",               href: "https://roberts-space-industries.com" },
-  { id: "r1-bakery",     src: "/images/partners/row1_8.png",      alt: "Naqabi Bakery",     href: "https://naqabibakery.com" },
-  { id: "r1-emblem",     src: "/images/partners/row1_1.png",      alt: "Brand Partner",     href: "https://m1aviation.com" },
-  { id: "r1-recipli",    src: "/images/partners/row1_2.png",      alt: "Recipli",           href: "https://recipli.com" },
-  { id: "r1-shell",      src: "/images/partners/row1_3.png",      alt: "Shell Aviation",    href: "https://www.shell.com/business-customers/aviation.html" },
-  { id: "r1-indus",      src: "/images/partners/row1_4.png",      alt: "Indus Group",       href: "https://indus-group.com" },
-  // Row 2 Reference Partners:
-  { id: "r2-nutrien",    src: "/images/partners/row2_4.png",      alt: "Nutrien Livestock", href: "https://www.nutrienagsolutions.com" },
-  { id: "r2-azure",      src: "/images/partners/row2_5.png",      alt: "Microsoft Azure",   href: "https://azure.microsoft.com" },
-  { id: "r2-wave",       src: "/images/partners/row2_6.png",      alt: "Aerodynamics Corp", href: "https://www.aerodynamics.com" },
-  { id: "r2-gigas",      src: "/images/partners/row2_7.png",      alt: "Gigas",             href: "https://gigas.com" },
-  { id: "r2-royal",      src: "/images/partners/row2_1.png",      alt: "Royal Aviation",    href: "https://royalaviation.com" },
-  { id: "r2-shopify",    src: "/images/partners/row2_2.png",      alt: "Shopify",           href: "https://www.shopify.com" },
-  { id: "r2-cameco",     src: "/images/partners/row2_3.png",      alt: "Cameco",            href: "https://www.cameco.com" },
+  { id: "p-bn-aviation", src: "/images/partners/bn-aviation.png", alt: "BNAvation",   href: "https://britten-norman.com" },
+  { id: "p-velari",      src: "/images/partners/velari-jets.png", alt: "Velari Jets", href: "https://velarijets.co" },
+  { id: "p-7ivs",        src: "/images/partners/7ivs.png",        alt: "7IVS",        href: "https://www.7ivs.com" },
 ];
 
 export default function PartnerStrip() {
-  // Repeat 4x to guarantee uninterrupted infinite marquee across ultra-wide viewports
-  const singleRowLogos = [...ALL_LOGOS, ...ALL_LOGOS, ...ALL_LOGOS, ...ALL_LOGOS];
+  // Repeat to guarantee uninterrupted infinite marquee across ultra-wide viewports
+  const singleRowLogos = Array.from({ length: 16 }, () => ALL_LOGOS).flat();
 
   const handleLogoDoubleClick = (url: string) => {
     if (url && typeof window !== "undefined") {
@@ -58,8 +40,8 @@ export default function PartnerStrip() {
       {/* ── Direct Logos Placement: Single Moving Line on Plain Black Screen ── */}
       <div className="relative w-full overflow-hidden group z-30">
         <div
-          className="flex items-center gap-14 sm:gap-20 w-max animate-marquee-rtl group-hover:[animation-play-state:paused] py-2"
-          style={{ animationDuration: "125s" }}
+          className="flex items-center gap-24 sm:gap-36 md:gap-44 lg:gap-52 w-max animate-marquee-rtl group-hover:[animation-play-state:paused] py-2"
+          style={{ animationDuration: "80s" }}
         >
           {singleRowLogos.map((logo, i) => (
             <div

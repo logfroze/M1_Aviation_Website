@@ -66,13 +66,8 @@ export default function IndustryPartnerPage() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const lastActiveIndex = useRef<number>(-1);
 
-  // Repeat 4x to guarantee uninterrupted infinite marquee across ultra-wide viewports
-  const repeatedLogos = [
-    ...ALL_LOGOS,
-    ...ALL_LOGOS,
-    ...ALL_LOGOS,
-    ...ALL_LOGOS,
-  ];
+  // Repeat 16x to guarantee uninterrupted infinite marquee across ultra-wide viewports
+  const repeatedLogos = Array.from({ length: 16 }, () => ALL_LOGOS).flat();
 
   // Resume audio on first user touch/scroll/click
   useEffect(() => {
@@ -216,8 +211,8 @@ export default function IndustryPartnerPage() {
           {/* Continuous Moving Logos Row */}
           <div className="relative w-full overflow-hidden">
             <div
-              className="flex items-center gap-16 sm:gap-24 md:gap-32 w-max animate-marquee-rtl group-hover/marquee:[animation-play-state:paused] py-3"
-              style={{ animationDuration: "70s" }}
+              className="flex items-center gap-24 sm:gap-36 md:gap-44 lg:gap-52 w-max animate-marquee-rtl group-hover/marquee:[animation-play-state:paused] py-3"
+              style={{ animationDuration: "80s" }}
             >
               {repeatedLogos.map((logo, i) => (
                 <div

@@ -23,6 +23,8 @@ export interface ArticleSection {
   content: string[];
   imageUrl?: string;
   imageCaption?: string;
+  layout?: "wrap-right" | "wrap-left" | "full" | "dual";
+  images?: { url: string; caption?: string }[];
 }
 
 export interface Article {

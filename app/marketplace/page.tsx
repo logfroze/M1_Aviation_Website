@@ -274,17 +274,17 @@ function MarketplaceHeroCardView({ card }: { card: HeroCarouselCard }) {
   );
 }
 
-// ── Marketplace Version 2.0 Specifications & Laws ──
+// ── Marketplace Version 2.0 Specifications & Features ──
 const V2_LAWS = [
   {
     number: "01",
-    shortTitle: "Instant Escrow",
-    title: "Instant Cryptographic Escrow",
-    law: "Autonomous Multilateral Clearance Law",
+    shortTitle: "Market Intelligence",
+    title: "Market Intelligence",
+    law: "Global Airframe Opportunity Index",
     summary:
-      "Eliminates standard 21-day escrow latency by integrating verified smart contracts with institutional aviation banks, releasing title in under 4 minutes.",
-    metric: "4-Minute Title Settlement",
-    detail: "FAA & EASA Digital Registry Synchronization",
+      "Discover aircraft opportunities, monitor listing status, and explore a database of more than 300,000 aircraft models.",
+    metric: "300,000+ Aircraft Models",
+    detail: "Real-time Listing Status & Opportunity Monitoring",
     theme: {
       cardBg: "bg-[linear-gradient(145deg,#061422_0%,#0c2236_35%,#123654_65%,#08192a_100%)]",
       borderColor: "border-cyan-500/35 hover:border-cyan-400/50",
@@ -299,13 +299,13 @@ const V2_LAWS = [
   },
   {
     number: "02",
-    shortTitle: "Continuous Audit",
-    title: "Continuous Telemetric Audit",
-    law: "Zero-Tamper Airframe History Protocol",
+    shortTitle: "Industry Partner",
+    title: "Industry Partner",
+    law: "Exclusive Operator Network Protocol",
     summary:
-      "Automated inspection engines parse continuous SAIOS turbine vibration records, APU cycle logs, and unscheduled maintenance filings directly from airframe avionics.",
-    metric: "100% Neural Logbook Integrity",
-    detail: "Zero Paper-Logbook Discrepancy",
+      "Join the exclusive Industry Partner circle. Share off-market acquisition opportunities. Keep an eye on industry news about emerging opportunities.",
+    metric: "Exclusive Partner Circle",
+    detail: "Off-Market Acquisition & Industry News",
     theme: {
       cardBg: "bg-[linear-gradient(145deg,#150a24_0%,#221038_35%,#33184e_65%,#160a26_100%)]",
       borderColor: "border-purple-500/35 hover:border-purple-400/50",
@@ -320,13 +320,13 @@ const V2_LAWS = [
   },
   {
     number: "03",
-    shortTitle: "Zero-Spread Swaps",
-    title: "Zero-Spread Liquidity Swaps",
-    law: "Multilateral Fleet Rebalancing Matrix",
+    shortTitle: "Assisted Acquisition",
+    title: "7-step Assisted Acquisition",
+    law: "Transparent Acquisition Corridor",
     summary:
-      "Execute bilateral and multi-asset exchanges across whole-airframe, dry-lease, and fractional portfolios without traditional intermediary broker markups.",
-    metric: "<0.02% Execution Drift",
-    detail: "Direct Institutional Liquidity Pool",
+      "The whole acquisition process made easy by M1 Marketplace. Acquisition process based on transparency, built for efficiency.",
+    metric: "7-Step Assisted Framework",
+    detail: "End-to-End Transparency & Operational Efficiency",
     theme: {
       cardBg: "bg-[linear-gradient(145deg,#1a0f05_0%,#2a1909_35%,#3d250f_65%,#1c1005_100%)]",
       borderColor: "border-amber-500/35 hover:border-amber-400/50",
@@ -341,13 +341,13 @@ const V2_LAWS = [
   },
   {
     number: "04",
-    shortTitle: "Algorithmic Pricing",
-    title: "Algorithmic Valuation Index",
-    law: "Live Global Sovereign Pricing Standard",
+    shortTitle: "Verified Listing",
+    title: "Verified Listing",
+    law: "Multi-Tier Verification Standard",
     summary:
-      "Real-time airframe depreciation curves updated continuously against global fuel consumption telemetry, engine cycle depreciation, and component supply times.",
-    metric: "Microsecond Pricing Refresh",
-    detail: "Predictive Lifecycle Residual Valuation",
+      "Listings that complete M1's verification process receive a distinct verified status, helping buyers identify listings that have undergone additional checks. Verified listings are 9.7x more trustworthy.",
+    metric: "9.7x More Trustworthy",
+    detail: "Distinct Status Following Rigorous Verification",
     theme: {
       cardBg: "bg-[linear-gradient(145deg,#051912_0%,#0a281e_35%,#0f3d2e_65%,#061a13_100%)]",
       borderColor: "border-emerald-500/35 hover:border-emerald-400/50",
@@ -528,11 +528,10 @@ const HIGHLIGHT_LISTINGS = [
 
 // ── Marketplace Network Telemetry Stats ──
 const MARKETPLACE_STATS = [
-  { value: "$4.8B+", label: "Transacted Volume", desc: "Institutional asset volume cleared" },
-  { value: "18,500+", label: "Active Recipients", desc: "Verified corporate & private bidders" },
-  { value: "1,420+", label: "Charter Fleets", desc: "Certified airframe operators on-grid" },
-  { value: "99.98%", label: "Escrow Execution", desc: "Frictionless title release success" },
-  { value: "42", label: "Sovereign Jurisdictions", desc: "Worldwide cross-border clearance" },
+  { value: "9", label: "Active Users", desc: "Verified operators and institutional bidders" },
+  { value: "3", label: "Active Listings", desc: "Curated premium aircraft currently on-grid" },
+  { value: "1", label: "Ongoing Acquisition Process", desc: "Active assisted acquisition in progress" },
+  { value: "4", label: "Industry Partners", desc: "Certified aviation industry alliance members" },
 ];
 
 export default function MarketplacePage() {
@@ -717,7 +716,7 @@ export default function MarketplacePage() {
             variant="silver"
             className="py-3 sm:py-3.5 px-8 sm:px-10 text-xs sm:text-sm font-mono font-bold tracking-wider shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
           >
-            EXPLORE ASSETS
+            EXPLORE LISTINGS
           </ParallelogramButton>
         </div>
 
@@ -727,7 +726,7 @@ export default function MarketplacePage() {
             variant="white"
             className="py-3 sm:py-3.5 px-8 sm:px-10 text-xs sm:text-sm font-mono font-bold tracking-wider shadow-[0_10px_30px_rgba(255,255,255,0.2)]"
           >
-            REQUEST ACCESS
+            DISCOVER OPPORTUNITIES
           </ParallelogramButton>
         </div>
       </section>
@@ -742,8 +741,7 @@ export default function MarketplacePage() {
             Marketplace Version 2.0
           </h2>
           <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto font-light">
-            Governed by autonomous execution laws engineered to eliminate broker arbitrage and
-            guarantee institutional clearing speed.
+            Aircraft discovery, market intelligence, and a more transparent acquisition process in one marketplace.
           </p>
         </div>
 
@@ -999,9 +997,9 @@ export default function MarketplacePage() {
           <div className="relative w-full overflow-hidden">
             <div
               className="flex items-stretch gap-6 sm:gap-8 w-max animate-marquee-rtl group-hover/marquee:[animation-play-state:paused] py-3"
-              style={{ animationDuration: "35s" }}
+              style={{ animationDuration: "50s" }}
             >
-              {[...MARKETPLACE_STATS, ...MARKETPLACE_STATS, ...MARKETPLACE_STATS, ...MARKETPLACE_STATS].map((stat, i) => (
+              {Array.from({ length: 8 }, () => MARKETPLACE_STATS).flat().map((stat, i) => (
                 <div
                   key={`stat-carousel-${i}`}
                   className="w-64 sm:w-72 p-6 rounded-2xl border border-white/15 bg-[linear-gradient(135deg,#0c0e12_0%,#181d26_50%,#283241_75%,#0d1015_100%)] backdrop-blur-xl flex flex-col justify-between space-y-3 text-center shrink-0 hover:border-white/60 hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] transition-all duration-300"

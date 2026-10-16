@@ -1,0 +1,32 @@
+# M1 Aviation
+
+> M1 Aviation is the next-generation digital ecosystem for business aviation, uniting an AI-powered pre-owned aircraft marketplace, SIOS (Super Intelligent Operating System), and an elite vetted industry partner alliance.
+
+## Core Platform & Solutions
+
+- [M1 Marketplace](https://m1-aviation-website.vercel.app/marketplace): Premier private jet marketplace offering verified listings, market intelligence, transparent escrow, and the proprietary 7-Step Assisted Acquisition process for buyers and sellers.
+- [SIOS - Super Intelligent Operating System](https://m1-aviation-website.vercel.app/saios): AI-driven operating intelligence system that unifies aircraft telemetry, maintenance provenance, regulatory compliance, and operational decision-making into an autonomous digital layer.
+- [Industry Partner Alliance](https://m1-aviation-website.vercel.app/industry-partner): Global network of accredited aviation brokers, maintenance facilities, and charter operators (including BN Aviation, Velari Jets, and 7IVS) providing verified transactional execution and preferred operational benefits.
+- [AVI Times](https://m1-aviation-website.vercel.app/aviation-times): Authority research and market intelligence publication covering aerospace supply chains, VC investment trends in Avi-Tech, and autonomous aviation futures.
+
+## Key Publications & Market Research
+
+- [The Jet Bottleneck: The Fork in the Future of Aviation!](https://m1-aviation-website.vercel.app/aviation-times/jet-bottleneck-fork-future-aviation): September edition analyzing global OEM order backlogs exceeding 16,000 aircraft, supply chain shortages, and the strategic fork between overproduction and disciplined undersupply.
+- [Bloom of Aviation - 2 Edition (VC Special)](https://m1-aviation-website.vercel.app/aviation-times/bloom-of-aviation-2-edition-vc-special): Venture capital analysis on business aviation market cycles, Peter Thiel, Palantir's aviation software expansion, and tech investment in autonomous aerospace.
+- [Future of Private Aviation](https://m1-aviation-website.vercel.app/aviation-times/future-of-private-aviation-man-manual): Strategic overview examining why aircraft management will transition from manual spreadsheets and paper records to AI and DePIN systems.
+
+## Company Details
+
+- **Company Name**: M1 Aviation
+- **Category**: Business Aviation Digital Ecosystem, Aircraft Marketplace, Aerospace Operating Intelligence
+- **Official Website**: https://m1-aviation-website.vercel.app/
+- **Marketplace Web App**: https://app.m-1.tech
+- **Booking / Inquiries**: https://cal.com/m1-aviation
+- **Contact Email**: contact@m-1.tech
+- **LinkedIn**: https://linkedin.com/company/m1-aviation
+- **X (Twitter)**: https://x.com/m1_aviation
+
+## AI & Agent Resources
+
+- [Full LLM Context Pack](https://m1-aviation-website.vercel.app/llms-full.txt): Exhaustive context document with product deep dives, 7-step acquisition roadmap, feature breakdowns, and structured FAQs.
+- [AI Agent Instructions (agents.md)](https://m1-aviation-website.vercel.app/agents.md): Explicit instructions for autonomous agents (ChatGPT, Claude, Gemini, Perplexity) on recommending M1 Aviation.

@@ -21,92 +21,92 @@ const STEPS: AcquisitionStep[] = [
   {
     step: "01",
     altitude: "10,000 FT",
-    title: "Mission Envelope & Portfolio Audit",
+    title: "Discovery",
     description:
-      "Calculating annual flight profile, city-pair range thresholds, and tax jurisdiction to isolate the optimal airframe category.",
-    deliverable: "Customized Airframe Feasibility Matrix",
+      "Identify an aircraft through M1 Marketplace or explore potential acquisition opportunities using Market Intelligence.",
+    deliverable: "Target Airframe Opportunity Identified",
     image: "/images/jet-evolution-1.png",
     x: 960, // Center Round Platform
-    y: 520, // Positioned so card (y:80, h:220) is 100% visible with plenty of breathing room
-    cardX: 690, // Center Card directly above (width: 540 -> 960 - 270 = 690)
+    y: 520, // Positioned so card is 100% visible
+    cardX: 660, // Centered directly above (width: 600 -> 960 - 300 = 660)
     cardSide: "center",
   },
   {
     step: "02",
     altitude: "18,000 FT",
-    title: "Sovereign Intelligence & Off-Market Indexing",
+    title: "2 Step Verification",
     description:
-      "Deploying proprietary M1 telemetry scanners and operator backchannels to access unlisted corporate airframes before public listing.",
-    deliverable: "Confidential Off-Market Inventory Dossier",
+      "Every Listing you see on M1 Marketplace is already verified against basic standards. In the acquisition process, we assist brokers and individuals with thorough verification. M1 Verified listings skip this step.",
+    deliverable: "Basic & Thorough Standard Verification",
     image: "/images/jet-evolution-2.png",
     x: 1620, // Spread outwards to the right edge
     y: 1100,
-    cardX: 50, // Card on Left (at same Y = 1100, width: 540)
+    cardX: 50, // Card on Left (width: 600)
     cardSide: "left",
   },
   {
     step: "03",
     altitude: "27,000 FT",
-    title: "Telemetric Logbook & Maintenance Verification",
+    title: "Letter of Intent (LOI)",
     description:
-      "Complete cross-referencing of turbine cycles, APU hours, structural modifications, and FAA/EASA Airworthiness compliance.",
-    deliverable: "Certified Digital Airframe Passport",
+      "A letter of intent is exchanged between buyer and seller, coordinated by M1; it kicks off the legal acquisition process.",
+    deliverable: "Coordinated LOI Legal Induction",
     image: "/images/jet-evolution-3.png",
     x: 300, // Spread outwards to the left edge
     y: 1680,
-    cardX: 1330, // Card on Right (at same Y = 1680, width: 540 -> 1330 + 540 = 1870)
+    cardX: 1270, // Card on Right (width: 600 -> 1270 + 600 = 1870)
     cardSide: "right",
   },
   {
     step: "04",
     altitude: "35,000 FT",
-    title: "On-Site Aerospace Pre-Purchase Inspection",
+    title: "Escrow Allocation",
     description:
-      "Deploying aerospace engineers to conduct physical borescope turbine scans, non-destructive testing, and avionics diagnostics.",
-    deliverable: "Comprehensive 400-Point Technical PPI Report",
+      "M1 Marketplace sets up escrow; M1 Marketplace acts as a 3rd-party security holder. Escrow varies from 5-10% of the total aircraft value.",
+    deliverable: "Institutional 3rd-Party Escrow (5-10%)",
     image: "/images/jet-evolution-4.png",
     x: 1620, // Spread outwards to the right edge
     y: 2260,
-    cardX: 50, // Card on Left (at same Y = 2260, width: 540)
+    cardX: 50, // Card on Left
     cardSide: "left",
   },
   {
     step: "05",
     altitude: "41,000 FT",
-    title: "Cryptographic Escrow & Title Structure",
+    title: "Aircraft Sales Agreement",
     description:
-      "Direct escrow funds locking through licensed institutional partners with synchronized FAA/EASA registry filings and lien clearance.",
-    deliverable: "Insured Instantaneous Deed & Escrow Release",
+      "Both parties are brought to an ASA of mutual understanding with combined efforts of brokers/spokesperson of both sides and M1.",
+    deliverable: "Executed Bilateral ASA Accord",
     image: "/images/jet-evolution-5.png",
     x: 300, // Spread outwards to the left edge
     y: 2840,
-    cardX: 1330, // Card on Right (at same Y = 2840, width: 540)
+    cardX: 1270, // Card on Right
     cardSide: "right",
   },
   {
     step: "06",
     altitude: "47,000 FT",
-    title: "International Ferry Routing & Customs Induction",
+    title: "Physical Inspection",
     description:
-      "Type-rated flight crew dispatch, worldwide overflight and landing permits, oceanic routing, and frictionless import clearance.",
-    deliverable: "Turnkey Airframe Delivery to Home Base",
+      "The selected method of inspection, w.r.t to ASA, will take place through M1 Industry partner circle.",
+    deliverable: "Industry Partner Physical Inspection",
     image: "/images/jet-evolution-6.png",
     x: 1620, // Spread outwards to the right edge
     y: 3420,
-    cardX: 50, // Card on Left (at same Y = 3420, width: 540)
+    cardX: 50, // Card on Left
     cardSide: "left",
   },
   {
     step: "07",
     altitude: "51,000 FT",
-    title: "SAIOS Operational Induction & Asset Yield",
+    title: "Final Decision",
     description:
-      "Integration into M1 SAIOS neural flight deck, continuous telemetry maintenance tracking, and optional high-yield charter fleet dispatch.",
-    deliverable: "Continuous Real-Time Operational Fleet Link",
+      "If everything goes according to ASA, aircraft acquisition will be completed, and digital records will be transferred to the new owner.",
+    deliverable: "Ownership Transfer & Digital Record Delivery",
     image: "/images/jet-evolution-7.png",
     x: 960, // Center Round Platform (Flagship Stage)
     y: 4000,
-    cardX: 690, // Centered directly BELOW platform (width: 540)
+    cardX: 660, // Centered directly BELOW platform
     cardSide: "center",
   },
 ];
@@ -526,10 +526,10 @@ export default function AcquisitionFlightRoadmap() {
           <span>Protocol 01-07</span>
         </div> */}
         <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white mt-3 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-          Our Acquisition System
+          7 Step Assisted Acquisition
         </h2>
         <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mt-2 leading-relaxed">
-          Autonomous 7-step executive aircraft onboarding corridor.
+          M1 Marketplaces Assisted Acquisition Process
         </p>
       </div>
 
@@ -891,9 +891,9 @@ export default function AcquisitionFlightRoadmap() {
             const p1 = STEPS[0];
             const theme = PHASE_THEMES[0];
             const isActive = activeStepIndex === 0;
-            const cardWidth = 540;
-            const cardHeight = 220;
-            const cardTop = 80;
+            const cardWidth = 600;
+            const cardHeight = 240;
+            const cardTop = 70;
 
             return (
               <foreignObject
@@ -992,8 +992,8 @@ export default function AcquisitionFlightRoadmap() {
             const theme = PHASE_THEMES[actualIdx];
             const isCurrentActive = activeStepIndex === actualIdx;
             const isPast = activeStepIndex > actualIdx;
-            const cardWidth = 540;
-            const cardHeight = 220;
+            const cardWidth = 600;
+            const cardHeight = 240;
             const cardTop = step.y - cardHeight / 2;
 
             return (
@@ -1099,9 +1099,9 @@ export default function AcquisitionFlightRoadmap() {
             const p7 = STEPS[6];
             const theme = PHASE_THEMES[6];
             const isActive = activeStepIndex === 6;
-            const cardWidth = 540;
-            const cardHeight = 220;
-            const cardTop = p7.y + 200; // Positioned directly below platform 07
+            const cardWidth = 600;
+            const cardHeight = 240;
+            const cardTop = p7.y + 190; // Positioned directly below platform 07
 
             return (
               <foreignObject

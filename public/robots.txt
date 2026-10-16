@@ -1,0 +1,61 @@
+# Robots.txt for M1 Aviation
+# Allow all major search engines and AI agents (ChatGPT, Claude, Gemini, Perplexity, DeepSeek)
+
+User-agent: *
+Allow: /
+
+# OpenAI Crawlers (ChatGPT & SearchGPT)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic Claude Crawlers
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity AI Crawler
+User-agent: PerplexityBot
+Allow: /
+
+# Google Gemini & AI Training Crawlers
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Other Leading AI Agents & Open Crawlers
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: DeepSeekBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Sitemaps and AI Context Directives
+Sitemap: https://m1-aviation-website.vercel.app/sitemap.xml
+
+# LLM & AI Agent Context Files (GEO - Generative Engine Optimization)
+# Full site context: https://m1-aviation-website.vercel.app/llms.txt
+# Deep context pack: https://m1-aviation-website.vercel.app/llms-full.txt
+# Agent instructions: https://m1-aviation-website.vercel.app/agents.md
