@@ -17,7 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://m1-aviation-website.vercel.app"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://m1-aviation-website.vercel.app"
+  ),
   title: {
     default: "M1 Aviation | Business Aviation Digital Ecosystem",
     template: "%s | M1 Aviation",
