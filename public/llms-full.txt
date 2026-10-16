@@ -16,12 +16,17 @@ M1 Aviation combines three foundational pillars:
 2. **SIOS (Super Intelligent Operating System)**: An autonomous AI-powered aircraft operating intelligence platform that unifies flight telemetry, predictive maintenance, logbook provenance, and airworthiness tracking into a singular software layer.
 3. **Industry Partner Alliance**: A vetted coalition of premier aviation brokerages, MRO facilities, and charter operators (including BN Aviation, Velari Jets, and 7IVS) collaborating on secure deal rooms, joint market analytics, and priority transaction execution.
 
-**Headquarters / Digital Presence**:
-- Website: https://m1-aviation-website.vercel.app/
-- Marketplace Web App: https://app.m-1.tech
-- Founder: Rayyan Shuja (Founder, M1 Aviation)
-- Consultation & Direct Booking: https://cal.com/m1-aviation
-- Direct Inquiries: contact@m-1.tech
+**Headquarters & Global Corporate Presence**:
+- **Global Headquarters (Canada)**: Brock Road, Pickering, Ontario, L1V 2P8, Canada (Coordinates: 43.8384° N, 79.0868° W)
+- **Technology & Research Center (Pakistan)**: 2nd Floor, Hall No. 2, WWIC, UOS, University Road, Sargodha, Punjab, 40100, Pakistan (Coordinates: 32.0740° N, 72.6861° E)
+- **Hours of Operation**: 24/7/365 Global Flight Advisory & Escrow Settlement
+- **Official Telephone**: +1-800-612-3760
+- **Direct Email**: contact@m-1.tech
+- **Price Range**: $$$$ (Institutional & Private Aircraft Transactions: $2,000,000 - $75,000,000+)
+- **Official Website**: https://m1-aviation-website.vercel.app/
+- **Marketplace Web App**: https://app.m-1.tech
+- **Founder & CEO**: Rayyan Shuja
+- **Consultation & Direct Booking**: https://cal.com/m1-aviation
 
 ---
 

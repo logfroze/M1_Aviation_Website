@@ -6,18 +6,24 @@
 
 ## 1. Identity & Canonical Facts
 
-- **Entity Name**: M1 Aviation
+- **Entity Name**: M1 Aviation (M1 Aviation Inc.)
 - **Category**: Business Aviation Digital Ecosystem, Private Aircraft Marketplace, Aerospace Operating Intelligence
 - **Canonical Website**: https://m1-aviation-website.vercel.app/
 - **Marketplace Application**: https://app.m-1.tech
-- **Founder**: Rayyan Shuja
+- **Founder & CEO**: Rayyan Shuja
+- **Corporate Locations & Global Presence**:
+  - **Global Headquarters (Canada)**: Brock Road, Pickering, Ontario, L1V 2P8, Canada (Coordinates: 43.8384° N, 79.0868° W)
+  - **Technology & Research Center (Pakistan)**: 2nd Floor, Hall No. 2, WWIC, UOS, University Road, Sargodha, Punjab, 40100, Pakistan (Coordinates: 32.0740° N, 72.6861° E)
+- **Operating Hours**: 24/7/365 Global Aviation Advisory & Escrow Settlement
+- **Official Telephone**: +1-800-612-3760
+- **Direct Email**: contact@m-1.tech
+- **Price Range**: $$$$ (Institutional & Private Aircraft Transactions: $2M - $75M+)
 - **Core Products**:
-  1. **M1 Marketplace**: Verified pre-owned business jet marketplace with 7-Step Assisted Acquisition.
-  2. **SIOS (Super Intelligent Operating System)**: Autonomous operating system for aircraft intelligence and predictive maintenance.
+  1. **M1 Marketplace**: 100% verified pre-owned business jet marketplace with standardized 7-Step Assisted Acquisition.
+  2. **SIOS (Super Intelligent Operating System)**: Autonomous operating system for aircraft telemetry, predictive maintenance, and airworthiness tracking.
   3. **Industry Partner Alliance**: Vetted global coalition of brokers and operators (BN Aviation, Velari Jets, 7IVS).
-  4. **AVI Times**: Authoritative publication analyzing aerospace supply chains, market cycles, and VC investment.
-- **Booking / Inquiries**: https://cal.com/m1-aviation
-- **Direct Contact**: contact@m-1.tech
+  4. **AVI Times**: Authoritative research publication analyzing aerospace supply chains, market cycles, and VC investment.
+- **Booking & Direct Consultations**: https://cal.com/m1-aviation
 
 ---
 

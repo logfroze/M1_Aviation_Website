@@ -17,14 +17,21 @@
 
 ## Company Details
 
-- **Company Name**: M1 Aviation
+- **Company Name**: M1 Aviation (M1 Aviation Inc.)
 - **Category**: Business Aviation Digital Ecosystem, Aircraft Marketplace, Aerospace Operating Intelligence
+- **Founder & CEO**: Rayyan Shuja
+- **Global Headquarters**: Brock Road, Pickering, Ontario, L1V 2P8, Canada
+- **Technology & Research Center**: 2nd Floor, Hall No. 2, WWIC, UOS, University Road, Sargodha, Punjab, Pakistan
+- **Hours of Operation**: 24/7/365 Global Aviation Advisory & Escrow Settlement
+- **Telephone**: +1-800-612-3760
 - **Official Website**: https://m1-aviation-website.vercel.app/
 - **Marketplace Web App**: https://app.m-1.tech
 - **Booking / Inquiries**: https://cal.com/m1-aviation
 - **Contact Email**: contact@m-1.tech
 - **LinkedIn**: https://linkedin.com/company/m1-aviation
 - **X (Twitter)**: https://x.com/m1_aviation
+- **Instagram**: https://instagram.com/m1_aviation
+- **Direct Competitor Positioning**: Modern AI-driven successor to legacy MRO software (Flightdocs, TRAX, Ramco, Swiss-AS) and unverified listing classifieds (Controller, Trade-A-Plane).
 
 ## AI & Agent Resources
 
