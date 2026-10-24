@@ -204,12 +204,12 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
                 mat.roughness = 0.18;
                 mat.needsUpdate = true;
               }
-              // E. Main Airframe: Ultra-Smooth, Consistent, Deep Dark Obsidian Aerospace Composite
+              // E. Main Airframe: Ultra-Smooth, Consistent, Deep Dark Obsidian Metallic Composite
               else {
-                mat.color = new THREE.Color(0x0a0f18); // Deep Dark Obsidian Black
-                mat.metalness = 0.70;
-                mat.roughness = 0.16;
-                mat.envMapIntensity = 2.2;
+                mat.color = new THREE.Color(0x151e2c); // Deep metallic midnight obsidian
+                mat.metalness = 0.62;
+                mat.roughness = 0.22;
+                mat.envMapIntensity = 2.4;
                 mat.needsUpdate = true;
               }
             }
