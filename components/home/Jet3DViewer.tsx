@@ -125,22 +125,27 @@ export default function Jet3DViewer({
     renderer.toneMappingExposure = 1.25 * lightIntensity;
     rendererRef.current = renderer;
 
-    // 4. Lighting setup for sleek aerospace reflections
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.45);
+    // 4. Lighting setup for sleek Dark Jet with vivid Blue & Gold metallic sheen
+    const ambientLight = new THREE.AmbientLight(0x1e293b, 1.6);
     scene.add(ambientLight);
 
-    // Primary key sunlight from upper-right
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-    keyLight.position.set(12, 16, 14);
+    // Primary key sunlight from upper-right (crisp white specular highlights)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    keyLight.position.set(12, 18, 14);
     scene.add(keyLight);
 
-    // Aerodynamic cyan rim light matching M1 theme
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 4.0);
-    rimLight.position.set(-14, 8, 8);
-    scene.add(rimLight);
+    // Vibrant Electric / Sapphire Blue rim light (creates vivid blue metallic sheen along wings & spine)
+    const blueRimLight = new THREE.DirectionalLight(0x0284c7, 4.5);
+    blueRimLight.position.set(-16, 10, 8);
+    scene.add(blueRimLight);
+
+    // Luxury Warm 24K Gold specular rim light (creates warm gold glints along curves as it turns)
+    const goldRimLight = new THREE.DirectionalLight(0xf59e0b, 3.8);
+    goldRimLight.position.set(14, -4, 12);
+    scene.add(goldRimLight);
 
     // Subtle blue fill light from below
-    const fillLight = new THREE.DirectionalLight(0x60a5fa, 1.2);
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.4);
     fillLight.position.set(0, -10, 6);
     scene.add(fillLight);
 

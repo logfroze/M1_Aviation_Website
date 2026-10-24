@@ -145,39 +145,71 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
                 return;
               }
 
+              // Remove noisy patchwork camo textures to ensure a smooth, uniform, aesthetic luxury surface
+              if (mat.map) {
+                mat.map = null;
+              }
+
+              // A. Luxury Gold / Champagne Brass Metallic Accents (Engine cowlings, de-icing rings, exhaust rims)
               if (
-                matName.includes("fuselage") ||
-                matName.includes("wingpod") ||
-                matName.includes("paint") ||
-                matName.includes("material_")
+                matName.includes("deicing") ||
+                matName.includes("titanium_burnt") ||
+                matName.includes("copper") ||
+                matName.includes("nacelle_inside") ||
+                matName.includes("engine_axle") ||
+                matName.includes("antenna_metal_glossy")
               ) {
-                // Sleek aeronautical gloss finish
-                mat.metalness = 0.45;
-                mat.roughness = 0.22;
-                mat.envMapIntensity = 1.6;
+                mat.color = new THREE.Color(0xd4af37); // Rich 24K Champagne Gold
+                mat.metalness = 0.94;
+                mat.roughness = 0.12;
+                mat.envMapIntensity = 2.4;
                 mat.needsUpdate = true;
-              } else if (
+              }
+              // B. Electric / Deep Sapphire Blue Aerodynamic Highlights (Wingpods, wingtip edges, aero livery lines)
+              else if (
+                matName.includes("wingpod") ||
+                matName.includes("sky_blue") ||
+                matName.includes("crimson_red") ||
+                matName.includes("fuselage_blue")
+              ) {
+                mat.color = new THREE.Color(0x0ea5e9); // Electric Cyan / Sapphire Blue
+                mat.metalness = 0.82;
+                mat.roughness = 0.15;
+                mat.envMapIntensity = 2.2;
+                mat.needsUpdate = true;
+              }
+              // C. Cockpit Canopy: Deep Tinted Sapphire Aerospace Glass
+              else if (
                 matName.includes("glass") ||
                 matName.includes("clear") ||
                 matName.includes("cockpit")
               ) {
-                // Cockpit canopy windows: Deep tinted sapphire aerospace glass
                 mat.transparent = true;
-                mat.opacity = 0.88;
-                mat.color = new THREE.Color(0x081525);
-                mat.metalness = 0.95;
-                mat.roughness = 0.10;
-                mat.envMapIntensity = 2.0;
+                mat.opacity = 0.90;
+                mat.color = new THREE.Color(0x030a14); // Deep Midnight Sapphire
+                mat.metalness = 0.96;
+                mat.roughness = 0.08;
+                mat.envMapIntensity = 2.5;
                 mat.needsUpdate = true;
-              } else if (
-                matName.includes("metal") ||
+              }
+              // D. Machined Titanium / Dark Metal Mechanical Trim
+              else if (
                 matName.includes("titanium") ||
-                matName.includes("copper") ||
-                matName.includes("deicing")
+                matName.includes("dark_metal") ||
+                matName.includes("metal") ||
+                matName.includes("landing_gear")
               ) {
-                // Precision machined titanium / metal trim
-                mat.metalness = 0.85;
+                mat.color = new THREE.Color(0x283140); // Dark Titanium Alloy
+                mat.metalness = 0.88;
                 mat.roughness = 0.18;
+                mat.needsUpdate = true;
+              }
+              // E. Main Airframe: Ultra-Smooth, Consistent, Deep Dark Obsidian Aerospace Composite
+              else {
+                mat.color = new THREE.Color(0x0a0f18); // Deep Dark Obsidian Black
+                mat.metalness = 0.70;
+                mat.roughness = 0.16;
+                mat.envMapIntensity = 2.2;
                 mat.needsUpdate = true;
               }
             }
