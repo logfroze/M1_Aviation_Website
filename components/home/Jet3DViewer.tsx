@@ -220,9 +220,15 @@ export default function Jet3DViewer({
 
         // Degree to radians
         const toRad = Math.PI / 180;
-        const totalYawRad = (curRot.yaw + autoYawRef.current + mouseTiltYaw) * toRad;
+        const totalYawDeg = curRot.yaw + autoYawRef.current + mouseTiltYaw;
+        const totalYawRad = totalYawDeg * toRad;
         const totalPitchRad = (curRot.pitch + mouseTiltPitch) * toRad;
         const totalRollRad = (curRot.roll + mouseTiltRoll) * toRad;
+
+        // Broadcast current live orientation for seamless scroll takeoff handoff
+        if (target.autoRotate && typeof window !== "undefined") {
+          (window as any).__M1_PLATFORM_JET_YAW = totalYawDeg;
+        }
 
         // In our model:
         // - Nose is along -X, Tail is along +X

@@ -51,6 +51,7 @@ export default function ScrollFlightJet() {
   const viewEnteredAtRef = useRef<number | null>(null);
   const takeoffScrollRef = useRef<number | null>(null);
   const takeoffPosRef = useRef<{ x: number; y: number } | null>(null);
+  const initialPlatformYawRef = useRef<number | null>(null);
   const isScrollingRef = useRef(false);
   const scrollIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevProgressRef = useRef(0);
@@ -84,6 +85,7 @@ export default function ScrollFlightJet() {
         viewEnteredAtRef.current = null;
         takeoffScrollRef.current = null;
         takeoffPosRef.current = null;
+        initialPlatformYawRef.current = null;
       }
 
       const FLIGHT_DELAY_MS = 2500; // 2.5 seconds (within user's requested 2-3s)
@@ -92,6 +94,8 @@ export default function ScrollFlightJet() {
 
       // If delay hasn't completed or user hasn't reached view, lock to pedestal
       if (!delayCompleted) {
+        takeoffScrollRef.current = null;
+        initialPlatformYawRef.current = null;
         if (sourceEl) {
           sourceEl.style.opacity = "1";
           sourceEl.style.pointerEvents = "auto";
@@ -118,6 +122,10 @@ export default function ScrollFlightJet() {
           x: vw * 0.5,
           y: Math.max(vh * 0.25, Math.min(vh * 0.65, sourceRect.top + sourceRect.height * 0.5)),
         };
+
+        // Capture live instantaneous heading of the turntable aircraft at the exact moment of liftoff
+        const livePlatformYaw = typeof window !== "undefined" ? (window as any).__M1_PLATFORM_JET_YAW : undefined;
+        initialPlatformYawRef.current = typeof livePlatformYaw === "number" ? livePlatformYaw : 28;
       }
 
       const takeoffScroll = takeoffScrollRef.current;
@@ -136,6 +144,8 @@ export default function ScrollFlightJet() {
 
       // When scroll is 0 or less, plane stays 100% parked on pedestal
       if (!isTakingOff) {
+        takeoffScrollRef.current = null;
+        initialPlatformYawRef.current = null;
         if (sourceEl) {
           sourceEl.style.opacity = "1";
           sourceEl.style.pointerEvents = "auto";
@@ -215,11 +225,30 @@ export default function ScrollFlightJet() {
         curX = startX + (p1X - startX) * ease1;
         curY = startY + (p1Y - startY) * ease1;
 
-        curYaw = 28 + (48 - 28) * ease1;
-        curPitch = 6 + (14 - 6) * ease1;
-        curRoll = 22 + (-16 - 22) * ease1;
+        // 1. Instantaneous heading of the aircraft at the exact moment user initiated liftoff
+        const rawPlatformYaw = initialPlatformYawRef.current ?? 28;
+        const startYawNorm = ((rawPlatformYaw % 360) + 360) % 360;
+
+        // 2. Base flying direction for takeoff is 28 degrees. Calculate shortest circular turn.
+        const baseFlightYaw = 28;
+        let diff = (baseFlightYaw - startYawNorm) % 360;
+        if (diff > 180) diff -= 360;
+        if (diff < -180) diff += 360;
+
+        // 3. Fast smooth swivel along shortest path in initial liftoff segment (flightP 0.00 to 0.06)
+        const turnT = Math.min(1, flightP / 0.06);
+        const turnEase = turnT * turnT * (3 - 2 * turnT);
+        const headingAtLiftoff = startYawNorm + diff * turnEase;
+
+        // 4. Continue seamlessly into the climb bank and turn towards the left foreground (48 degrees)
+        const climbT = Math.max(0, (flightP - 0.06) / 0.19);
+        const climbEase = climbT * climbT * (3 - 2 * climbT);
+        curYaw = headingAtLiftoff + (48 - 28) * climbEase;
+
+        curPitch = 2 + (14 - 2) * ease1;
+        curRoll = 0 + (-16 - 0) * ease1;
         curScale = 1.0 + (1.20 - 1.0) * ease1;
-        curThrust = 0.4 + 0.55 * ease1;
+        curThrust = 0.45 + 0.50 * ease1;
       } else if (flightP <= 0.65) {
         // Phase 2 (0.25 -> 0.65): Big Smooth Round Turn Near Screen (Left to Right)
         const t2 = (flightP - 0.25) / 0.40;

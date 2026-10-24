@@ -131,6 +131,19 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
             const mat = child.material;
             if (mat) {
               const matName = (mat.name || "").toLowerCase();
+              const childName = (child.name || "").toLowerCase();
+
+              // Completely remove the visible dotted wire / HF antenna line along the top of the aircraft
+              if (
+                matName.includes("wire") ||
+                childName.includes("wire") ||
+                child.name === "Object_981" ||
+                child.name === "Object_418" ||
+                child.name === "Object_476"
+              ) {
+                child.visible = false;
+                return;
+              }
 
               if (
                 matName.includes("fuselage") ||
