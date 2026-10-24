@@ -344,6 +344,89 @@ export default function ScrollFlightJet() {
         visibility: state.active && state.opacity > 0.01 ? "visible" : "hidden",
       }}
     >
+      {/* ── LIFTOFF THRUST AIR EFFECT ON PLATFORM (SHOCKWAVE RINGS & DOWNWASH) ── */}
+      {state.progress > 0.002 && state.progress < 0.24 && (
+        <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+          {/* Expanding Aerodynamic Thrust Air Ring Shockwave 1 */}
+          <div
+            style={{
+              position: "absolute",
+              left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
+              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.24) * 3.8})`,
+              width: "320px",
+              height: "100px",
+              borderRadius: "50%",
+              border: `2px solid rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.22) * 0.75})`,
+              boxShadow: `0 0 25px rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.22) * 0.5}), inset 0 0 15px rgba(255, 255, 255, ${Math.max(0, 1 - state.progress / 0.22) * 0.4})`,
+              opacity: Math.max(0, 1 - state.progress / 0.22),
+              filter: "blur(1.5px)",
+            }}
+          />
+
+          {/* Expanding Aerodynamic Thrust Air Ring Shockwave 2 */}
+          <div
+            style={{
+              position: "absolute",
+              left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
+              transform: `translate(-50%, -50%) scale(${0.6 + (state.progress / 0.24) * 2.6})`,
+              width: "240px",
+              height: "75px",
+              borderRadius: "50%",
+              border: `1.5px solid rgba(186, 230, 253, ${Math.max(0, 1 - state.progress / 0.20) * 0.85})`,
+              boxShadow: `0 0 35px rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.20) * 0.6})`,
+              opacity: Math.max(0, 1 - state.progress / 0.20),
+              filter: "blur(0.8px)",
+            }}
+          />
+
+          {/* Dissipating Platform Contact Shadow */}
+          <div
+            style={{
+              position: "absolute",
+              left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
+              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.24) * 1.5})`,
+              width: "360px",
+              height: "70px",
+              borderRadius: "50%",
+              background: "rgba(0, 0, 0, 0.75)",
+              filter: `blur(${12 + (state.progress / 0.24) * 30}px)`,
+              opacity: Math.max(0, 1 - state.progress / 0.18),
+            }}
+          />
+
+          {/* Dual Turbine Downwash Air Streaks */}
+          <div
+            style={{
+              position: "absolute",
+              left: (takeoffPosRef.current ? takeoffPosRef.current.x : 500) - 45,
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 30,
+              width: "18px",
+              height: `${60 + (state.progress / 0.24) * 90}px`,
+              background: "linear-gradient(to bottom, rgba(56,189,248,0.7) 0%, rgba(255,255,255,0.4) 40%, transparent 100%)",
+              filter: "blur(3px)",
+              transform: "rotate(-12deg)",
+              opacity: Math.max(0, 1 - state.progress / 0.22),
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: (takeoffPosRef.current ? takeoffPosRef.current.x : 500) + 35,
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 30,
+              width: "18px",
+              height: `${60 + (state.progress / 0.24) * 90}px`,
+              background: "linear-gradient(to bottom, rgba(56,189,248,0.7) 0%, rgba(255,255,255,0.4) 40%, transparent 100%)",
+              filter: "blur(3px)",
+              transform: "rotate(12deg)",
+              opacity: Math.max(0, 1 - state.progress / 0.22),
+            }}
+          />
+        </div>
+      )}
+
       {/* ── 3D Bombardier Windjet 365 Aircraft in Flight / Swooping into Runway ── */}
       <div
         className="absolute top-0 left-0 will-change-transform z-15"

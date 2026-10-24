@@ -5,19 +5,92 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 let cachedScene: THREE.Group | null = null;
 let loadPromise: Promise<THREE.Group> | null = null;
 
+export interface JetColorConfig {
+  fuselageColor?: string; // Main aircraft body paint (e.g. "#0f172a", "#ffffff", "#000000")
+  accentColor?: string;   // Wingpod, stripes, winglet paint (e.g. "#38bdf8", "#f59e0b", "#ef4444")
+  trimMetalColor?: string;// Titanium & leading edge deicing trim (e.g. "#94a3b8")
+  glassColor?: string;    // Cockpit canopy tint (e.g. "#081525")
+}
+
+/**
+ * Dynamically applies custom paint and material colors to any Bombardier Windjet 365 3D instance.
+ */
+export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
+  root.traverse((child: any) => {
+    if (child.isMesh && child.material) {
+      const mat = child.material;
+      const matName = (mat.name || "").toLowerCase();
+
+      // Clone material if it hasn't been cloned for this instance
+      if (!mat.userData?.isInstanceCloned) {
+        child.material = mat.clone();
+        child.material.userData = { ...(child.material.userData || {}), isInstanceCloned: true };
+      }
+      const instanceMat = child.material;
+
+      // 1. Primary fuselage paint
+      if (
+        config.fuselageColor &&
+        (matName.includes("fuselage") ||
+          matName.includes("fuselage2") ||
+          matName.includes("fuselage_blue"))
+      ) {
+        instanceMat.color = new THREE.Color(config.fuselageColor);
+        instanceMat.needsUpdate = true;
+      }
+
+      // 2. Wingpod & Livery Accents
+      if (
+        config.accentColor &&
+        (matName.includes("wingpod") ||
+          matName.includes("sky_blue") ||
+          matName.includes("paint") ||
+          matName.includes("crimson_red"))
+      ) {
+        instanceMat.color = new THREE.Color(config.accentColor);
+        instanceMat.needsUpdate = true;
+      }
+
+      // 3. Cockpit canopy glass
+      if (
+        config.glassColor &&
+        (matName.includes("glass") || matName.includes("cockpit") || matName.includes("clear_glass"))
+      ) {
+        instanceMat.color = new THREE.Color(config.glassColor);
+        instanceMat.needsUpdate = true;
+      }
+
+      // 4. Titanium trim
+      if (
+        config.trimMetalColor &&
+        (matName.includes("titanium") || matName.includes("deicing") || matName.includes("dark_metal"))
+      ) {
+        instanceMat.color = new THREE.Color(config.trimMetalColor);
+        instanceMat.needsUpdate = true;
+      }
+    }
+  });
+}
+
 /**
  * Loads and preprocesses the Bombardier Windjet 365 3D aircraft model.
  * - Centers the geometry pivot at the center of gravity.
  * - Upgrades materials with luxury aeronautical metallic finish and tinted glass canopy.
- * - Adds engine turbine exhaust glow emitters at the dual rear turbofan nozzles.
+ * - Replaces any dots with authentic supersonic propulsion flame cones that only engage at high thrust.
  */
-export function getJetModel(): Promise<THREE.Group> {
+export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
   if (cachedScene) {
-    return Promise.resolve(cachedScene.clone(true));
+    const clone = cachedScene.clone(true);
+    if (colors) applyJetColors(clone, colors);
+    return Promise.resolve(clone);
   }
 
   if (loadPromise) {
-    return loadPromise.then((scene) => scene.clone(true));
+    return loadPromise.then((scene) => {
+      const clone = scene.clone(true);
+      if (colors) applyJetColors(clone, colors);
+      return clone;
+    });
   }
 
   loadPromise = new Promise<THREE.Group>((resolve, reject) => {
@@ -32,7 +105,6 @@ export function getJetModel(): Promise<THREE.Group> {
         const box = new THREE.Box3().setFromObject(root);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        console.log("BOMBARDIER RAW BOUNDS:", JSON.stringify({ min: box.min, max: box.max, center, size }));
 
         // Center pivot at model center of gravity to ensure entire nose and tail are visible
         root.position.set(-center.x + 0.4, -center.y, -center.z);
@@ -67,7 +139,7 @@ export function getJetModel(): Promise<THREE.Group> {
                 matName.includes("material_")
               ) {
                 // Sleek aeronautical gloss finish
-                mat.metalness = 0.42;
+                mat.metalness = 0.45;
                 mat.roughness = 0.22;
                 mat.envMapIntensity = 1.6;
                 mat.needsUpdate = true;
@@ -99,40 +171,61 @@ export function getJetModel(): Promise<THREE.Group> {
           }
         });
 
-        // 3. Add dual glowing cyan engine exhaust emitters at the rear turbofan nozzles
+        // 3. Supersonic Propulsion Exhaust Flame Cones (NO WEIRD DOTS)
+        // Only active during high-speed flight maneuvers (invisible when parked or showcase)
         const engineGlowGroup = new THREE.Group();
         engineGlowGroup.name = "EngineGlowGroup";
+        engineGlowGroup.visible = false; // Hidden by default (completely off when parked)
 
-        const glowMaterial = new THREE.MeshBasicMaterial({
+        // Realistic elongated supersonic thrust flame cone
+        // Cylinder pointing along +X (tail direction)
+        const flameGeo = new THREE.CylinderGeometry(0.04, 0.22, 2.2, 16, 1, true);
+        flameGeo.rotateZ(Math.PI / 2); // Point along +X axis
+        flameGeo.translate(1.1, 0, 0); // Origin at nozzle
+
+        const flameMaterial = new THREE.MeshBasicMaterial({
           color: new THREE.Color(0x38bdf8),
+          transparent: true,
+          opacity: 0.85,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+
+        // Inner white-hot supersonic core cone
+        const coreGeo = new THREE.CylinderGeometry(0.02, 0.12, 1.4, 16, 1, true);
+        coreGeo.rotateZ(Math.PI / 2);
+        coreGeo.translate(0.7, 0, 0);
+
+        const coreMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(0xffffff),
           transparent: true,
           opacity: 0.95,
           blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
         });
 
-        const glowGeo = new THREE.SphereGeometry(0.24, 16, 16);
+        // Left turbine assembly
+        const leftEngine = new THREE.Group();
+        leftEngine.position.set(1.2, 0.45, -1.18);
+        leftEngine.add(new THREE.Mesh(flameGeo, flameMaterial));
+        leftEngine.add(new THREE.Mesh(coreGeo, coreMaterial));
+        engineGlowGroup.add(leftEngine);
 
-        // Turbine nozzle positions for Bombardier Windjet 365
-        const leftGlow = new THREE.Mesh(glowGeo, glowMaterial);
-        leftGlow.position.set(1.2, 0.45, -1.18);
-        engineGlowGroup.add(leftGlow);
-
-        const rightGlow = new THREE.Mesh(glowGeo, glowMaterial.clone());
-        rightGlow.position.set(1.2, 0.45, 1.18);
-        engineGlowGroup.add(rightGlow);
-
-        const leftLight = new THREE.PointLight(0x38bdf8, 3.5, 5.0);
-        leftLight.position.set(1.4, 0.45, -1.18);
-        engineGlowGroup.add(leftLight);
-
-        const rightLight = new THREE.PointLight(0x38bdf8, 3.5, 5.0);
-        rightLight.position.set(1.4, 0.45, 1.18);
-        engineGlowGroup.add(rightLight);
+        // Right turbine assembly
+        const rightEngine = new THREE.Group();
+        rightEngine.position.set(1.2, 0.45, 1.18);
+        rightEngine.add(new THREE.Mesh(flameGeo, flameMaterial));
+        rightEngine.add(new THREE.Mesh(coreGeo, coreMaterial));
+        engineGlowGroup.add(rightEngine);
 
         root.add(engineGlowGroup);
 
         cachedScene = pivot;
-        resolve(pivot.clone(true));
+        const result = pivot.clone(true);
+        if (colors) applyJetColors(result, colors);
+        resolve(result);
       },
       undefined,
       (err) => {
@@ -142,5 +235,9 @@ export function getJetModel(): Promise<THREE.Group> {
     );
   });
 
-  return loadPromise.then((scene) => scene.clone(true));
+  return loadPromise.then((scene) => {
+    const clone = scene.clone(true);
+    if (colors) applyJetColors(clone, colors);
+    return clone;
+  });
 }

@@ -306,16 +306,18 @@ export default function OneLiner() {
               ))}
             </div>
           )}
-          {/* 3D Bombardier Windjet 365 resting on metallic pedestal (entire aircraft visible, tilted to show right wing) */}
+          {/* 3D Bombardier Windjet 365 resting on metallic pedestal (continuous 360-degree turntable product showcase) */}
           <div className="w-full h-[460px] sm:h-[520px] md:h-[580px] relative pointer-events-none select-none">
             <Jet3DViewer
               yaw={28}
-              pitch={6}
-              roll={22}
+              pitch={2}
+              roll={0}
               modelScale={1.55}
               interactive={true}
+              autoRotate={true}
+              autoRotateSpeed={15}
               mouseOffset={mouseOffset}
-              engineThrust={jetHovered ? 0.9 : 0.35}
+              engineThrust={0}
             />
           </div>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { getJetModel } from "./jetModelManager";
+import { getJetModel, JetColorConfig, applyJetColors } from "./jetModelManager";
 
 interface Jet3DViewerProps {
   yaw?: number; // Heading angle in degrees
@@ -11,9 +11,12 @@ interface Jet3DViewerProps {
   modelScale?: number; // Scale multiplier
   lightIntensity?: number; // Lighting brightness
   interactive?: boolean; // Mouse tilt interaction
+  autoRotate?: boolean; // Continuous 360-degree showcase turntable rotation
+  autoRotateSpeed?: number; // Turntable rotation speed in degrees per second (e.g. 15)
   mouseOffset?: { x: number; y: number };
-  engineThrust?: number; // Afterburner glow multiplier (0 to 1)
+  engineThrust?: number; // Propulsion thrust (0 to 1). < 0.45 = completely off, > 0.45 = supersonic exhaust cones
   immediate?: boolean; // When true, bypasses interpolation lag so rotation syncs 1:1 with scroll
+  customColors?: JetColorConfig; // Programmatic paint colors
   className?: string;
   style?: React.CSSProperties;
   onLoaded?: () => void;
@@ -26,9 +29,12 @@ export default function Jet3DViewer({
   modelScale = 1.0,
   lightIntensity = 1.0,
   interactive = false,
+  autoRotate = false,
+  autoRotateSpeed = 15,
   mouseOffset,
-  engineThrust = 0.5,
+  engineThrust = 0,
   immediate = false,
+  customColors,
   className = "",
   style,
   onLoaded,
@@ -44,6 +50,8 @@ export default function Jet3DViewer({
   const engineGroupRef = useRef<THREE.Group | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const isLoadedRef = useRef(false);
+  const autoYawRef = useRef(0);
+  const lastTimeRef = useRef(performance.now());
 
   // Dynamic values ref for smooth animation loop
   const targetTransformRef = useRef({
@@ -55,6 +63,8 @@ export default function Jet3DViewer({
     mouseY: 0,
     thrust: engineThrust,
     immediate,
+    autoRotate,
+    autoRotateSpeed,
   });
 
   // Keep target transform updated
@@ -65,7 +75,9 @@ export default function Jet3DViewer({
     targetTransformRef.current.scale = modelScale;
     targetTransformRef.current.thrust = engineThrust;
     targetTransformRef.current.immediate = immediate;
-  }, [yaw, pitch, roll, modelScale, engineThrust, immediate]);
+    targetTransformRef.current.autoRotate = autoRotate;
+    targetTransformRef.current.autoRotateSpeed = autoRotateSpeed;
+  }, [yaw, pitch, roll, modelScale, engineThrust, immediate, autoRotate, autoRotateSpeed]);
 
   useEffect(() => {
     if (mouseOffset) {
@@ -73,6 +85,13 @@ export default function Jet3DViewer({
       targetTransformRef.current.mouseY = mouseOffset.y;
     }
   }, [mouseOffset]);
+
+  // Handle dynamic color changes if provided
+  useEffect(() => {
+    if (modelPivotRef.current && customColors) {
+      applyJetColors(modelPivotRef.current, customColors);
+    }
+  }, [customColors]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -107,7 +126,7 @@ export default function Jet3DViewer({
     rendererRef.current = renderer;
 
     // 4. Lighting setup for sleek aerospace reflections
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.45);
     scene.add(ambientLight);
 
     // Primary key sunlight from upper-right
@@ -126,17 +145,19 @@ export default function Jet3DViewer({
     scene.add(fillLight);
 
     // 5. Load preprocessed 3D Jet model
-    getJetModel()
+    getJetModel(customColors)
       .then((jetModel) => {
         if (destroyed) return;
 
         modelPivotRef.current = jetModel;
         scene.add(jetModel);
 
-        // Find engine glow group
+        // Find engine propulsion flame group
         const engineGlow = jetModel.getObjectByName("EngineGlowGroup");
         if (engineGlow) {
           engineGroupRef.current = engineGlow as THREE.Group;
+          // Ensure propulsion flames start hidden if thrust is 0
+          engineGroupRef.current.visible = engineThrust > 0.45;
         }
 
         isLoadedRef.current = true;
@@ -161,13 +182,25 @@ export default function Jet3DViewer({
 
     // 7. High-performance 60-120fps render loop
     const curRot = { yaw: yaw, pitch: pitch, roll: roll };
+    lastTimeRef.current = performance.now();
 
     const animate = () => {
       if (destroyed) return;
 
+      const now = performance.now();
+      const deltaSec = Math.min((now - lastTimeRef.current) / 1000, 0.1);
+      lastTimeRef.current = now;
+
       const model = modelPivotRef.current;
       if (model) {
         const target = targetTransformRef.current;
+
+        // Auto-rotation (showcase turntable rotation)
+        if (target.autoRotate) {
+          autoYawRef.current = (autoYawRef.current + target.autoRotateSpeed * deltaSec) % 360;
+        } else {
+          autoYawRef.current = 0;
+        }
 
         // Direct or smoothed rotation dynamics
         if (target.immediate) {
@@ -187,7 +220,7 @@ export default function Jet3DViewer({
 
         // Degree to radians
         const toRad = Math.PI / 180;
-        const totalYawRad = (curRot.yaw + mouseTiltYaw) * toRad;
+        const totalYawRad = (curRot.yaw + autoYawRef.current + mouseTiltYaw) * toRad;
         const totalPitchRad = (curRot.pitch + mouseTiltPitch) * toRad;
         const totalRollRad = (curRot.roll + mouseTiltRoll) * toRad;
 
@@ -195,20 +228,30 @@ export default function Jet3DViewer({
         // - Nose is along -X, Tail is along +X
         // - Wingspan is along Z
         // - Up is along Y
-        // Yaw = rotation around Y
-        // Pitch = rotation around Z (moves -X nose up/down)
-        // Roll = rotation around X (banks Z wings up/down)
         model.rotation.set(totalRollRad, totalYawRad, totalPitchRad, "YXZ");
 
         // Dynamic scale
         const targetScale = target.scale;
         model.scale.set(targetScale, targetScale, targetScale);
 
-        // Dynamic engine glow pulse
+        // Supersonic propulsion flames:
+        // Only visible when thrust > 0.45 during flight maneuvers.
+        // On showcase pedestal or low idle, visibility is strictly FALSE (ZERO flame, ZERO weird dots).
         if (engineGroupRef.current) {
           const thrust = target.thrust;
-          engineGroupRef.current.visible = thrust > 0.05;
-          engineGroupRef.current.scale.setScalar(0.8 + thrust * 0.5);
+          if (thrust > 0.45) {
+            engineGroupRef.current.visible = true;
+            // Scale propulsion flame along length (+X) and slightly expand diameter with thrust
+            const flameIntensity = (thrust - 0.45) / 0.55;
+            const flicker = 0.94 + Math.sin(now * 0.04) * 0.06;
+            engineGroupRef.current.scale.set(
+              (0.8 + flameIntensity * 0.7) * flicker,
+              0.85 + flameIntensity * 0.3,
+              0.85 + flameIntensity * 0.3
+            );
+          } else {
+            engineGroupRef.current.visible = false;
+          }
         }
       }
 
