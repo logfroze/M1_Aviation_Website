@@ -7,6 +7,10 @@ export interface NavItem {
 export interface VisionMilestone {
   year: string;
   statement: string;
+  phase?: string;
+  title?: string;
+  cycle?: string;
+  subtitle?: string;
 }
 
 export interface Partner {

@@ -60,6 +60,44 @@ const ENGAGEMENT_CARDS = [
   },
 ];
 
+const INDUSTRY_PARTNER_BENEFITS = [
+  {
+    num: "01",
+    title: "A Voice in Innovation",
+    desc: "Contribute perspectives and feedback on emerging innovations being developed by M1.",
+  },
+  {
+    num: "02",
+    title: "Access to the M1 Industry Circle",
+    desc: "Join a network of aviation professionals and industry partners exchanging ideas and exploring opportunities.",
+  },
+  {
+    num: "03",
+    title: "Early Access",
+    desc: "Gain early access to eligible M1 features and products as they become available.",
+  },
+  {
+    num: "04",
+    title: "Preferential Pricing",
+    desc: "Access special pricing across eligible M1 products and services.",
+  },
+  {
+    num: "05",
+    title: "Shape Aviation's Future",
+    desc: "Work with M1 to help inform the development of technologies designed for the next era of aviation.",
+  },
+  {
+    num: "06",
+    title: "Industry Partner Marketplace Tiers",
+    desc: "Access dedicated M1 Marketplace tiers designed for industry partners.",
+  },
+  {
+    num: "07",
+    title: "First Approach to New Opportunities",
+    desc: "Receive priority consideration for relevant opportunities within the M1 ecosystem, subject to availability and applicable terms.",
+  },
+];
+
 import { playSolidDockSound, getSharedAudioContext } from "@/lib/audio";
 
 export default function IndustryPartnerPage() {
@@ -334,7 +372,57 @@ export default function IndustryPartnerPage() {
         </div>
       </section>
 
-      {/* ── 3. Play Your Role CTA ── */}
+      {/* ── 3. Industry Partner Benefits Section (Alliance Program) ── */}
+      <section className="relative z-10 py-24 sm:py-32 px-6 md:px-12 max-w-6xl mx-auto w-full border-t border-zinc-900/80">
+        <div className="text-center mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-950/80 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
+            <span>Alliance Program</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white">
+            Industry Partner Benefits
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto font-light leading-relaxed">
+            Exclusive privileges, preferential access, and collaborative innovation opportunities for verified M1 partners.
+          </p>
+        </div>
+
+        {/* Benefits Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {INDUSTRY_PARTNER_BENEFITS.map((b, idx) => (
+            <div
+              key={b.num}
+              className={`group relative p-7 rounded-2xl border border-white/10 bg-[#0c0d12]/90 backdrop-blur-md hover:-translate-y-2 hover:border-zinc-400 hover:shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(255,255,255,0.08)] transition-all duration-300 overflow-hidden flex flex-col justify-between ${
+                idx === 6 ? "md:col-span-2 lg:col-span-3" : ""
+              }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+              <div className="space-y-4 relative z-10">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-bold px-3 py-1 rounded-md bg-white/5 border border-white/10 text-zinc-300 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300">
+                    {b.num}
+                  </span>
+                  <div className="w-2 h-2 rounded-full bg-zinc-800 group-hover:bg-white group-hover:shadow-[0_0_8px_#ffffff] transition-all duration-300" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-light text-white tracking-tight group-hover:text-white transition-colors">
+                  {b.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed group-hover:text-zinc-300 transition-colors">
+                  {b.desc}
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-500 group-hover:text-zinc-400">
+                <span>M1 ALLIANCE PROTOCOL</span>
+                <span>→</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4. Play Your Role CTA ── */}
       <PlayYourRoleCTA />
     </div>
   );

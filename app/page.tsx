@@ -40,9 +40,9 @@ export default function Home() {
         <ScrollFlightJet />
 
         {/* 3. M1 One-Liner Statement */}
-        <SectionFocusItem id="philosophy">
+        <div id="philosophy" className="relative z-20 w-full">
           <OneLiner />
-        </SectionFocusItem>
+        </div>
 
         {/* 4. Industry Partner Logo Strip (Crisp, fully legible, z-30 in front of flying jet) */}
         <div id="partners" className="relative z-30 w-full">

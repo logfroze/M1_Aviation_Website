@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bombardier windjet 365
+* source:	https://sketchfab.com/3d-models/bombardier-windjet-365-ec83c3e00d574cb9836e802a3ad47ab9
+* author:	dannzjs (https://sketchfab.com/dannzjs)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bombardier windjet 365" (https://sketchfab.com/3d-models/bombardier-windjet-365-ec83c3e00d574cb9836e802a3ad47ab9) by dannzjs (https://sketchfab.com/dannzjs) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

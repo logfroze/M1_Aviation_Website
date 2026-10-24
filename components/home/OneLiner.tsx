@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Jet3DViewer from "./Jet3DViewer";
+
 
 interface EcosystemNode {
   id: string;
@@ -150,18 +152,30 @@ export default function OneLiner() {
         <div className="text-xs sm:text-sm font-mono tracking-[0.42em] text-zinc-400 font-medium uppercase">
           MORE THAN A MARKETPLACE.
         </div>
-        <h2
-          className="text-6xl sm:text-8xl md:text-[7.5rem] font-black tracking-[0.14em] sm:tracking-[0.18em] uppercase leading-none"
-          style={{
-            background: "linear-gradient(180deg,#ffffff 0%,#e2e8f0 30%,#94a3b8 70%,#475569 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.9))",
-          }}
-        >
-          M1 ECOSYSTEM
-        </h2>
+        <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 py-1">
+          <div className="w-[180px] sm:w-[260px] md:w-[320px] lg:w-[360px] max-w-[85vw]">
+            <Image
+              src="/m1-logo.png"
+              alt="M1 Logo"
+              width={1302}
+              height={461}
+              priority
+              className="w-full h-auto object-contain opacity-95 drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]"
+            />
+          </div>
+          <h2
+            className="text-6xl sm:text-8xl md:text-[7.5rem] font-black tracking-[0.14em] sm:tracking-[0.18em] uppercase leading-none"
+            style={{
+              background: "linear-gradient(180deg,#ffffff 0%,#e2e8f0 30%,#94a3b8 70%,#475569 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              filter: "drop-shadow(0 4px 24px rgba(0,0,0,0.9))",
+            }}
+          >
+            ECOSYSTEM
+          </h2>
+        </div>
         <p className="text-xs sm:text-sm font-mono tracking-[0.38em] text-zinc-400 font-medium uppercase">
           THE OPERATING LAYER CONNECTING AVIATION.
         </p>
@@ -230,7 +244,7 @@ export default function OneLiner() {
             <ellipse cx="600" cy="432" rx="408" ry="132" fill="none" stroke="url(#platBotRim)" strokeWidth="2.5" />
             <ellipse cx="600" cy="412" rx="408" ry="132" fill="none" stroke="url(#platTopRim)" strokeWidth="2.8" />
             {/* Grounding shadow cast by aircraft directly onto platform surface */}
-            <ellipse cx="600" cy="416" rx="270" ry="50" fill="rgba(0,0,0,0.55)" filter="blur(16px)" />
+            <ellipse cx="600" cy="422" rx="330" ry="58" fill="rgba(0,0,0,0.65)" filter="blur(18px)" />
           </g>
 
           {/* Connecting lines — Only thick white line shown on hover, no dotted lines, no tiny dots */}
@@ -256,7 +270,7 @@ export default function OneLiner() {
         {/* Aircraft centered directly on top of metallic platform */}
         <div
           id="ecosystem-jet-source"
-          className="absolute top-[80%] left-[87%] -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[920px] z-20 cursor-pointer pointer-events-auto"
+          className="absolute top-[40%] left-1/2 w-full max-w-[1100px] z-50 cursor-pointer pointer-events-auto"
           onMouseEnter={() => setJetHovered(true)}
           onMouseLeave={() => setJetHovered(false)}
           style={{
@@ -292,17 +306,18 @@ export default function OneLiner() {
               ))}
             </div>
           )}
-          <Image
-            src="/images/ecosystem-jet-transparent.png"
-            alt="M1 Autonomous Business Jet"
-            width={1376}
-            height={768}
-            priority
-            draggable={false}
-            className={`w-full h-auto object-contain pointer-events-none select-none transition-all duration-500 ${
-              jetHovered ? "brightness-110 drop-shadow-[0_40px_70px_rgba(0,0,0,0.99)]" : "brightness-105 drop-shadow-[0_28px_56px_rgba(0,0,0,0.95)]"
-            }`}
-          />
+          {/* 3D Bombardier Windjet 365 resting on metallic pedestal (entire aircraft visible, tilted to show right wing) */}
+          <div className="w-full h-[460px] sm:h-[520px] md:h-[580px] relative pointer-events-none select-none">
+            <Jet3DViewer
+              yaw={28}
+              pitch={6}
+              roll={22}
+              modelScale={1.55}
+              interactive={true}
+              mouseOffset={mouseOffset}
+              engineThrust={jetHovered ? 0.9 : 0.35}
+            />
+          </div>
         </div>
 
         {/* 6 Point Buttons with Hover Popups */}

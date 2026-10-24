@@ -1,0 +1,8 @@
+Model Information:
+* title:	Pilatus PC-24 Super Versatile Jet
+* source:	https://sketchfab.com/3d-models/pilatus-pc-24-super-versatile-jet-1cad9495515646d497eae0ef470dd729
+* author:	helijah (https://sketchfab.com/helijah)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

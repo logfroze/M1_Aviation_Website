@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useRef } from "react";
+import Jet3DViewer from "./Jet3DViewer";
 
 // Dynamic supersonic air streaks during flight
 const AIR_STREAKS = [
@@ -23,19 +23,12 @@ interface FlightState {
   y: number;
   width: number;
   scale: number;
-  rotateZ: number;
-  rotateX: number;
-  rotateY: number;
+  yaw: number;
+  pitch: number;
+  roll: number;
+  thrust: number;
   opacity: number;
   showAirStreaks: boolean;
-  // Tow Rope State
-  ropeVisible: boolean;
-  ropeProgress: number;
-  ropePath: string;
-  jetHookX: number;
-  jetHookY: number;
-  roadHookX: number;
-  roadHookY: number;
 }
 
 export default function ScrollFlightJet() {
@@ -44,25 +37,25 @@ export default function ScrollFlightJet() {
     progress: 0,
     x: 0,
     y: 0,
-    width: 920,
-    scale: 1,
-    rotateZ: 0,
-    rotateX: 0,
-    rotateY: 0,
+    width: 1100,
+    scale: 1.0,
+    yaw: 28,
+    pitch: 6,
+    roll: 22,
+    thrust: 0.35,
     opacity: 0,
     showAirStreaks: false,
-    ropeVisible: false,
-    ropeProgress: 0,
-    ropePath: "",
-    jetHookX: 0,
-    jetHookY: 0,
-    roadHookX: 0,
-    roadHookY: 0,
   });
 
-  useEffect(() => {
-    let animId: number;
+  // Tracking timestamps and references for the 2-3s delay and scroll-locking
+  const viewEnteredAtRef = useRef<number | null>(null);
+  const takeoffScrollRef = useRef<number | null>(null);
+  const takeoffPosRef = useRef<{ x: number; y: number } | null>(null);
+  const isScrollingRef = useRef(false);
+  const scrollIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevProgressRef = useRef(0);
 
+  useEffect(() => {
     const updateFlight = () => {
       const sourceEl = document.getElementById("ecosystem-jet-source");
       const visionContainer = document.getElementById("vision");
@@ -71,335 +64,298 @@ export default function ScrollFlightJet() {
 
       const vh = window.innerHeight;
       const vw = window.innerWidth;
+      const scrollY = window.scrollY || window.pageYOffset;
 
       const sourceRect = sourceEl.getBoundingClientRect();
       const visionRect = visionContainer.getBoundingClientRect();
 
-      // Takeoff trigger: smooth launch when Ecosystem scrolls up
-      const takeoffThreshold = vh * 0.10;
-      // Landing trigger: When Vision timeline arrives into view
-      const landingThreshold = vh * 0.18;
+      // Detection: Ecosystem centerpiece view is in the viewport
+      // (The exact view in the user's reference image where the pedestal aircraft is visible)
+      const isInEcosystemView = sourceRect.top < vh * 0.70 && sourceRect.bottom > vh * 0.20;
 
-      // Distance from takeoff threshold down to vision arrival
-      const flightDistance = (visionRect.top - landingThreshold) - (sourceRect.top - takeoffThreshold);
-
-      if (flightDistance <= 0) return;
-
-      // Progress calculation
-      const scrolled = takeoffThreshold - sourceRect.top;
-      const progressRaw = scrolled / flightDistance;
-      const progress = Math.max(0, progressRaw);
-
-      // Flight progress (0 to 1 for the transition from Ecosystem to Vision)
-      const flightP = Math.min(1, progress);
-
-      // ── Road Journey Scroll (Inside Vision Timeline) ──
-      // Tracks how far user has scrolled into Vision Timeline
-      const visionScrollable = visionRect.height - vh;
-      const roadScrolled = Math.max(0, landingThreshold - visionRect.top);
-      const roadProgress = visionScrollable > 0 ? Math.min(1, roadScrolled / visionScrollable) : 0;
-
-      // =========================================================================
-      // ✈️ 1. LANDING PLANE SIZE CONFIGURATION:
-      // Edit LANDING_SCALE below to change the landing plane size:
-      // - 1.0  = Full original size
-      // - 0.70 = 30% smaller (CURRENT: reduced by ~30%)
-      // - 0.50 = 50% smaller (half size)
-      // =========================================================================
-      const LANDING_SCALE = 0.70;
-
-      // Exact width of the original plane on the platform
-      const jetWidth = sourceRect.width > 50 ? sourceRect.width : 920;
-
-      // Scale smoothly transitions from 1.0 (takeoff) down to LANDING_SCALE (landing)
-      const curScale = 1.0 - flightP * (1.0 - LANDING_SCALE);
-      const jetW = jetWidth * curScale;
-      const jetH = jetW * (768 / 1376);
-
-      // ── Precise Fixed Road Anchor Point ──
-      // Tracks the physical starting threshold of the road (#road-tow-anchor)
-      const roadAnchor = document.getElementById("road-tow-anchor") as SVGCircleElement | null;
-      let roadHookX = 0;
-      let roadHookY = 0;
-      let hasValidAnchor = false;
-
-      if (roadAnchor) {
-        const rRect = roadAnchor.getBoundingClientRect();
-        if (rRect.width > 0 && rRect.height > 0) {
-          roadHookX = rRect.left + rRect.width * 0.5;
-          roadHookY = rRect.top + rRect.height * 0.5;
-          hasValidAnchor = true;
-        } else {
-          // Native SVG coordinate matrix transform fallback if rect is empty
-          try {
-            const svg = roadAnchor.ownerSVGElement;
-            if (svg) {
-              const ctm = typeof roadAnchor.getScreenCTM === "function" ? roadAnchor.getScreenCTM() : null;
-              if (ctm) {
-                const pt = svg.createSVGPoint();
-                pt.x = roadAnchor.cx.baseVal.value || 0;
-                pt.y = roadAnchor.cy.baseVal.value || 0;
-                const screenPt = pt.matrixTransform(ctm);
-                roadHookX = screenPt.x;
-                roadHookY = screenPt.y;
-                hasValidAnchor = true;
-              }
-            }
-          } catch (e) {
-            // Ignore error
-          }
+      // ── 1. DELAY TAKEOFF BY 2-3 SECONDS ──
+      // When user first reaches/crosses this view, start a 2.5s timer.
+      if (isInEcosystemView) {
+        if (viewEnteredAtRef.current === null) {
+          viewEnteredAtRef.current = Date.now();
         }
+      } else if (sourceRect.top >= vh * 0.70) {
+        // Scrolled back up above Ecosystem view, reset timer and takeoff anchor
+        viewEnteredAtRef.current = null;
+        takeoffScrollRef.current = null;
+        takeoffPosRef.current = null;
       }
 
-      // =========================================================================
-      // 📍 2. LANDING & TOW STRING CONFIGURATION:
-      // - BASE_STRING_LENGTH: Exact taut length of the towing cable on touchdown (110px)
-      // - MAX_TOW_STRETCH: Small, subtle strain stretch under load when user begins scrolling (18px)
-      // - After stretching by this slight amount, length stays 100% intact and never stretches further!
-      // =========================================================================
-      const BASE_STRING_LENGTH = 110;
-      const MAX_TOW_STRETCH = 18; // Stretch just a little bit (+18px max) under tow tension
-      const initialStrainProgress = Math.min(1, roadProgress / 0.035);
-      const currentStretch = initialStrainProgress * MAX_TOW_STRETCH;
-      const currentStringLength = BASE_STRING_LENGTH + currentStretch;
+      const FLIGHT_DELAY_MS = 2500; // 2.5 seconds (within user's requested 2-3s)
+      const elapsed = viewEnteredAtRef.current !== null ? Date.now() - viewEnteredAtRef.current : 0;
+      const delayCompleted = viewEnteredAtRef.current !== null && elapsed >= FLIGHT_DELAY_MS;
 
-      const landingX = hasValidAnchor ? (roadHookX - BASE_STRING_LENGTH) - jetW * 0.16 : 420;
-      // Vertically aligns plane's tow hook (curY + jetH * 0.08) exactly with the road anchor (roadHookY)
-      const targetLevelY = hasValidAnchor ? roadHookY - jetH * 0.08 : vh * 0.40;
-      const landingY = targetLevelY;
-
-      // Starting coordinate (center of Ecosystem platform jet in viewport)
-      const startX = sourceRect.left + sourceRect.width * 0.5;
-      const startY = sourceRect.top + sourceRect.height * 0.5;
-
-      // Smooth flight trajectory curve:
-      // Standard Hermite ease has 1.50x peak acceleration at midpoint (crossing the logo section).
-      // Blending 82% linear + 18% hermite slows down the midpoint speed to ~1.09x,
-      // keeping the plane perfectly synchronized with the user's screen scroll without rushing ahead.
-      const hermite = flightP * flightP * (3 - 2 * flightP);
-      const easeT = 0.82 * flightP + 0.18 * hermite;
-      const lateralArc = Math.sin(flightP * Math.PI) * 28;
-
-      const flightX = startX + (landingX - startX) * easeT - lateralArc;
-      const flightY = startY + (landingY - startY) * easeT;
-
-      // ── Road Journey Scroll (Inside Vision Timeline) ──
-      // Once landed, plane is hitched to the road anchor at currentStringLength.
-      // As road anchor moves left with scroll, the plane travels in absolute lockstep with it,
-      // keeping the string completely intact at its fixed taut length without stretching further!
-      const curX = flightP >= 1
-        ? (hasValidAnchor ? (roadHookX - currentStringLength) - jetW * 0.16 : landingX)
-        : flightX;
-      const curY = flightP >= 1 ? targetLevelY : flightY;
-
-      const planeRightEdge = curX + jetW * 0.5;
-      // Plane is in frame as long as any part of it is within the viewport (including tail)
-      const isPlaneInFrame = planeRightEdge > -20;
-
-      // Only deactivate once plane has physically departed completely past the left screen edge
-      // and user has advanced past the initial towing entry (roadProgress > 0.28)
-      const isDeparted = flightP >= 1.0 && planeRightEdge < -40 && roadProgress > 0.25;
-      const isActive = progress > 0.01 && visionRect.bottom > vh * 0.1 && !isDeparted;
-
-      if (!isActive) {
-        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0, ropeVisible: false } : prev));
+      // If delay hasn't completed or user hasn't reached view, lock to pedestal
+      if (!delayCompleted) {
+        if (sourceEl) {
+          sourceEl.style.opacity = "1";
+          sourceEl.style.pointerEvents = "auto";
+        }
+        setState((prev) =>
+          prev.active || prev.opacity > 0
+            ? {
+                ...prev,
+                active: false,
+                opacity: 0,
+                progress: 0,
+                showAirStreaks: false,
+              }
+            : prev
+        );
         return;
       }
 
-      // ── Tow Rope Hook Coordinates ──
-      const jetHookX = curX + jetW * 0.16;
-      const jetHookY = curY + jetH * 0.08;
-
-      // ── Animated Tow Rope Unwrap & Attachment ──
-      // String attaches upon touchdown (flightP >= 0.98), stays intact and connected
-      // as long as the plane is towing and hasn't completely exited past the left frame
-      let ropeVisible = false;
-      let ropeProgress = 0;
-      let ropePath = "";
-
-      if (flightP >= 0.98 && hasValidAnchor && !isDeparted) {
-        ropeVisible = true;
-        if (flightP < 1.0) {
-          // Snappy smooth unwrap right on touchdown (0.98 -> 1.0)
-          ropeProgress = (flightP - 0.98) / 0.02;
-        } else {
-          ropeProgress = 1.0; // Fully latched to road anchor!
-        }
-
-        const targetX = jetHookX + (roadHookX - jetHookX) * ropeProgress;
-        const targetY = jetHookY + (roadHookY - jetHookY) * ropeProgress;
-
-        // When pulling under tension, cable straightens taut
-        const sag = Math.max(0, 14 * (1 - ropeProgress) - initialStrainProgress * 30);
-        const midX = (jetHookX + targetX) / 2;
-        const midY = (jetHookY + targetY) / 2 + sag;
-
-        ropePath = `M ${jetHookX} ${jetHookY} Q ${midX} ${midY} ${targetX} ${targetY}`;
+      // ── 2. ESTABLISH STABLE TAKEOFF BASELINE ──
+      // Once delay has elapsed, record the exact scroll baseline where flight begins
+      if (takeoffScrollRef.current === null) {
+        takeoffScrollRef.current = scrollY;
+        takeoffPosRef.current = {
+          x: vw * 0.5,
+          y: Math.max(vh * 0.25, Math.min(vh * 0.65, sourceRect.top + sourceRect.height * 0.5)),
+        };
       }
 
-      // 3D Banking & Pitch during flight — settles level (0deg) once landed in Vision section
-      const rollMidFlight = -14 * Math.sin(flightP * Math.PI);
-      const curRotateZ = flightP >= 1 ? 0 : rollMidFlight * (1 - flightP);
-      const curRotateX = flightP >= 1 ? 0 : -6 * Math.sin(flightP * Math.PI);
-      const curRotateY = flightP >= 1 ? 0 : -10 * Math.sin(flightP * Math.PI);
+      const takeoffScroll = takeoffScrollRef.current;
+      // Landing completes exactly when Vision section arrives at the top of the viewport
+      const docVisionTop = scrollY + visionRect.top;
+      const landingScroll = docVisionTop - vh * 0.05;
+      const flightDistance = Math.max(500, landingScroll - takeoffScroll);
 
-      // Air streaks active ONLY in flight, completely OFF once landed!
-      const showAirStreaks = flightP > 0.08 && flightP < 0.95;
+      // Scrolled distance beyond takeoff trigger
+      const scrolled = scrollY - takeoffScroll;
+      const rawProgress = scrolled / flightDistance;
+      const flightP = Math.min(1.0, Math.max(0, rawProgress));
 
-      // Opacity:
-      // 1. Fades in on takeoff
-      // 2. Full opacity (1.0) when landed at Step 01
-      // 3. Stays 100% visible while any part of plane is inside the frame
-      // 4. Only fades out when the tail physically passes behind the left screen bezel
-      let opacity = 1;
-      if (flightP < 0.06) {
-        opacity = flightP / 0.06;
-      } else if (flightP >= 1.0) {
-        if (planeRightEdge < 0) {
-          // Smooth fade-out only as the tail physically passes behind the left screen bezel
-          opacity = Math.max(0, 1 + planeRightEdge / 40);
-        } else {
-          // Solid 100% visible while inside the frame!
-          opacity = 1;
+      // ── 3. STRICT SINGLE-PLANE VISIBILITY & PROGRESS GATING ──
+      const isTakingOff = flightP > 0.002;
+
+      // When scroll is 0 or less, plane stays 100% parked on pedestal
+      if (!isTakingOff) {
+        if (sourceEl) {
+          sourceEl.style.opacity = "1";
+          sourceEl.style.pointerEvents = "auto";
         }
+        setState((prev) =>
+          prev.active || prev.opacity > 0
+            ? {
+                ...prev,
+                active: false,
+                opacity: 0,
+                progress: 0,
+                showAirStreaks: false,
+              }
+            : prev
+        );
+        return;
+      }
+
+      // Pedestal fade out upon liftoff
+      if (sourceEl) {
+        if (flightP < 0.04) {
+          const fade = flightP / 0.04;
+          sourceEl.style.opacity = Math.max(0, 1 - fade).toString();
+          sourceEl.style.pointerEvents = "none";
+        } else {
+          sourceEl.style.opacity = "0";
+          sourceEl.style.pointerEvents = "none";
+        }
+      }
+
+      // Measure exact destination on the runway from DOM anchor if available
+      const runwayJetAnchor =
+        document.getElementById("vision-end-jet-anchor") ||
+        document.getElementById("vision-end-jet");
+
+      let landingX = vw * 0.5;
+      let landingY = vh * 0.86;
+
+      if (runwayJetAnchor) {
+        const r = runwayJetAnchor.getBoundingClientRect();
+        if (r.width > 20 && r.height > 20) {
+          landingX = r.left + r.width * 0.5;
+          landingY = r.top + r.height * 0.5;
+        }
+      }
+
+      // Jet initial and target width
+      const jetWidth = sourceRect.width > 50 ? sourceRect.width : 1100;
+      const targetJetW = Math.max(440, Math.min(680, vw * 0.38));
+      const landingScale = targetJetW / jetWidth;
+
+      const startX = takeoffPosRef.current ? takeoffPosRef.current.x : vw * 0.5;
+      const startY = takeoffPosRef.current ? takeoffPosRef.current.y : vh * 0.52;
+
+      // Waypoints for the multi-stage 3D flight maneuver:
+      const p1X = vw * 0.26;
+      const p1Y = vh * 0.35;
+
+      const p2X = vw * 0.76;
+      const p2Y = vh * 0.46;
+
+      const p3Y = vh * 0.74;
+
+      let curX = startX;
+      let curY = startY;
+      let curYaw = 28;
+      let curPitch = 6;
+      let curRoll = 22;
+      let curScale = 1.0;
+      let curThrust = 0.35;
+
+      // ── 4. C1-CONTINUOUS FLIGHT TRAJECTORY (ZERO JITTER / ZERO YANK) ──
+      if (flightP <= 0.25) {
+        // Phase 1 (0.00 -> 0.25): Liftoff from platform & Climb towards left foreground
+        const t1 = flightP / 0.25;
+        const ease1 = t1 * t1 * (3 - 2 * t1);
+        curX = startX + (p1X - startX) * ease1;
+        curY = startY + (p1Y - startY) * ease1;
+
+        curYaw = 28 + (48 - 28) * ease1;
+        curPitch = 6 + (14 - 6) * ease1;
+        curRoll = 22 + (-16 - 22) * ease1;
+        curScale = 1.0 + (1.20 - 1.0) * ease1;
+        curThrust = 0.4 + 0.55 * ease1;
+      } else if (flightP <= 0.65) {
+        // Phase 2 (0.25 -> 0.65): Big Smooth Round Turn Near Screen (Left to Right)
+        const t2 = (flightP - 0.25) / 0.40;
+        const ease2 = t2 * t2 * (3 - 2 * t2);
+
+        curX = p1X + (p2X - p1X) * ease2;
+        const arcDip = Math.sin(t2 * Math.PI) * (vh * 0.08);
+        curY = p1Y + (p2Y - p1Y) * ease2 + arcDip;
+
+        curScale = 1.20 + (1.30 - 1.20) * Math.sin(t2 * Math.PI) + (1.18 - 1.20) * ease2;
+        curYaw = 48 + (-60 - 48) * ease2;
+        curRoll = -16 + (32 - (-16)) * ease2;
+        curPitch = 14 + (2 - 14) * ease2;
+        curThrust = 0.95;
+      } else if (flightP <= 0.86) {
+        // Phase 3 (0.65 -> 0.86): Align Inwards with Runway Centerline
+        const t3 = (flightP - 0.65) / 0.21;
+        const ease3 = t3 * t3 * (3 - 2 * t3);
+
+        curX = p2X + (landingX - p2X) * ease3;
+        curY = p2Y + (p3Y - p2Y) * ease3;
+
+        curRoll = 32 * (1 - ease3);
+        curYaw = -60 + (-90 - (-60)) * ease3;
+        curPitch = 2 + (-2 - 2) * ease3;
+        curScale = 1.18 + (landingScale - 1.18) * ease3;
+        curThrust = 0.65;
+      } else {
+        // Phase 4 (0.86 -> 1.00): Touchdown onto Blue Road Runway (Facing INWARDS)
+        const t4 = (flightP - 0.86) / 0.14;
+        const ease4 = t4 * t4 * (3 - 2 * t4);
+
+        curX = landingX;
+        curY = p3Y + (landingY - p3Y) * ease4;
+
+        curRoll = 0;
+        curYaw = -90;
+        curPitch = -2 + 4 * Math.sin(t4 * Math.PI);
+        curScale = landingScale;
+        curThrust = 0.65 * (1 - ease4) + 0.20 * ease4;
+      }
+
+      // Air streaks active ONLY during active scrolling & cruising
+      const showAirStreaks = isScrollingRef.current && flightP > 0.05 && flightP < 0.75;
+      // Thrust settles to gentle idle glow when user stops scrolling
+      const effectiveThrust = isScrollingRef.current ? curThrust : 0.22;
+
+      // Flight jet opacity: fade in upon takeoff, blend into runway at touchdown
+      let opacity = 0;
+      if (flightP < 0.04) {
+        opacity = flightP / 0.04;
+      } else if (flightP >= 0.90) {
+        const blend = (flightP - 0.90) / 0.10;
+        opacity = Math.max(0, 1 - blend);
       } else {
         opacity = 1;
       }
 
+      const isActive = isTakingOff && flightP < 1.0 && visionRect.top > -20;
+
+      prevProgressRef.current = flightP;
+
       setState({
-        active: true,
+        active: isActive,
         progress: flightP,
         x: curX,
         y: curY,
         width: jetWidth,
         scale: curScale,
-        rotateZ: curRotateZ,
-        rotateX: curRotateX,
-        rotateY: curRotateY,
+        yaw: curYaw,
+        pitch: curPitch,
+        roll: curRoll,
+        thrust: effectiveThrust,
         opacity,
         showAirStreaks,
-        ropeVisible,
-        ropeProgress,
-        ropePath,
-        jetHookX,
-        jetHookY,
-        roadHookX,
-        roadHookY,
       });
     };
 
-    // Continuous requestAnimationFrame loop: synchronizes frame-by-frame with VisionTimeline's camera lerp
-    const loop = () => {
+    const onScroll = () => {
+      isScrollingRef.current = true;
+      if (scrollIdleTimerRef.current) {
+        clearTimeout(scrollIdleTimerRef.current);
+      }
+      scrollIdleTimerRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+        // Trigger flight update to cleanly hide air streaks and lower thrust to idle
+        updateFlight();
+      }, 100);
+
       updateFlight();
-      animId = requestAnimationFrame(loop);
     };
 
-    animId = requestAnimationFrame(loop);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    // Initial check
+    updateFlight();
+
+    // Check timer expiration in case user paused at Ecosystem view
+    const timerInterval = setInterval(() => {
+      if (viewEnteredAtRef.current !== null && takeoffScrollRef.current === null) {
+        updateFlight();
+      }
+    }, 200);
 
     return () => {
-      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      clearInterval(timerInterval);
+      if (scrollIdleTimerRef.current) {
+        clearTimeout(scrollIdleTimerRef.current);
+      }
     };
   }, []);
-
-  if (!state.active) return null;
 
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-10 overflow-hidden select-none"
-      style={{ perspective: 1200 }}
+      className="fixed inset-0 pointer-events-none z-[45] overflow-hidden select-none"
+      style={{
+        opacity: state.active ? state.opacity : 0,
+        visibility: state.active && state.opacity > 0.01 ? "visible" : "hidden",
+      }}
     >
-      {/* ── Dynamic Animated Tow Rope pulling the Road into view ── */}
-      {state.ropeVisible && state.ropeProgress > 0.05 && (
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none overflow-visible z-20"
-          style={{ opacity: state.opacity }}
-        >
-          <defs>
-            <filter id="towRopeGlow" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="3.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* Luminous Glow Behind Cable */}
-          <path
-            d={state.ropePath}
-            fill="none"
-            stroke="rgba(186, 230, 253, 0.45)"
-            strokeWidth="7"
-            strokeLinecap="round"
-            filter="url(#towRopeGlow)"
-          />
-
-          {/* Core High-Tension Braided Steel Aircraft Tow Cable */}
-          <path
-            d={state.ropePath}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="3.2"
-            strokeLinecap="round"
-          />
-
-          {/* Woven Steel Strands Texture */}
-          <path
-            d={state.ropePath}
-            fill="none"
-            stroke="#64748b"
-            strokeWidth="1.5"
-            strokeDasharray="5 3"
-            strokeLinecap="round"
-          />
-
-          {/* Aircraft Tow Hitch Anchor on Fuselage */}
-          <circle
-            cx={state.jetHookX}
-            cy={state.jetHookY}
-            r="6"
-            fill="#090d14"
-            stroke="#ffffff"
-            strokeWidth="2"
-          />
-          <circle cx={state.jetHookX} cy={state.jetHookY} r="2.5" fill="#38bdf8" />
-
-          {/* Titanium Shackle / Carabiner at Road Tip (Shows when rope connects to road) */}
-          {state.ropeProgress >= 0.90 && (
-            <g>
-              <circle
-                cx={state.roadHookX}
-                cy={state.roadHookY}
-                r="7.5"
-                fill="#090d14"
-                stroke="#ffffff"
-                strokeWidth="2.4"
-              />
-              <circle
-                cx={state.roadHookX}
-                cy={state.roadHookY}
-                r="3.5"
-                fill="#38bdf8"
-              />
-            </g>
-          )}
-        </svg>
-      )}
-
-      {/* ── High-Detail M1 Aircraft in Flight / Parked ── */}
+      {/* ── 3D Bombardier Windjet 365 Aircraft in Flight / Swooping into Runway ── */}
       <div
         className="absolute top-0 left-0 will-change-transform z-15"
         style={{
-          transform: `translate3d(${state.x}px, ${state.y}px, 0) translate(-50%, -50%) scale(${state.scale}) rotateX(${state.rotateX}deg) rotateY(${state.rotateY}deg) rotateZ(${state.rotateZ}deg)`,
-          opacity: state.opacity,
-          transition: "opacity 0.15s ease-out",
-          width: state.width || 920,
-          maxWidth: "92vw",
+          transform: `translate3d(${state.x}px, ${state.y}px, 0) translate(-50%, -50%) scale(${state.scale})`,
+          width: state.width || 1100,
+          height: (state.width || 1100) * 0.58,
+          maxWidth: "96vw",
         }}
       >
-        <div className="relative w-full h-auto">
-          {/* ── Flight Air Lines Effect (Slipstream streaks active on flight and landing approach) ── */}
+        <div className="relative w-full h-full">
+          {/* ── Flight Air Lines Effect (Slipstream streaks active during cruising) ── */}
           {state.showAirStreaks && (
             <div
               className="absolute inset-0 pointer-events-none overflow-visible z-25"
@@ -428,15 +384,15 @@ export default function ScrollFlightJet() {
             </div>
           )}
 
-          {/* High-detail M1 Jet in 3D Flight */}
-          <Image
-            src="/images/ecosystem-jet-transparent.png"
-            alt=""
-            width={1376}
-            height={768}
-            priority
-            draggable={false}
-            className="w-full h-auto object-contain pointer-events-none select-none drop-shadow-[0_28px_56px_rgba(0,0,0,0.85)] brightness-105"
+          {/* Real-time 3D Bombardier Windjet 365 WebGL Jet */}
+          <Jet3DViewer
+            yaw={state.yaw}
+            pitch={state.pitch}
+            roll={state.roll}
+            engineThrust={state.thrust}
+            modelScale={1.55}
+            lightIntensity={1.2}
+            immediate={true}
           />
         </div>
       </div>

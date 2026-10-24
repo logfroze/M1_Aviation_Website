@@ -132,18 +132,104 @@ function FooterJetThrustFire() {
 }
 
 export default function Footer() {
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  // ── Background Video Playback: matching Hero section (1.0x speed, 0s-10s -> skip -> 20s to 55s trim, continuous loop) ──
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const applySpeed = () => {
+      video.playbackRate = 1.0;
+    };
+
+    applySpeed();
+    video.play().catch(() => {});
+
+    const startPlay = () => {
+      video.play().catch(() => {});
+    };
+    window.addEventListener("scroll", startPlay, { passive: true, once: true });
+    window.addEventListener("click", startPlay, { passive: true, once: true });
+    window.addEventListener("touchstart", startPlay, { passive: true, once: true });
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            }
+          });
+        },
+        { rootMargin: "300px" }
+      );
+      observer.observe(video);
+    }
+
+    const handleTimeUpdate = () => {
+      if (video.playbackRate !== 1.0) {
+        video.playbackRate = 1.0;
+      }
+      // Skip the 10th to 20th seconds window (Hero section setting)
+      if (video.currentTime >= 10 && video.currentTime < 20) {
+        video.currentTime = 20;
+      }
+      // Trim at 55 seconds: do not play past 55 seconds, loop seamlessly back to 0
+      if (video.currentTime >= 55) {
+        video.currentTime = 0;
+        video.playbackRate = 1.0;
+        video.play().catch(() => {});
+      } else if (video.duration && video.currentTime >= video.duration - 0.2) {
+        video.currentTime = 0;
+        video.playbackRate = 1.0;
+        video.play().catch(() => {});
+      }
+    };
+
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.playbackRate = 1.0;
+      video.play().catch(() => {});
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("ended", handleEnded);
+    video.addEventListener("loadedmetadata", applySpeed);
+    video.addEventListener("play", applySpeed);
+    video.addEventListener("canplay", applySpeed);
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener("scroll", startPlay);
+      window.removeEventListener("click", startPlay);
+      window.removeEventListener("touchstart", startPlay);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("loadedmetadata", applySpeed);
+      video.removeEventListener("play", applySpeed);
+      video.removeEventListener("canplay", applySpeed);
+    };
+  }, []);
+
   return (
     <footer className="relative bg-black text-zinc-400 border-t border-zinc-900 pt-44 sm:pt-48 pb-20 sm:pb-28 overflow-hidden select-none">
-      {/* ── Atmospheric Clouds Horizon ─────────────────────────── */}
-      <div className="absolute top-0 left-0 right-0 h-72 overflow-hidden pointer-events-none z-0">
-        {/* Sky Ambient Glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/60 via-zinc-950/80 to-black" />
+      {/* ── Background Video covering entire footer (Matching Hero section) ───────────── */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+        src="/videos/hero.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
 
-        {/* Volumetric Clouds Formations */}
-        <div className="absolute -top-10 left-[-10%] w-[120%] h-48 opacity-45 blur-2xl bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.45)_0%,_transparent_65%)] animate-pulse" />
-        <div className="absolute top-4 left-[20%] w-[60%] h-40 opacity-35 blur-3xl bg-[radial-gradient(ellipse_at_center,_rgba(200,225,255,0.4)_0%,_transparent_70%)]" />
-        <div className="absolute top-16 left-0 right-0 h-28 bg-gradient-to-b from-transparent via-white/5 to-transparent blur-xl" />
-      </div>
+      {/* Subtle dark tint over full video for clean visual contrast & text legibility (Matching Hero section) */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none z-0" />
 
       {/* ── Left Supersonic Jet (Hovering with Streamlines & Dynamic Afterburner Fire) ── */}
       <div className="absolute left-[-25px] sm:left-0 md:left-6 lg:left-12 top-[-52px] sm:top-[-38px] md:top-[-32px] lg:top-[-28px] w-[340px] sm:w-[460px] md:w-[560px] lg:w-[640px] h-[230px] sm:h-[310px] md:h-[380px] lg:h-[430px] z-10 group pointer-events-auto cursor-pointer">

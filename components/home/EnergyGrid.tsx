@@ -5,7 +5,7 @@ import React, { useRef, useEffect, useCallback } from "react";
 const CORE_FUNCTIONS = [
   { num: "01", title: "Predictive Maintenance",   desc: "Neural sensor algorithms foresee component stress cycles and turbine wear before scheduled inspection thresholds." },
   { num: "02", title: "Streamlined Scheduling",   desc: "Autonomous tail routing that dynamically aligns crew duty limits, fuel stops, and airport slot reservations." },
-  { num: "03", title: "Autonomous Monitoring",    desc: "24/7 continuous airframe telemetry and avionics bus diagnostics streaming live to ground dispatch." },
+  { num: "03", title: "50+ Aviation Tools Connectivity", desc: "24/7 continuous airframe telemetry and avionics bus diagnostics streaming live to ground dispatch." },
   { num: "04", title: "Compliance Monitoring",    desc: "Automated FAA, EASA, and ICAO log synchronization with real-time auditability and airworthiness directive checks." },
   { num: "05", title: "Digital Passport",         desc: "Tamper-proof lifecycle registry tracking every component, serial number, overhaul history, and structural test." },
   { num: "06", title: "Intelligent Operations",   desc: "Unified mission planning hub integrating dispatchers, pilots, FBO ground handlers, and executive passengers." },

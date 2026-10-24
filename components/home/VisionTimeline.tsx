@@ -2,964 +2,549 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Jet3DViewer from "./Jet3DViewer";
 import { VISION_MILESTONES } from "@/data/vision";
 
-interface MilestoneItem {
-  year: string;
-  phase: string;
-  title: string;
-  statement: string;
-  side: "right" | "left"; // Alternating: "right" = above/right, "left" = below/left
-  roadX: number;
-  roadY: number;
-  cardX: number;
-  cardY: number;
-  cardW?: number;
-  cardH?: number;
-  icon: React.ReactNode;
+const TOTAL = VISION_MILESTONES.length;
+
+function clamp(v: number, lo: number, hi: number) {
+  return Math.max(lo, Math.min(hi, v));
 }
 
-// =========================================================================
-// 📍 MANUAL CARD POSITIONS CONFIGURATION
-// You can edit the positions of each milestone card manually below:
-// - cardX : Horizontal position of the card (larger = further right, smaller = further left)
-// - cardY : Vertical position of the card (larger = further down, smaller = further up)
-// - roadX : Horizontal coordinate on the road where the year is printed & leader line connects
-// - roadY : Vertical coordinate on the road
-// - side  : "right" (card is above the road) | "left" (card is below the road)
-// =========================================================================
-export const MILESTONES: MilestoneItem[] = [
-  {
-    year: "2027",
-    phase: "PHASE 01",
-    title: "Marketplace",
-    statement: VISION_MILESTONES[0].statement,
-    side: "right", // Above the road
-    roadX: 420,
-    roadY: 198,
-    cardX: 230,
-    cardY: -180, // Elevated with generous clearance above the road
-    cardW: 600,
-    cardH: 260,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-        <path d="M9 12H4s.55-3.03 2-4.5c1.62-1.63 5-2 5-2" />
-        <path d="M12 15v5s3.03-.55 4.5-2c1.63-1.62 2-5 2-5" />
-      </svg>
-    ),
-  },
-  {
-    year: "2028",
-    phase: "PHASE 02",
-    title: "Avigram",
-    statement: VISION_MILESTONES[1].statement,
-    side: "left", // Below the road
-    roadX: 900,
-    roadY: 265,
-    cardX: 1150,
-    cardY: -50,
-    cardW: 600,
-    cardH: 260,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-        <line x1="16" x2="16" y1="2" y2="6" />
-        <line x1="8" x2="8" y1="2" y2="6" />
-        <line x1="3" x2="21" y1="10" y2="10" />
-        <path d="m9 16 2 2 4-4" />
-      </svg>
-    ),
-  },
-  {
-    year: "2029",
-    phase: "PHASE 03",
-    title: "SIOS",
-    statement: VISION_MILESTONES[2].statement,
-    side: "right", // Outside right bend
-    roadX: 1350,
-    roadY: 560,
-    cardX: 1470,
-    cardY: 450,
-    cardW: 620,
-    cardH: 300,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <line x1="12" x2="12" y1="20" y2="10" />
-        <line x1="18" x2="18" y1="20" y2="4" />
-        <line x1="6" x2="6" y1="20" y2="16" />
-        <path d="m3 3 6 6 4-4 8 8" />
-      </svg>
-    ),
-  },
-  {
-    year: "2031",
-    phase: "PHASE 04",
-    title: "Super Scale",
-    statement: VISION_MILESTONES[3].statement,
-    side: "left", // Outside left bend
-    roadX: 640,
-    roadY: 730,
-    cardX: -100,
-    cardY: 560,
-    cardW: 620,
-    cardH: 320,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-        <path d="M12 6v2" />
-        <path d="M12 16v2" />
-      </svg>
-    ),
-  },
-  {
-    year: "2035",
-    phase: "PHASE 05",
-    title: "A new era",
-    statement: VISION_MILESTONES[4].statement,
-    side: "right", // Above the road
-    roadX: 1240,
-    roadY: 980,
-    cardX: 650,
-    cardY: 1100,
-    cardW: 620,
-    cardH: 320,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M2 12h20" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-    ),
-  },
-  {
-    year: "2037",
-    phase: "PHASE 06",
-    title: "Preparation for next evolution.",
-    statement: VISION_MILESTONES[5].statement,
-    side: "left", // Below the road
-    roadX: 1760,
-    roadY: 1030,
-    cardX: 1470,
-    cardY: 1200,
-    cardW: 640,
-    cardH: 340,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <circle cx="12" cy="12" r="10" />
-        <circle cx="12" cy="12" r="6" />
-        <circle cx="12" cy="12" r="2" />
-      </svg>
-    ),
-  },
-];
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
 
-// ── Wavy Serpentine Road Path: First heads right, sweeps in a big smooth curve left, then sweeps right towards destination ──
-const ROAD_PATH =
-  "M 60 160 C 340 180, 620 220, 940 270 C 1260 320, 1440 430, 1340 560 C 1220 680, 860 620, 680 720 C 540 800, 600 910, 880 960 C 1200 990, 1680 1015, 2140 1070";
+function easeInOut(t: number) {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
 
 export default function VisionTimeline() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const roadPathRef = useRef<SVGPathElement>(null);
-  const targetProgressRef = useRef(0);
-  const currentProgressRef = useRef(0);
-  const [smoothProgress, setSmoothProgress] = useState(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
+  const targetRef = useRef(0);
+  const smoothRef = useRef(0);
+
+  const [progress, setProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [fillerHead, setFillerHead] = useState({ x: 60, y: 160, angle: 5 });
+  const [landingProgress, setLandingProgress] = useState(0);
 
-  // Smooth lerp loop for scroll progress
   useEffect(() => {
-    let animId: number;
+    const onScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      if (scrollable <= 0) return;
+      targetRef.current = clamp(-rect.top / scrollable, 0, 1);
 
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const headerOffset = 30;
-      const bottomHold = 420; // Hold view at end of road so content stays comfortably on screen before unpinning
-      const scrollableDistance = rect.height - window.innerHeight - headerOffset - bottomHold;
-      if (scrollableDistance <= 0) return;
-
-      const raw = (-rect.top - headerOffset) / scrollableDistance;
-      targetProgressRef.current = Math.min(1, Math.max(0, raw));
+      // Smooth landing transition:
+      // rect.top moves from 450 down to 20: incoming flight touches down & runway plane materializes
+      const landingRatio = clamp((450 - rect.top) / 400, 0, 1);
+      setLandingProgress(landingRatio);
     };
 
-    const updateLoop = () => {
-      currentProgressRef.current += (targetProgressRef.current - currentProgressRef.current) * 0.12;
-      const prog = currentProgressRef.current;
-      setSmoothProgress(prog);
+    const loop = () => {
+      // Smooth dampening for high-refresh displays
+      smoothRef.current += (targetRef.current - smoothRef.current) * 0.09;
+      const p = smoothRef.current;
+      setProgress(p);
 
-      // Track exact (x, y) coordinates and tangent angle of the silver fill head along the curved road
-      if (roadPathRef.current) {
-        try {
-          const totalLength = roadPathRef.current.getTotalLength();
-          const currentLen = totalLength * Math.min(1, Math.max(0, prog));
-          const pt = roadPathRef.current.getPointAtLength(currentLen);
-          const sampleDelta = 2;
-          const ptAhead = roadPathRef.current.getPointAtLength(Math.min(totalLength, currentLen + sampleDelta));
-          const ptBehind = roadPathRef.current.getPointAtLength(Math.max(0, currentLen - sampleDelta));
-          const dx = ptAhead.x - ptBehind.x;
-          const dy = ptAhead.y - ptBehind.y;
-          const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-          setFillerHead({ x: pt.x, y: pt.y, angle });
-        } catch {
-          // ignore before SVG mount
-        }
-      }
+      const ni = clamp(Math.floor(p * TOTAL), 0, TOTAL - 1);
+      setActiveIndex(ni);
 
-      const idx = Math.min(
-        MILESTONES.length - 1,
-        Math.max(0, Math.floor(prog * MILESTONES.length + 0.15))
-      );
-      setActiveIndex(idx);
-
-      animId = requestAnimationFrame(updateLoop);
+      rafRef.current = requestAnimationFrame(loop);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    animId = requestAnimationFrame(updateLoop);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    rafRef.current = requestAnimationFrame(loop);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animId);
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  // Camera tracking waypoints along the big wavy curves
-  const getCameraWaypoint = (p: number) => {
-    const t = Math.max(0, Math.min(1, p));
-    const WAYPOINTS = [
-      { p: 0.00, x: 440,  y: 220, zoom: 1.00 }, // Runway departure, Step 01 & Parked Jet
-      { p: 0.18, x: 820,  y: 290, zoom: 1.03 }, // Step 02 (heading right)
-      { p: 0.40, x: 1240, y: 520, zoom: 1.06 }, // Step 03 (sweeping right bend)
-      { p: 0.62, x: 580,  y: 730, zoom: 1.08 }, // Step 04 (sweeping left bend)
-      { p: 0.82, x: 1220, y: 920, zoom: 1.10 }, // Step 05 (sweeping right east)
-      { p: 1.00, x: 1540, y: 860, zoom: 1.02 }, // Step 06 & Terminal Jet - perfectly centered so content fills screen without blank void
-    ];
-
-    for (let i = 0; i < WAYPOINTS.length - 1; i++) {
-      const w1 = WAYPOINTS[i];
-      const w2 = WAYPOINTS[i + 1];
-      if (t >= w1.p && t <= w2.p) {
-        const segT = (t - w1.p) / (w2.p - w1.p);
-        const ease = segT * segT * (3 - 2 * segT);
-        return {
-          x: w1.x + (w2.x - w1.x) * ease,
-          y: w1.y + (w2.y - w1.y) * ease,
-          zoom: w1.zoom + (w2.zoom - w1.zoom) * ease,
-        };
-      }
-    }
-    return WAYPOINTS[WAYPOINTS.length - 1];
+  const scrollToMilestone = (index: number) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const scrollY = window.scrollY;
+    const docTop = scrollY + rect.top;
+    const scrollable = sectionRef.current.offsetHeight - window.innerHeight;
+    // Position the milestone in the sweet spot of its range
+    const targetP = (index + 0.35) / TOTAL;
+    window.scrollTo({
+      top: docTop + targetP * scrollable,
+      behavior: "smooth",
+    });
   };
 
-  const cameraTransform = (() => {
-    const cam = getCameraWaypoint(smoothProgress);
-    const viewportCenterX = 850;
-    const viewportCenterY = 480;
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activeIndex > 0) {
+      scrollToMilestone(activeIndex - 1);
+    }
+  };
 
-    const translateX = viewportCenterX - cam.x * cam.zoom;
-    const translateY = viewportCenterY - cam.y * cam.zoom;
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activeIndex < TOTAL - 1) {
+      scrollToMilestone(activeIndex + 1);
+    }
+  };
 
-    return { translateX, translateY, zoomScale: cam.zoom };
-  })();
+  const eased = easeInOut(progress);
 
-  // Calculate live road completion percentage and recharge status
-  const percentage = Math.min(100, Math.max(0, Math.round(smoothProgress * 100)));
-  const isNearEnd = smoothProgress >= 0.88;
-  const isRecharged = smoothProgress >= 0.95;
-  const rechargeRatio = isNearEnd ? Math.min(1, Math.max(0, (smoothProgress - 0.88) / 0.12)) : 0;
+  // ── 3D Jet Perspective & Position Dynamics ──
+  // Plane starts placed securely on the blue road runway above the progress bar & dock.
+  // As user scrolls, view zooms in: plane scales up to 1.55 and STAYS LARGE and zoomed-in
+  // until the end of the road (never shrinking into distance).
+  const jetBottom = lerp(11, 26, eased);
+  const jetScale = lerp(1.20, 1.55, Math.min(1, eased * 2.2));
+  const jetOpacity = progress < 0.96 ? 1 : clamp(1 - (progress - 0.96) / 0.04, 0, 1);
+
+  // Crossfade from incoming flight to stationary runway plane
+  const centralJetOpacity = jetOpacity * Math.max(landingProgress, progress > 0 ? 1 : 0);
+  const centralJetBlur = progress > 0 ? 0 : (1 - landingProgress) * 4;
+
+  // ── Tunnel Camera Zoom Effect ──
+  // Pushes road, neon rings, and vanishing point towards camera while outer rock frame stays static
+  const tunnelScale = 1.0 + eased * 0.85;
+  const tunnelY = eased * 6.5;
+
+  // ── Circular Progress Arc (Right side of outer ring, matching reference HUD) ──
+  const ARC_R = 365;
+  const arcLength = Math.PI * ARC_R * 0.45;
+  const arcDashOffset = arcLength * (1 - progress);
+
+  const currentMilestone = VISION_MILESTONES[activeIndex];
 
   return (
-    <div
-      ref={containerRef}
+    <section
+      ref={sectionRef}
+      id="vision"
       aria-label="The 10-Year Vision Roadmap"
-      className="relative w-full h-[320vh] bg-[#04060a]"
+      className="relative w-full select-none"
+      style={{ height: "600vh" }}
     >
-      {/* ── Relative Section Header (Moves naturally up and out of the way as user scrolls down) ── */}
-      <div className="relative z-30 pt-14 sm:pt-20 pb-4 px-6 max-w-5xl mx-auto text-center pointer-events-none">
-        <div className="inline-flex items-center px-3 py-1 rounded bg-zinc-900 border border-zinc-700/80 mb-2">
-          <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-zinc-300 font-semibold">
-            Let's Travel together:
-          </span>
-        </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white">
-          10 years long Vision.
-        </h2>
-        <p className="text-xs sm:text-sm font-mono tracking-wide text-zinc-400 mt-1">
-          A journey towards the next era of Aviation.
-        </p>
-      </div>
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black flex items-center justify-center">
 
-      {/* ── Sticky Fullscreen Viewport for the Road Scene ── */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-start select-none">
-        {/* Subtle Dark Matte Background */}
-        <div className="absolute inset-0 pointer-events-none z-0 bg-[#04060a]">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#04060a] via-[#080b10] to-[#04060a]" />
-        </div>
+        {/* ── 1. CINEMATIC ZOOMING INNER LAYER (ROAD, RINGS, VANISHING POINT GRID) ── */}
+        <div
+          className="absolute inset-0 w-full h-full pointer-events-none origin-center will-change-transform"
+          style={{
+            transform: `scale(${tunnelScale}) translateY(${tunnelY}%)`,
+            transition: "transform 0.05s linear",
+          }}
+        >
+          <Image
+            src="/images/vision-tunnel-backdrop.jpg"
+            alt="Futuristic Neon Tunnel with Runway"
+            fill
+            priority
+            className="object-cover w-full h-full select-none"
+          />
 
-        {/* ── Road Scene along the Wavy Serpentine Path ── */}
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto overflow-hidden">
+          {/* Vignette & Depth Shadow */}
           <div
-            className="relative w-full h-full max-w-[2200px] max-h-[1450px] will-change-transform"
+            className="absolute inset-0 pointer-events-none"
             style={{
-              transform: `translate3d(${cameraTransform.translateX}px, ${cameraTransform.translateY}px, 0) scale(${cameraTransform.zoomScale})`,
-              transformOrigin: "0 0",
+              background:
+                "radial-gradient(circle at 50% 50%, transparent 45%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.85) 100%)",
             }}
+          />
+
+          {/* Glowing Winding Spline Path / Cable from Jet into Tunnel */}
+          <svg
+            viewBox="0 0 1000 900"
+            preserveAspectRatio="xMidYMid meet"
+            className="absolute inset-0 w-full h-full pointer-events-none z-[12]"
+            style={{ overflow: "visible" }}
           >
-            {/* ── SVG Road & Interactive Milestones ── */}
-            <svg
-              viewBox="0 0 2200 1450"
-              preserveAspectRatio="xMidYMid meet"
-              className="w-full h-full overflow-visible"
-            >
-              <defs>
-                {/* Silver/White Roadbed Fill Gradients */}
-                <linearGradient id="roadSilverGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-                  <stop offset="50%" stopColor="#cbd5e1" stopOpacity="0.35" />
-                  <stop offset="100%" stopColor="#e2e8f0" stopOpacity="0.65" />
-                </linearGradient>
+            <defs>
+              <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur1" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
-                <linearGradient id="roadSilverBeam" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#e2e8f0" stopOpacity="0.85" />
-                  <stop offset="35%" stopColor="#94a3b8" stopOpacity="0.55" />
-                  <stop offset="70%" stopColor="#f8fafc" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
-                </linearGradient>
+            <path
+              d={`M 500 ${880 - eased * 350} 
+                  C 515 ${760 - eased * 240}, 
+                    ${480 + Math.sin(progress * Math.PI * 4) * 12} ${620 - eased * 150}, 
+                    500 480`}
+              fill="none"
+              stroke="rgba(56, 189, 248, 0.9)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              filter="url(#neon-glow)"
+              strokeDasharray="8 6"
+              className="opacity-80"
+            />
+          </svg>
+        </div>
 
-                <radialGradient id="rechargeThrustGlow" cx="100%" cy="50%" r="60%">
-                  <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                  <stop offset="30%" stopColor="#38bdf8" stopOpacity="0.9" />
-                  <stop offset="70%" stopColor="#f97316" stopOpacity="0.6" />
-                  <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-                </radialGradient>
-              </defs>
+        {/* ── 2. STATIC OUTER ROCK WALLS FRAME (REMAINS EXACT SAME SIZE & VIEW) ── */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-[15]">
+          <Image
+            src="/images/vision-rock-frame.png"
+            alt="Cavern Rock Walls Perimeter"
+            fill
+            priority
+            className="object-cover w-full h-full select-none"
+          />
+        </div>
 
-              {/* ── Solid Highway Track Structure (Sharp Geometric Edges, Heavy Asphalt Foundation) ── */}
-              <g id="road-track-solid">
-                {/* 1. Outer Heavy Curb Foundation Line */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="#1e293b"
-                  strokeWidth="82"
-                  strokeLinecap="butt"
+        {/* ── 3. HUD CIRCULAR PROGRESS GAUGE (RIGHT SIDE NEON RING) ── */}
+        <svg
+          viewBox="0 0 1000 900"
+          preserveAspectRatio="xMidYMid meet"
+          className="absolute inset-0 w-full h-full pointer-events-none z-[18]"
+          style={{ overflow: "visible" }}
+        >
+          <path
+            d="M 820 460 A 365 365 0 0 1 650 780"
+            fill="none"
+            stroke="rgba(56, 189, 248, 0.15)"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 820 460 A 365 365 0 0 1 650 780"
+            fill="none"
+            stroke="#38bdf8"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={arcLength}
+            strokeDashoffset={arcDashOffset}
+            filter="url(#neon-glow)"
+          />
+          <text
+            x="675"
+            y="795"
+            fill="#38bdf8"
+            fontSize="15"
+            fontFamily="monospace"
+            fontWeight="bold"
+            letterSpacing="1.5"
+            filter="url(#neon-glow)"
+          >
+            {Math.round(progress * 100)}%
+          </text>
+        </svg>
+
+        {/* ── 4. REALISTIC REAR-VIEW 3D BOMBARDIER JET CRUISING DOWN RUNWAY ── */}
+        <div
+          className="absolute left-1/2 z-[20] pointer-events-none origin-bottom will-change-transform"
+          style={{
+            bottom: `${jetBottom}%`,
+            transform: `translateX(-50%) scale(${jetScale})`,
+            width: "clamp(420px, 36vw, 620px)",
+            opacity: centralJetOpacity,
+            filter: centralJetBlur > 0.1 ? `blur(${centralJetBlur}px)` : undefined,
+            transition:
+              "bottom 0.05s linear, transform 0.05s linear, opacity 0.08s linear, filter 0.08s linear",
+          }}
+          id="vision-end-jet-anchor"
+        >
+          <div id="vision-end-jet-wrapper">
+            <div id="vision-end-jet" className="relative w-full">
+              {/* Runway Ground Reflection & Contact Shadow */}
+              <div
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none"
+                style={{
+                  width: "82%",
+                  height: "30px",
+                  background:
+                    "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(56,189,248,0.28) 42%, transparent 75%)",
+                  filter: "blur(7px)",
+                }}
+              />
+
+              {/* 3D Bombardier Windjet 365 on Runway (facing inwards into tunnel) */}
+              <div className="w-full h-[270px] sm:h-[330px] relative pointer-events-none select-none">
+                <Jet3DViewer
+                  yaw={-90}
+                  pitch={0}
+                  roll={0}
+                  modelScale={1.35}
+                  engineThrust={0.4 + eased * 0.6}
+                  lightIntensity={1.3}
                 />
-                {/* 2. Crisp Shoulder Curb Edges (White/Slate boundary) */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="#475569"
-                  strokeWidth="78"
-                  strokeLinecap="butt"
-                />
-                {/* 3. Solid Deep Black Tarmac Roadbed */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="#090d16"
-                  strokeWidth="72"
-                  strokeLinecap="butt"
-                />
-                {/* 4. Sharp Dashed Runway Guidance Centerline */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="#64748b"
-                  strokeWidth="2.5"
-                  strokeDasharray="18 12"
-                  strokeLinecap="butt"
-                  opacity="0.85"
-                />
+              </div>
 
-                {/* ── PROGRESSIVE SILVER/WHITE SOLID ROAD FILLER ── */}
-                {/* 1. Underlying Solid Silver Base Layer */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="url(#roadSilverGlow)"
-                  strokeWidth="72"
-                  strokeLinecap="butt"
-                  pathLength={1000}
-                  strokeDasharray="1000"
-                  strokeDashoffset={1000 * (1 - smoothProgress)}
-                  opacity={0.55}
-                />
-
-                {/* 2. Core Solid Metallic Highway Slab */}
-                <path
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="url(#roadSilverBeam)"
-                  strokeWidth="64"
-                  strokeLinecap="butt"
-                  pathLength={1000}
-                  strokeDasharray="1000"
-                  strokeDashoffset={1000 * (1 - smoothProgress)}
-                  opacity={0.98}
-                />
-
-                {/* 3. Razor-Sharp Solid White Progress Centerline */}
-                <path
-                  ref={roadPathRef}
-                  d={ROAD_PATH}
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="4"
-                  strokeLinecap="butt"
-                  pathLength={1000}
-                  strokeDasharray="1000"
-                  strokeDashoffset={1000 * (1 - smoothProgress)}
-                />
-              </g>
-
-              {/* ── Traveling Head of the Road Fill with Prominent Solid Percentage Display ── */}
-              {smoothProgress > 0.005 && (
-                <g
-                  transform={`translate(${fillerHead.x}, ${fillerHead.y})`}
-                  className="pointer-events-none transition-transform duration-75"
-                >
-                  {/* Razor-sharp cut bar across the roadbed at the fill head, rotated to match road curvature normal */}
-                  <line
-                    x1="0"
-                    y1="-36"
-                    x2="0"
-                    y2="36"
-                    stroke="#ffffff"
-                    strokeWidth="4"
-                    strokeLinecap="butt"
-                    transform={`rotate(${fillerHead.angle + 90})`}
-                  />
-                  <rect
-                    x="-4"
-                    y="-4"
-                    width="8"
-                    height="8"
-                    fill="#ffffff"
-                    stroke="#000000"
-                    strokeWidth="1.2"
-                  />
-
-                  {/* Floating Sharp Solid Percentage Badge */}
-                  <g transform="translate(0, -52)">
-                    {/* Sharp Solid Connection Stalk */}
-                    <line
-                      x1="0"
-                      y1="22"
-                      x2="0"
-                      y2="48"
-                      stroke="#ffffff"
-                      strokeWidth="2.2"
-                      strokeLinecap="butt"
-                    />
-
-                    {/* Sharp Solid Rectangular Container */}
-                    <rect
-                      x="-105"
-                      y="-22"
-                      width="210"
-                      height="44"
-                      rx="0"
-                      fill="#06090e"
-                      stroke="#ffffff"
-                      strokeWidth="2.5"
-                      style={{ filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.95))" }}
-                    />
-
-                    {/* Prominent Large Percentage Word & Value */}
-                    <text
-                      x="0"
-                      y="7"
-                      textAnchor="middle"
-                      fill="#ffffff"
-                      className="font-mono text-[19px] font-black tracking-widest select-none uppercase fill-white"
-                    >
-                      PERCENTAGE {percentage}%
-                    </text>
-                  </g>
-                </g>
-              )}
-
-              {/* ── ALL YEARS ON THE ROAD: Large, Solid, Sharp Station Labels (Always Visible) ── */}
-              <g id="road-year-stations">
-                {MILESTONES.map((m, idx) => {
-                  const isActive = idx === activeIndex;
-                  const isPassed = smoothProgress >= (idx / (MILESTONES.length - 1)) * 0.95;
-
-                  return (
-                    <g key={`road-station-${m.year}`} className="transition-all duration-300">
-                      {/* Sharp diamond station checkpoint on the road centerline */}
-                      <rect
-                        x={m.roadX - 7}
-                        y={m.roadY - 7}
-                        width="14"
-                        height="14"
-                        transform={`rotate(45 ${m.roadX} ${m.roadY})`}
-                        fill={isActive ? "#ffffff" : isPassed ? "#cbd5e1" : "#090d16"}
-                        stroke={isActive ? "#ffffff" : isPassed ? "#ffffff" : "#64748b"}
-                        strokeWidth="2"
-                      />
-
-                      {/* Enlarged Year label printed prominently along the road */}
-                      <text
-                        x={
-                          m.year === "2029"
-                            ? m.roadX - 32
-                            : m.year === "2031"
-                            ? m.roadX + 32
-                            : m.roadX
-                        }
-                        y={
-                          m.year === "2027" || m.year === "2028"
-                            ? m.roadY + 56
-                            : m.year === "2035" || m.year === "2037"
-                            ? m.roadY - 38
-                            : m.roadY + 9
-                        }
-                        textAnchor={
-                          m.year === "2029"
-                            ? "end"
-                            : m.year === "2031"
-                            ? "start"
-                            : "middle"
-                        }
-                        fill={isActive ? "#ffffff" : isPassed ? "#e2e8f0" : "#94a3b8"}
-                        className={`font-mono text-[26px] font-black tracking-widest select-none transition-all duration-300 ${
-                          isActive
-                            ? "fill-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]"
-                            : isPassed
-                            ? "fill-zinc-100"
-                            : "fill-zinc-400"
-                        }`}
-                      >
-                        {m.year}
-                      </text>
-                    </g>
-                  );
-                })}
-              </g>
-
-              {/* ── START OF ROAD: Solid Sharp Departure Threshold ── */}
-              <g id="road-start-threshold" transform="translate(60, 160)">
-                {/* Tow Cable Latch Shackle Point (Used by ScrollFlightJet to hitch and pull road) */}
-                <circle
-                  id="road-tow-anchor"
-                  cx="0"
-                  cy="0"
-                  r="9"
-                  fill="#090d14"
-                  stroke="#ffffff"
-                  strokeWidth="2.5"
-                  opacity="1"
-                />
-
-                {/* Sharp Perpendicular Threshold Border Line (seals the 72px road mouth) */}
-                <line
-                  x1="0"
-                  y1="-36"
-                  x2="0"
-                  y2="36"
-                  stroke="#ffffff"
-                  strokeWidth="4"
-                  strokeLinecap="butt"
-                />
-                {/* Secondary Precision Stop Line */}
-                <line
-                  x1="6"
-                  y1="-36"
-                  x2="6"
-                  y2="36"
-                  stroke="#cbd5e1"
-                  strokeWidth="2"
-                  strokeLinecap="butt"
-                />
-                {/* Runway Piano Key Stripes */}
-                {[-26, -18, -10, -2, 6, 14, 22].map((offsetY, i) => (
-                  <line
-                    key={`thr-${i}`}
-                    x1="12"
-                    y1={offsetY}
-                    x2="30"
-                    y2={offsetY}
-                    stroke="#ffffff"
-                    strokeWidth="3"
-                    strokeLinecap="butt"
-                    opacity="0.9"
-                  />
-                ))}
-              </g>
-
-              {/* ── END OF ROAD: Solid Sharp Terminal Edge (x=2140, y=1070) ── */}
-              <g id="road-end-threshold" transform="translate(2140, 1070)">
-                {/* Primary Sharp Terminal Boundary Line across 72px road width */}
-                <line
-                  x1="-4.5"
-                  y1="-36"
-                  x2="4.5"
-                  y2="36"
-                  stroke="#ffffff"
-                  strokeWidth="4"
-                  strokeLinecap="butt"
-                />
-                {/* Secondary Terminal Precision Line */}
-                <line
-                  x1="-10.5"
-                  y1="-36"
-                  x2="-1.5"
-                  y2="36"
-                  stroke="#94a3b8"
-                  strokeWidth="2"
-                  strokeLinecap="butt"
-                />
-                {isNearEnd && (
-                  <line
-                    x1="1.5"
-                    y1="-36"
-                    x2="10.5"
-                    y2="36"
-                    stroke="#ffffff"
-                    strokeWidth={isRecharged ? 3.5 : 2}
-                    strokeLinecap="butt"
-                    opacity={rechargeRatio}
-                  />
-                )}
-              </g>
-
-              {/* ── Power Conduit Transfer Line (from Sharp Terminal into Jet) ── */}
-              {isNearEnd && (
-                <g className="transition-opacity duration-300 pointer-events-none">
-                  <line
-                    x1="2140"
-                    y1="1070"
-                    x2="2350"
-                    y2="1030"
-                    stroke="#ffffff"
-                    strokeWidth={isRecharged ? 3 : 1.8}
-                    strokeDasharray="8 6"
-                    strokeLinecap="butt"
-                    opacity={0.8 + rechargeRatio * 0.2}
-                    filter="drop-shadow(0 0 8px rgba(255,255,255,0.85))"
-                  />
-                  <rect
-                    x={2140 + (2350 - 2140) * Math.min(1, (smoothProgress - 0.88) / 0.1) - 4}
-                    cy={1070 + (1030 - 1070) * Math.min(1, (smoothProgress - 0.88) / 0.1) - 4}
-                    width="8"
-                    height="8"
-                    fill="#ffffff"
-                    filter="drop-shadow(0 0 8px #ffffff)"
-                  />
-                </g>
-              )}
-
-              {/* ── Stationary Supersonic Jet with Power Recharged Boost Effect ── */}
-              <g
-                id="vision-end-jet-anchor"
-                transform={`translate(2580, ${1030 - rechargeRatio * 18})`}
-              >
-                <g
-                  id="vision-end-jet-wrapper"
-                  className="transition-all duration-300"
-                  style={{ opacity: 1 }}
-                >
-                  {/* Tarmac Ground Shadow (softens and shrinks slightly as plane lifts) */}
-                  <ellipse
-                    cx="10"
-                    cy={130 + rechargeRatio * 18}
-                    rx={300 - rechargeRatio * 25}
-                    ry={24 - rechargeRatio * 6}
-                    fill="#000000"
-                    opacity={0.80 - rechargeRatio * 0.25}
-                    filter="blur(16px)"
-                  />
-
-
-                  {/* Supersonic Jet: Rotated to horizontal, lifts and pitches up slightly on full recharge */}
-                  <image
-                    id="vision-end-jet"
-                    href="/images/footer-jet.png"
-                    x="-410"
-                    y="-229"
-                    width="820"
-                    height="458"
-                    transform={`rotate(${15 - rechargeRatio * 4})`}
-                    preserveAspectRatio="xMidYMid meet"
-                    style={{
-                      filter: isRecharged
-                        ? "drop-shadow(0 0 35px rgba(255,255,255,0.75)) drop-shadow(0 24px 48px rgba(0,0,0,0.95))"
-                        : "drop-shadow(0 24px 48px rgba(0,0,0,0.95))",
-                      transition: "filter 0.3s ease",
-                    }}
-                  />
-
-                  {/* Subtle Standby Navigation Beacon Accent on Engine Nacelle */}
-                  <circle cx="-300" cy="55" r="5" fill="#f97316" opacity="0.75" filter="blur(2px)" />
-                  <circle cx="-300" cy="55" r="2" fill="#ffffff" />
-
-                  {/* Power Recharged Engine Thrusters Boost Flames */}
-                  {isNearEnd && (
-                    <g
-                      className="transition-opacity duration-300 pointer-events-none"
-                      style={{ opacity: rechargeRatio }}
-                      transform={`rotate(${15 - rechargeRatio * 4})`}
-                    >
-                      {/* Upper Engine Nozzle Thrust Stream */}
-                      <g transform="translate(-320, 52)">
-                        <ellipse cx="-40" cy="0" rx="40" ry="6" fill="url(#rechargeThrustGlow)" />
-                        <ellipse cx="-22" cy="0" rx="22" ry="3.5" fill="#ffffff" filter="drop-shadow(0 0 10px #ffffff)" />
-                        <line x1="-15" y1="-5" x2="-15" y2="5" stroke="#ffffff" strokeWidth="1.5" />
-                        <line x1="-32" y1="-4" x2="-32" y2="4" stroke="#38bdf8" strokeWidth="1.2" />
-                      </g>
-
-                      {/* Lower Engine Nozzle Thrust Stream */}
-                      <g transform="translate(-300, 72)">
-                        <ellipse cx="-40" cy="0" rx="40" ry="6" fill="url(#rechargeThrustGlow)" />
-                        <ellipse cx="-22" cy="0" rx="22" ry="3.5" fill="#ffffff" filter="drop-shadow(0 0 10px #ffffff)" />
-                        <line x1="-15" y1="-5" x2="-15" y2="5" stroke="#ffffff" strokeWidth="1.5" />
-                        <line x1="-32" y1="-4" x2="-32" y2="4" stroke="#38bdf8" strokeWidth="1.2" />
-                      </g>
-                    </g>
-                  )}
-
-                </g>
-              </g>
-
-              {/* ── 6 Alternating Milestones (Enlarged Cards with Parallelogram Tilted Pointy Corners) ── */}
-              {MILESTONES.map((m, idx) => {
-                const isActive = idx === activeIndex;
-                const isRight = m.side === "right";
-
-                // Enlarged card dimensions (longer cards for better readability)
-                const cardW = m.cardW || 540;
-                const cardH = m.cardH || 250;
-                const slant = 28;
-
-                // Dedicated, clean leader line attachment coordinates per milestone card
-                const getCardConnection = () => {
-                  if (m.year === "2027") {
-                    // Step 01: Card is above the road, attaches cleanly to bottom edge
-                    const attachX = m.cardX + cardW * 0.55;
-                    const attachY = m.cardY + cardH;
-                    const midY = (attachY + m.roadY) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${attachX} ${attachY} C ${attachX} ${midY}, ${m.roadX} ${midY}, ${m.roadX} ${m.roadY}`,
-                    };
-                  }
-                  if (m.year === "2028") {
-                    // Step 02: Card is above the road, attaches cleanly to bottom edge
-                    const attachX = m.cardX + cardW * 0.35;
-                    const attachY = m.cardY + cardH;
-                    const midY = (attachY + m.roadY) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${attachX} ${attachY} C ${attachX} ${midY}, ${m.roadX} ${midY}, ${m.roadX} ${m.roadY}`,
-                    };
-                  }
-                  if (m.year === "2029") {
-                    // Step 03: Card is to the right of the road curve -> attaches to SLANTED LEFT EDGE
-                    const t = 0.20; // 20% down the card
-                    const attachX = m.cardX + slant * (1 - t);
-                    const attachY = m.cardY + cardH * t;
-                    const midX = (m.roadX + attachX) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${m.roadX} ${m.roadY} C ${midX} ${m.roadY}, ${midX} ${attachY}, ${attachX} ${attachY}`,
-                    };
-                  }
-                  if (m.year === "2031") {
-                    // Step 04: Card is to the left of the road curve -> attaches to SLANTED RIGHT EDGE
-                    const t = 0.45;
-                    const attachX = m.cardX + cardW - slant * t;
-                    const attachY = m.cardY + cardH * t;
-                    const midX = (m.roadX + attachX) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${m.roadX} ${m.roadY} C ${midX} ${m.roadY}, ${midX} ${attachY}, ${attachX} ${attachY}`,
-                    };
-                  }
-                  if (m.year === "2035") {
-                    // Step 05: Card is BELOW the road -> attaches strictly to TOP EDGE of card (no line through bottom!)
-                    const attachX = m.cardX + cardW * 0.65;
-                    const attachY = m.cardY;
-                    const midY = (m.roadY + attachY) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${m.roadX} ${m.roadY} C ${m.roadX} ${midY}, ${attachX} ${midY}, ${attachX} ${attachY}`,
-                    };
-                  }
-                  if (m.year === "2037") {
-                    // Step 06: Card is BELOW the road -> attaches strictly to TOP EDGE of card
-                    const attachX = m.cardX + cardW * 0.38;
-                    const attachY = m.cardY;
-                    const midY = (m.roadY + attachY) / 2;
-                    return {
-                      attachX,
-                      attachY,
-                      path: `M ${m.roadX} ${m.roadY} C ${m.roadX} ${midY}, ${attachX} ${midY}, ${attachX} ${attachY}`,
-                    };
-                  }
-                  // Fallback
-                  const isAbove = m.cardY + cardH < m.roadY;
-                  const attachX = m.cardX + cardW * 0.5;
-                  const attachY = isAbove ? m.cardY + cardH : m.cardY;
-                  const midY = (attachY + m.roadY) / 2;
-                  return {
-                    attachX,
-                    attachY,
-                    path: `M ${attachX} ${attachY} C ${attachX} ${midY}, ${m.roadX} ${midY}, ${m.roadX} ${m.roadY}`,
-                  };
-                };
-
-                const connection = getCardConnection();
-                const dist = Math.abs(idx - activeIndex);
-                const isNearby = dist <= 1;
-                const cardOpacity = isActive ? 1 : isNearby ? 0.52 : 0.22;
-                const cardScale = isActive ? 1.25 : 0.86;
-
-                return (
-                  <g
-                    key={m.year}
-                    className="group transition-opacity duration-500"
-                    style={{
-                      opacity: cardOpacity,
-                      pointerEvents: isNearby ? "auto" : "none",
-                    }}
-                  >
-                    {/* 1. Curved Connection Line between Card and Road Center */}
-                    <path
-                      d={connection.path}
-                      fill="none"
-                      stroke={isActive ? "#38bdf8" : "#64748b"}
-                      strokeWidth={isActive ? 2.5 : 1.2}
-                      strokeDasharray={isActive ? "none" : "5 4"}
-                      strokeLinecap="butt"
-                      className="transition-all duration-300"
-                    />
-
-                    {/* 2. Small Precision Terminal Square where Leader Line touches Card Border */}
-                    <rect
-                      x={connection.attachX - (isActive ? 4 : 2.5)}
-                      y={connection.attachY - (isActive ? 4 : 2.5)}
-                      width={isActive ? 8 : 5}
-                      height={isActive ? 8 : 5}
-                      fill={isActive ? "#38bdf8" : "#64748b"}
-                    />
-
-                    {/* 3. Milestone Card Slanted Parallelogram with Dynamic Focus Scale */}
-                    <g
-                      transform={`translate(${connection.attachX}, ${connection.attachY}) scale(${cardScale}) translate(-${connection.attachX}, -${connection.attachY})`}
-                      className="transition-transform duration-500 ease-out"
-                    >
-                      {/* Full Parallelogram Body Surface */}
-                      <polygon
-                        points={`${m.cardX + slant},${m.cardY} ${m.cardX + cardW},${m.cardY} ${m.cardX + cardW - slant},${m.cardY + cardH} ${m.cardX},${m.cardY + cardH}`}
-                        fill="#050811"
-                        stroke={isActive ? "#ffffff" : "#334155"}
-                        strokeWidth={isActive ? 2.5 : 1.2}
-                        className="transition-all duration-300"
-                        style={{
-                          filter: isActive
-                            ? "drop-shadow(0 0 24px rgba(56, 189, 248, 0.4)) drop-shadow(0 18px 40px rgba(0,0,0,0.98))"
-                            : "drop-shadow(0 6px 18px rgba(0,0,0,0.85))",
-                        }}
-                      />
-
-                      {/* Clean Minimalist Top Accent Highlight Line */}
-                      <line
-                        x1={m.cardX + slant}
-                        y1={m.cardY}
-                        x2={m.cardX + cardW}
-                        y2={m.cardY}
-                        stroke={isActive ? "#38bdf8" : "#475569"}
-                        strokeWidth={isActive ? 3 : 1.5}
-                        strokeLinecap="round"
-                        opacity={isActive ? 1 : 0.5}
-                        className="transition-all duration-300"
-                      />
-
-                      {/* Text & Icon Content inside ForeignObject (Clean layout, large readable typography) */}
-                      <foreignObject
-                        x={m.cardX + 16}
-                        y={m.cardY + 8}
-                        width={cardW - 32}
-                        height={cardH - 16}
-                        className="pointer-events-none overflow-hidden"
-                      >
-                        <div className="p-6 space-y-4 select-none flex flex-col justify-between h-full">
-                          <div>
-                            {/* Minimalist Header: Phase Badge + Year + Icon */}
-                            <div className="flex items-center justify-between gap-3 mb-3">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={`text-xs sm:text-sm font-mono font-bold tracking-[0.25em] uppercase px-2.5 py-1 rounded transition-colors ${
-                                    isActive
-                                      ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/35"
-                                      : "bg-zinc-800/60 text-zinc-400 border border-zinc-700/40"
-                                  }`}
-                                >
-                                  {m.phase}
-                                </span>
-                                <span className="text-xs font-mono text-zinc-600">//</span>
-                                <span
-                                  className={`text-xs sm:text-sm font-mono font-semibold tracking-wider ${
-                                    isActive ? "text-cyan-200" : "text-zinc-500"
-                                  }`}
-                                >
-                                  {m.year}
-                                </span>
-                              </div>
-
-                              <span
-                                className={`p-1.5 rounded transition-colors ${
-                                  isActive
-                                    ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"
-                                    : "bg-zinc-900/80 text-zinc-400 border border-zinc-700/40"
-                                }`}
-                              >
-                                {m.icon}
-                              </span>
-                            </div>
-
-                            {/* Title */}
-                            <h4
-                              className={`text-2xl sm:text-[26px] font-mono font-bold tracking-tight leading-snug transition-colors ${
-                                isActive
-                                  ? "text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.4)]"
-                                  : "text-zinc-300"
-                              }`}
-                            >
-                              {m.title}
-                            </h4>
-                          </div>
-
-                          {/* Statement */}
-                          <p
-                            className={`text-[17px] sm:text-[18px] font-mono leading-relaxed transition-colors ${
-                              isActive
-                                ? "text-zinc-100 font-normal drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]"
-                                : "text-zinc-400"
-                            }`}
-                          >
-                            {m.statement}
-                          </p>
-                        </div>
-                      </foreignObject>
-                    </g>
-                  </g>
-                );
-              })}
-            </svg>
+              {/* Dynamic Engine Afterburner Heat Distortion & Glow onto Runway */}
+              <div
+                className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 rounded-full pointer-events-none animate-pulse"
+                style={{
+                  width: "48%",
+                  height: "36px",
+                  background:
+                    "radial-gradient(ellipse at center, rgba(56, 189, 248, 0.8) 0%, rgba(56, 189, 248, 0.22) 50%, transparent 80%)",
+                  filter: "blur(11px)",
+                }}
+              />
+            </div>
           </div>
         </div>
+
+        {/* ── 5. VISION PHASE CARD (LEFT SIDE, EXACT HIGH-TECH FROSTED GLASS STYLE) ── */}
+        <div
+          className="absolute z-[32] pointer-events-auto transition-all duration-300"
+          style={{
+            left: "clamp(20px, 5.5vw, 90px)",
+            top: "47%",
+            transform: "translateY(-50%)",
+            width: "clamp(300px, 25vw, 430px)",
+          }}
+        >
+          <div
+            className="relative rounded-3xl p-6 sm:p-7 flex flex-col gap-3.5 backdrop-blur-2xl transition-all duration-300 select-text"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(8, 16, 26, 0.88) 0%, rgba(2, 6, 12, 0.94) 100%)",
+              border: "1px solid rgba(56, 189, 248, 0.35)",
+              boxShadow:
+                "0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.18)",
+            }}
+          >
+            {/* Top Row: Pill Badge & Previous/Next Navigation Controls */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 shadow-[0_0_12px_rgba(56,189,248,0.3)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-[10px] font-mono font-semibold tracking-widest text-cyan-300 uppercase">
+                  10-Year Vision Milestone
+                </span>
+              </div>
+
+              {/* Prev / Next Chevrons */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  disabled={activeIndex === 0}
+                  aria-label="Previous milestone"
+                  className="w-7 h-7 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/70 text-zinc-300 hover:text-white hover:border-cyan-400/60 disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={activeIndex === TOTAL - 1}
+                  aria-label="Next milestone"
+                  className="w-7 h-7 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/70 text-zinc-300 hover:text-white hover:border-cyan-400/60 disabled:opacity-30 disabled:pointer-events-none transition-all cursor-pointer"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Target Year & Phase Badge */}
+            <div className="flex items-baseline justify-between mt-1">
+              <span className="text-3xl sm:text-4xl font-extralight tracking-tight text-white font-mono transition-all duration-300">
+                {currentMilestone.year}
+              </span>
+              <span className="px-3 py-0.5 rounded-md bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 font-mono text-[11px] font-semibold tracking-wider uppercase transition-all duration-300">
+                {currentMilestone.phase}
+              </span>
+            </div>
+
+            {/* Milestone Title */}
+            <div>
+              <div className="text-[11px] font-mono tracking-[0.2em] text-zinc-400 uppercase mb-0.5">
+                {currentMilestone.cycle || "CYCLE 2027–2037"}
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight leading-snug transition-all duration-300">
+                {currentMilestone.title}
+              </h3>
+            </div>
+
+            {/* Glowing Accent Line */}
+            <div className="h-px w-full bg-gradient-to-r from-cyan-400/60 via-cyan-400/20 to-transparent" />
+
+            {/* Milestone Copy Statement */}
+            <p className="text-xs sm:text-[13px] text-zinc-300 font-light leading-relaxed min-h-[54px] transition-all duration-300">
+              &ldquo;{currentMilestone.statement}&rdquo;
+            </p>
+
+            {/* Quick 6-step interactive pill dots */}
+            <div className="flex items-center gap-1.5 pt-2">
+              {VISION_MILESTONES.map((item, i) => (
+                <button
+                  key={item.year}
+                  type="button"
+                  onClick={() => scrollToMilestone(i)}
+                  aria-label={`Jump to ${item.year}`}
+                  className="h-2 rounded-full transition-all duration-300 cursor-pointer"
+                  style={{
+                    width: i === activeIndex ? "24px" : "8px",
+                    background:
+                      i === activeIndex
+                        ? "#38bdf8"
+                        : i < activeIndex
+                        ? "rgba(56, 189, 248, 0.45)"
+                        : "rgba(255, 255, 255, 0.15)",
+                    boxShadow: i === activeIndex ? "0 0 10px rgba(56, 189, 248, 0.8)" : "none",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── 6. PROMINENT 10-YEAR HORIZONTAL TIMELINE PROGRESS BAR (ABOVE BOTTOM DOCK) ── */}
+        <div className="absolute bottom-[92px] sm:bottom-[98px] left-1/2 -translate-x-1/2 z-[34] w-[92%] max-w-3xl pointer-events-auto">
+          <div
+            className="rounded-2xl px-5 py-3 sm:px-7 sm:py-3.5 backdrop-blur-2xl transition-all duration-300"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(10, 18, 28, 0.92) 0%, rgba(3, 8, 14, 0.96) 100%)",
+              border: "1px solid rgba(56, 189, 248, 0.35)",
+              boxShadow:
+                "0 20px 45px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.15)",
+            }}
+          >
+            {/* Top Strip: Status Beacon, Current Phase Info & Percentage */}
+            <div className="flex items-center justify-between text-xs font-mono mb-2">
+              <div className="flex items-center gap-2 text-zinc-300">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span className="tracking-widest uppercase text-[10px] sm:text-xs font-semibold text-cyan-300">
+                  Strategic Roadmap
+                </span>
+                <span className="text-zinc-600 hidden sm:inline">•</span>
+                <span className="text-zinc-300 hidden sm:inline font-medium">
+                  {currentMilestone.phase}: {currentMilestone.title} ({currentMilestone.year})
+                </span>
+              </div>
+              <div className="text-cyan-400 font-bold tracking-wider text-xs sm:text-sm drop-shadow-[0_0_8px_rgba(56,189,248,0.7)]">
+                {Math.round(progress * 100)}% <span className="text-zinc-500 font-normal">COMPLETE</span>
+              </div>
+            </div>
+
+            {/* Continuous Progress Track with Clickable Milestone Nodes */}
+            <div className="relative w-full py-1">
+              {/* Background Rail */}
+              <div className="h-1.5 w-full bg-zinc-800/90 rounded-full relative overflow-hidden">
+                {/* Active Cyan Progress Fill */}
+                <div
+                  className="h-full rounded-full transition-all duration-75 ease-out"
+                  style={{
+                    width: `${progress * 100}%`,
+                    background: "linear-gradient(90deg, #0284c7 0%, #38bdf8 70%, #a5f3fc 100%)",
+                    boxShadow: "0 0 12px rgba(56, 189, 248, 0.9)",
+                  }}
+                />
+              </div>
+
+              {/* 6 Milestone Step Nodes Along the Track */}
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between pointer-events-none">
+                {VISION_MILESTONES.map((item, idx) => {
+                  const isActive = idx === activeIndex;
+                  const isCompleted = idx < activeIndex;
+
+                  return (
+                    <button
+                      key={item.year}
+                      type="button"
+                      onClick={() => scrollToMilestone(idx)}
+                      aria-label={`Go to phase ${item.phase}: ${item.year}`}
+                      className="pointer-events-auto group relative flex flex-col items-center focus:outline-none cursor-pointer -translate-x-1/2 first:translate-x-0 last:translate-x-0"
+                    >
+                      {/* Node Dot */}
+                      <div
+                        className="rounded-full transition-all duration-300 flex items-center justify-center"
+                        style={{
+                          width: isActive ? "18px" : "12px",
+                          height: isActive ? "18px" : "12px",
+                          background: isActive
+                            ? "#ffffff"
+                            : isCompleted
+                            ? "#38bdf8"
+                            : "rgba(113, 113, 122, 0.8)",
+                          boxShadow: isActive
+                            ? "0 0 0 3px rgba(56, 189, 248, 0.4), 0 0 14px rgba(56, 189, 248, 0.9)"
+                            : isCompleted
+                            ? "0 0 8px rgba(56, 189, 248, 0.7)"
+                            : "none",
+                        }}
+                      >
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />}
+                      </div>
+
+                      {/* Tooltip on Hover */}
+                      <div className="absolute -top-8 px-2 py-0.5 rounded bg-zinc-900 border border-cyan-500/40 text-[10px] font-mono text-cyan-300 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+                        {item.title}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Bottom Row: Years Label Strip */}
+            <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono text-zinc-400 mt-2 px-0.5">
+              {VISION_MILESTONES.map((item, idx) => {
+                const isActive = idx === activeIndex;
+                return (
+                  <button
+                    key={item.year}
+                    type="button"
+                    onClick={() => scrollToMilestone(idx)}
+                    className={`transition-colors cursor-pointer hover:text-cyan-300 ${
+                      isActive ? "text-cyan-400 font-bold drop-shadow-[0_0_6px_rgba(56,189,248,0.7)]" : ""
+                    }`}
+                  >
+                    {item.year}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ── 7. TOP HEADER (CLEAN FADE OUT UPON SCROLLING DEEP INTO RUNWAY) ── */}
+        <div
+          className="absolute top-8 left-0 right-0 flex flex-col items-center z-[30] pointer-events-none transition-opacity duration-300"
+          style={{ opacity: clamp(1 - progress * 4.0, 0, 1) }}
+        >
+          {/* Pill Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-700/60 bg-zinc-950/70 backdrop-blur-md mb-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+            <span className="text-[11px] font-mono tracking-[0.25em] text-zinc-300 uppercase">
+              Let&apos;s Travel Together
+            </span>
+          </div>
+
+          {/* Main Title */}
+          <h2 className="text-3xl sm:text-5xl font-extralight tracking-tight text-white uppercase drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+            10 YEARS LONG VISION.
+          </h2>
+          <p className="mt-1 text-xs sm:text-sm text-zinc-400 font-mono tracking-widest drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            A journey towards the next era of Aviation.
+          </p>
+        </div>
+
+        {/* ── 8. SCROLL HINT (FADES AWAY AS USER SCROLLS) ── */}
+        <div
+          className="absolute bottom-44 left-0 right-0 flex flex-col items-center gap-1.5 z-[28] pointer-events-none transition-opacity duration-300"
+          style={{ opacity: clamp(1 - progress * 8, 0, 0.7) }}
+        >
+          <span className="text-[10px] font-mono tracking-[0.3em] text-zinc-400 uppercase">
+            Scroll to explore roadmap
+          </span>
+          <div className="w-px h-5 bg-gradient-to-b from-cyan-400/60 to-transparent animate-pulse" />
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 }
