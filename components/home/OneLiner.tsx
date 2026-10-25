@@ -236,15 +236,13 @@ export default function OneLiner() {
             </filter>
           </defs>
 
-          {/* Clean, Plain Aesthetic Floating Platform (Extra dotted lines removed per Requirement 4) */}
+          {/* Single Solid Clean Metallic Platform (Transparent extra platform layer removed) */}
           <g>
             <ellipse cx="600" cy="452" rx="385" ry="62" fill="url(#platShadow)" />
             <ellipse cx="600" cy="432" rx="408" ry="132" fill="url(#platSideGrad)" />
-            <ellipse cx="600" cy="412" rx="408" ry="132" fill="url(#platTopSurface)" />
-            <ellipse cx="600" cy="432" rx="408" ry="132" fill="none" stroke="url(#platBotRim)" strokeWidth="2.5" />
-            <ellipse cx="600" cy="412" rx="408" ry="132" fill="none" stroke="url(#platTopRim)" strokeWidth="2.8" />
+            <ellipse cx="600" cy="432" rx="408" ry="132" fill="none" stroke="url(#platTopRim)" strokeWidth="2.5" />
             {/* Grounding shadow cast by aircraft directly onto platform surface */}
-            <ellipse cx="600" cy="422" rx="330" ry="58" fill="rgba(0,0,0,0.65)" filter="blur(18px)" />
+            <ellipse cx="600" cy="432" rx="330" ry="58" fill="rgba(0,0,0,0.7)" filter="blur(18px)" />
           </g>
 
           {/* Connecting lines — Only thick white line shown on hover, no dotted lines, no tiny dots */}

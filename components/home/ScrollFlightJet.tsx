@@ -3,17 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Jet3DViewer from "./Jet3DViewer";
 
-// Dynamic supersonic air streaks during flight
+// Dynamic continuous supersonic slipstream air streaks during flight (like ContactFlightJet)
 const AIR_STREAKS = [
-  { top: "60%", left: "10%", width: "26%", delay: "0s",    duration: "0.48s", opacity: 0.55, h: "1.5px" },
-  { top: "46%", left: "18%", width: "30%", delay: "0.12s", duration: "0.52s", opacity: 0.60, h: "1.5px" },
-  { top: "36%", left: "16%", width: "28%", delay: "0.06s", duration: "0.46s", opacity: 0.50, h: "1.5px" },
-  { top: "44%", left: "30%", width: "34%", delay: "0.10s", duration: "0.50s", opacity: 0.55, h: "1.5px" },
-  { top: "35%", left: "44%", width: "30%", delay: "0.04s", duration: "0.48s", opacity: 0.52, h: "1.5px" },
-  { top: "64%", left: "40%", width: "32%", delay: "0.16s", duration: "0.52s", opacity: 0.48, h: "1.5px" },
-  { top: "20%", left: "52%", width: "28%", delay: "0.08s", duration: "0.48s", opacity: 0.50, h: "1.5px" },
-  { top: "54%", left: "58%", width: "26%", delay: "0.14s", duration: "0.46s", opacity: 0.52, h: "1.5px" },
-  { top: "28%", left: "32%", width: "36%", delay: "0.18s", duration: "0.44s", opacity: 0.48, h: "1.5px" },
+  { top: "58%", left: "8%",  width: "28%", delay: "0s",    duration: "0.46s", opacity: 0.65, h: "1.5px" },
+  { top: "44%", left: "16%", width: "32%", delay: "0.10s", duration: "0.50s", opacity: 0.70, h: "1.5px" },
+  { top: "34%", left: "14%", width: "26%", delay: "0.05s", duration: "0.44s", opacity: 0.60, h: "1.5px" },
+  { top: "48%", left: "28%", width: "36%", delay: "0.12s", duration: "0.48s", opacity: 0.65, h: "1.5px" },
+  { top: "38%", left: "42%", width: "30%", delay: "0.03s", duration: "0.46s", opacity: 0.60, h: "1.5px" },
+  { top: "66%", left: "38%", width: "34%", delay: "0.15s", duration: "0.52s", opacity: 0.55, h: "1.5px" },
+  { top: "24%", left: "50%", width: "26%", delay: "0.08s", duration: "0.45s", opacity: 0.60, h: "1.5px" },
+  { top: "52%", left: "56%", width: "28%", delay: "0.13s", duration: "0.47s", opacity: 0.58, h: "1.5px" },
+  { top: "30%", left: "30%", width: "35%", delay: "0.17s", duration: "0.43s", opacity: 0.55, h: "1.5px" },
 ];
 
 interface FlightState {
@@ -26,7 +26,6 @@ interface FlightState {
   yaw: number;
   pitch: number;
   roll: number;
-  thrust: number;
   opacity: number;
   showAirStreaks: boolean;
 }
@@ -39,132 +38,86 @@ export default function ScrollFlightJet() {
     y: 0,
     width: 1100,
     scale: 1.0,
-    yaw: 28,
-    pitch: 6,
-    roll: 22,
-    thrust: 0.35,
+    yaw: 24,
+    pitch: 2,
+    roll: 0,
     opacity: 0,
     showAirStreaks: false,
   });
 
-  // Tracking timestamps and references for the 2-3s delay and scroll-locking
-  const viewEnteredAtRef = useRef<number | null>(null);
-  const takeoffScrollRef = useRef<number | null>(null);
+  // Smooth lerp physics refs for fluid, non-snapping 60fps/120fps motion
+  const targetProgressRef = useRef(0);
+  const currentProgressRef = useRef(0);
   const takeoffPosRef = useRef<{ x: number; y: number } | null>(null);
   const initialPlatformYawRef = useRef<number | null>(null);
-  const isScrollingRef = useRef(false);
-  const scrollIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const prevProgressRef = useRef(0);
 
   useEffect(() => {
-    const updateFlight = () => {
+    let animId: number;
+
+    const handleScroll = () => {
       const sourceEl = document.getElementById("ecosystem-jet-source");
       const visionContainer = document.getElementById("vision");
-
       if (!sourceEl || !visionContainer) return;
 
       const vh = window.innerHeight;
-      const vw = window.innerWidth;
       const scrollY = window.scrollY || window.pageYOffset;
 
       const sourceRect = sourceEl.getBoundingClientRect();
       const visionRect = visionContainer.getBoundingClientRect();
 
-      // Detection: Ecosystem centerpiece view is in the viewport
-      // (The exact view in the user's reference image where the pedestal aircraft is visible)
-      const isInEcosystemView = sourceRect.top < vh * 0.70 && sourceRect.bottom > vh * 0.20;
-
-      // ── 1. DELAY TAKEOFF BY 2-3 SECONDS ──
-      // When user first reaches/crosses this view, start a 2.5s timer.
-      if (isInEcosystemView) {
-        if (viewEnteredAtRef.current === null) {
-          viewEnteredAtRef.current = Date.now();
-        }
-      } else if (sourceRect.top >= vh * 0.70) {
-        // Scrolled back up above Ecosystem view, reset timer and takeoff anchor
-        viewEnteredAtRef.current = null;
-        takeoffScrollRef.current = null;
-        takeoffPosRef.current = null;
-        initialPlatformYawRef.current = null;
-      }
-
-      const FLIGHT_DELAY_MS = 2500; // 2.5 seconds (within user's requested 2-3s)
-      const elapsed = viewEnteredAtRef.current !== null ? Date.now() - viewEnteredAtRef.current : 0;
-      const delayCompleted = viewEnteredAtRef.current !== null && elapsed >= FLIGHT_DELAY_MS;
-
-      // If delay hasn't completed or user hasn't reached view, lock to pedestal
-      if (!delayCompleted) {
-        takeoffScrollRef.current = null;
-        initialPlatformYawRef.current = null;
-        if (sourceEl) {
-          sourceEl.style.opacity = "1";
-          sourceEl.style.pointerEvents = "auto";
-        }
-        setState((prev) =>
-          prev.active || prev.opacity > 0
-            ? {
-                ...prev,
-                active: false,
-                opacity: 0,
-                progress: 0,
-                showAirStreaks: false,
-              }
-            : prev
-        );
-        return;
-      }
-
-      // ── 2. ESTABLISH STABLE TAKEOFF BASELINE ──
-      // Once delay has elapsed, record the exact scroll baseline where flight begins
-      if (takeoffScrollRef.current === null) {
-        takeoffScrollRef.current = scrollY;
-        takeoffPosRef.current = {
-          x: vw * 0.5,
-          y: Math.max(vh * 0.25, Math.min(vh * 0.65, sourceRect.top + sourceRect.height * 0.5)),
-        };
-
-        // Capture live instantaneous heading of the turntable aircraft at the exact moment of liftoff
-        const livePlatformYaw = typeof window !== "undefined" ? (window as any).__M1_PLATFORM_JET_YAW : undefined;
-        initialPlatformYawRef.current = typeof livePlatformYaw === "number" ? livePlatformYaw : 28;
-      }
-
-      const takeoffScroll = takeoffScrollRef.current;
-      // Landing completes exactly when Vision section arrives at the top of the viewport
+      // Document scroll coordinates of platform center and vision entrance
+      const docPlatformCenter = scrollY + sourceRect.top + sourceRect.height * 0.5;
       const docVisionTop = scrollY + visionRect.top;
+
+      // Liftoff begins smoothly as user scrolls past Ecosystem platform
+      const takeoffScroll = docPlatformCenter - vh * 0.45;
+      // Landing completes when vision section arrives at top
       const landingScroll = docVisionTop - vh * 0.05;
-      const flightDistance = Math.max(500, landingScroll - takeoffScroll);
+      const flightDistance = Math.max(650, landingScroll - takeoffScroll);
 
-      // Scrolled distance beyond takeoff trigger
-      const scrolled = scrollY - takeoffScroll;
-      const rawProgress = scrolled / flightDistance;
-      const flightP = Math.min(1.0, Math.max(0, rawProgress));
+      const rawProgress = (scrollY - takeoffScroll) / flightDistance;
+      targetProgressRef.current = Math.min(1.05, Math.max(-0.05, rawProgress));
+    };
 
-      // ── 3. STRICT SINGLE-PLANE VISIBILITY & PROGRESS GATING ──
-      const isTakingOff = flightP > 0.002;
+    const updateLoop = () => {
+      const sourceEl = document.getElementById("ecosystem-jet-source");
+      const visionContainer = document.getElementById("vision");
 
-      // When scroll is 0 or less, plane stays 100% parked on pedestal
-      if (!isTakingOff) {
-        takeoffScrollRef.current = null;
-        initialPlatformYawRef.current = null;
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+
+      // ── FLUID 60FPS/120FPS PHYSICS LERP (Exact same mechanism as ContactFlightJet) ──
+      currentProgressRef.current += (targetProgressRef.current - currentProgressRef.current) * 0.085;
+      const flightP = currentProgressRef.current;
+
+      // Continuously sample platform anchor while at or near the platform
+      if (sourceEl && flightP <= 0.05) {
+        const sr = sourceEl.getBoundingClientRect();
+        if (sr.width > 20 && sr.top < vh + 300 && sr.bottom > -300) {
+          takeoffPosRef.current = {
+            x: sr.left + sr.width * 0.5,
+            y: sr.top + sr.height * 0.5,
+          };
+        }
+      }
+
+      // ── 1. STRICT SINGLE-PLANE VISIBILITY HANDOFF ──
+      // While parked on pedestal (flightP <= 0.005)
+      if (flightP <= 0.005) {
         if (sourceEl) {
           sourceEl.style.opacity = "1";
           sourceEl.style.pointerEvents = "auto";
         }
-        setState((prev) =>
-          prev.active || prev.opacity > 0
-            ? {
-                ...prev,
-                active: false,
-                opacity: 0,
-                progress: 0,
-                showAirStreaks: false,
-              }
-            : prev
-        );
+        // Continuously record live turntable angle of platform aircraft
+        const livePlatformYaw = typeof window !== "undefined" ? (window as any).__M1_PLATFORM_JET_YAW : undefined;
+        initialPlatformYawRef.current = typeof livePlatformYaw === "number" ? livePlatformYaw : 24;
+
+        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0, progress: 0 } : prev));
+        animId = requestAnimationFrame(updateLoop);
         return;
       }
 
-      // Pedestal fade out upon liftoff
+      // Hide pedestal jet once liftoff begins so only 1 jet exists
       if (sourceEl) {
         if (flightP < 0.04) {
           const fade = flightP / 0.04;
@@ -176,13 +129,26 @@ export default function ScrollFlightJet() {
         }
       }
 
-      // Measure exact destination on the runway from DOM anchor if available
+      // Once landed into Vision runway (flightP >= 0.99)
+      if (flightP >= 0.99) {
+        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0 } : prev));
+        animId = requestAnimationFrame(updateLoop);
+        return;
+      }
+
+      const pClamped = Math.max(0, Math.min(1, flightP));
+
+      // ── 2. TAKEOFF & DESTINATION COORDINATES ──
+      const startX = takeoffPosRef.current ? takeoffPosRef.current.x : vw * 0.5;
+      const startY = takeoffPosRef.current ? takeoffPosRef.current.y : vh * 0.50;
+
+      // Destination on the blue road runway
       const runwayJetAnchor =
         document.getElementById("vision-end-jet-anchor") ||
         document.getElementById("vision-end-jet");
 
       let landingX = vw * 0.5;
-      let landingY = vh * 0.86;
+      let landingY = vh * 0.82;
 
       if (runwayJetAnchor) {
         const r = runwayJetAnchor.getBoundingClientRect();
@@ -192,128 +158,113 @@ export default function ScrollFlightJet() {
         }
       }
 
-      // Jet initial and target width
-      const jetWidth = sourceRect.width > 50 ? sourceRect.width : 1100;
-      const targetJetW = Math.max(440, Math.min(680, vw * 0.38));
+      const jetWidth = 1100;
+      const targetJetW = Math.max(460, Math.min(700, vw * 0.40));
       const landingScale = targetJetW / jetWidth;
 
-      const startX = takeoffPosRef.current ? takeoffPosRef.current.x : vw * 0.5;
-      const startY = takeoffPosRef.current ? takeoffPosRef.current.y : vh * 0.52;
-
-      // Waypoints for the multi-stage 3D flight maneuver:
-      const p1X = vw * 0.26;
-      const p1Y = vh * 0.35;
-
-      const p2X = vw * 0.76;
-      const p2Y = vh * 0.46;
-
-      const p3Y = vh * 0.74;
-
+      // ── 3. SMOOTH AERODYNAMIC TRAJECTORY (FLUID LATERAL SWEEP & CLIMB) ──
       let curX = startX;
       let curY = startY;
-      let curYaw = 28;
-      let curPitch = 6;
-      let curRoll = 22;
+      let curYaw = 24;
+      let curPitch = 2;
+      let curRoll = 0;
       let curScale = 1.0;
-      let curThrust = 0.35;
 
-      // ── 4. C1-CONTINUOUS FLIGHT TRAJECTORY (ZERO JITTER / ZERO YANK) ──
-      if (flightP <= 0.25) {
-        // Phase 1 (0.00 -> 0.25): Liftoff from platform & Climb towards left foreground
-        const t1 = flightP / 0.25;
+      // Shortest circular turn calculation from pedestal turntable heading to base takeoff heading (24 deg)
+      const rawPlatformYaw = initialPlatformYawRef.current ?? 24;
+      const startYawNorm = ((rawPlatformYaw % 360) + 360) % 360;
+      const baseFlightYaw = 24;
+      let diff = (baseFlightYaw - startYawNorm) % 360;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+
+      if (pClamped <= 0.30) {
+        // Phase 1 (0.00 -> 0.30): Liftoff from platform, climb and bank towards left foreground
+        const t1 = pClamped / 0.30;
         const ease1 = t1 * t1 * (3 - 2 * t1);
-        curX = startX + (p1X - startX) * ease1;
-        curY = startY + (p1Y - startY) * ease1;
 
-        // 1. Instantaneous heading of the aircraft at the exact moment user initiated liftoff
-        const rawPlatformYaw = initialPlatformYawRef.current ?? 28;
-        const startYawNorm = ((rawPlatformYaw % 360) + 360) % 360;
+        const targetP1X = vw * 0.26;
+        const targetP1Y = vh * 0.35;
 
-        // 2. Base flying direction for takeoff is 28 degrees. Calculate shortest circular turn.
-        const baseFlightYaw = 28;
-        let diff = (baseFlightYaw - startYawNorm) % 360;
-        if (diff > 180) diff -= 360;
-        if (diff < -180) diff += 360;
+        curX = startX + (targetP1X - startX) * ease1;
+        curY = startY + (targetP1Y - startY) * ease1;
 
-        // 3. Fast smooth swivel along shortest path in initial liftoff segment (flightP 0.00 to 0.06)
-        const turnT = Math.min(1, flightP / 0.06);
+        // Swivel along shortest circular path to face flight direction (first 0.08 segment)
+        const turnT = Math.min(1, pClamped / 0.08);
         const turnEase = turnT * turnT * (3 - 2 * turnT);
         const headingAtLiftoff = startYawNorm + diff * turnEase;
 
-        // 4. Continue seamlessly into the climb bank and turn towards the left foreground (48 degrees)
-        const climbT = Math.max(0, (flightP - 0.06) / 0.19);
+        // Continue seamlessly into the left turn & climb (48 deg)
+        const climbT = Math.max(0, (pClamped - 0.08) / 0.22);
         const climbEase = climbT * climbT * (3 - 2 * climbT);
-        curYaw = headingAtLiftoff + (48 - 28) * climbEase;
+        curYaw = headingAtLiftoff + (48 - 24) * climbEase;
 
-        curPitch = 2 + (14 - 2) * ease1;
-        curRoll = 0 + (-16 - 0) * ease1;
+        // Dynamic climb pitch and banking turn to the left (-16 deg)
+        curPitch = 2 + (13 - 2) * ease1;
+        curRoll = -16 * ease1;
         curScale = 1.0 + (1.20 - 1.0) * ease1;
-        curThrust = 0.45 + 0.50 * ease1;
-      } else if (flightP <= 0.65) {
-        // Phase 2 (0.25 -> 0.65): Big Smooth Round Turn Near Screen (Left to Right)
-        const t2 = (flightP - 0.25) / 0.40;
+      } else if (pClamped <= 0.70) {
+        // Phase 2 (0.30 -> 0.70): Big graceful round turn near screen (left to right) with full dynamic twist & roll
+        const t2 = (pClamped - 0.30) / 0.40;
         const ease2 = t2 * t2 * (3 - 2 * t2);
+
+        const p1X = vw * 0.26;
+        const p1Y = vh * 0.35;
+        const p2X = vw * 0.74;
+        const p2Y = vh * 0.46;
 
         curX = p1X + (p2X - p1X) * ease2;
         const arcDip = Math.sin(t2 * Math.PI) * (vh * 0.08);
         curY = p1Y + (p2Y - p1Y) * ease2 + arcDip;
 
-        curScale = 1.20 + (1.30 - 1.20) * Math.sin(t2 * Math.PI) + (1.18 - 1.20) * ease2;
+        curScale = 1.20 + (1.28 - 1.20) * Math.sin(t2 * Math.PI);
+
+        // Dynamic heading sweep across the screen: 48 deg -> -60 deg
         curYaw = 48 + (-60 - 48) * ease2;
-        curRoll = -16 + (32 - (-16)) * ease2;
-        curPitch = 14 + (2 - 14) * ease2;
-        curThrust = 0.95;
-      } else if (flightP <= 0.86) {
-        // Phase 3 (0.65 -> 0.86): Align Inwards with Runway Centerline
-        const t3 = (flightP - 0.65) / 0.21;
+
+        // Dynamic roll/bank reverses from -16 deg (left bank) to +30 deg (right bank) as it swoops across
+        curRoll = -16 + (30 - (-16)) * ease2;
+
+        // Pitch eases level during the swooping arc
+        curPitch = 13 + (2 - 13) * ease2;
+      } else {
+        // Phase 3 (0.70 -> 1.00): Inward glide and touchdown alignment onto Vision Runway
+        const t3 = (pClamped - 0.70) / 0.30;
         const ease3 = t3 * t3 * (3 - 2 * t3);
 
+        const p2X = vw * 0.74;
+        const p2Y = vh * 0.46;
+
         curX = p2X + (landingX - p2X) * ease3;
-        curY = p2Y + (p3Y - p2Y) * ease3;
+        curY = p2Y + (landingY - p2Y) * ease3;
 
-        curRoll = 32 * (1 - ease3);
+        // Bank levels off smoothly from +30 deg back to level (0 deg)
+        curRoll = 30 * (1 - ease3);
+        // Heading turns smoothly inward to align straight down the runway (-90 deg)
         curYaw = -60 + (-90 - (-60)) * ease3;
-        curPitch = 2 + (-2 - 2) * ease3;
-        curScale = 1.18 + (landingScale - 1.18) * ease3;
-        curThrust = 0.65;
-      } else {
-        // Phase 4 (0.86 -> 1.00): Touchdown onto Blue Road Runway (Facing INWARDS)
-        const t4 = (flightP - 0.86) / 0.14;
-        const ease4 = t4 * t4 * (3 - 2 * t4);
-
-        curX = landingX;
-        curY = p3Y + (landingY - p3Y) * ease4;
-
-        curRoll = 0;
-        curYaw = -90;
-        curPitch = -2 + 4 * Math.sin(t4 * Math.PI);
-        curScale = landingScale;
-        curThrust = 0.65 * (1 - ease4) + 0.20 * ease4;
+        // Pitch settles level onto the road
+        curPitch = 2 * (1 - ease3);
+        curScale = 1.20 + (landingScale - 1.20) * ease3;
       }
 
-      // Air streaks active ONLY during active scrolling & cruising
-      const showAirStreaks = isScrollingRef.current && flightP > 0.05 && flightP < 0.75;
-      // Thrust settles to gentle idle glow when user stops scrolling
-      const effectiveThrust = isScrollingRef.current ? curThrust : 0.22;
+      // ── 4. CONTINUOUS AIR LINES EFFECT (STREAMING AIR DURING FLIGHT) ──
+      // Air streaks active continuously throughout mid-flight (just like ContactFlightJet)
+      const showAirStreaks = pClamped > 0.04 && pClamped < 0.94;
 
-      // Flight jet opacity: fade in upon takeoff, blend into runway at touchdown
-      let opacity = 0;
-      if (flightP < 0.04) {
-        opacity = flightP / 0.04;
-      } else if (flightP >= 0.90) {
-        const blend = (flightP - 0.90) / 0.10;
+      // Opacity crossfade: fade in smoothly on takeoff, blend smoothly onto runway
+      let opacity = 1;
+      if (pClamped < 0.04) {
+        opacity = pClamped / 0.04;
+      } else if (pClamped >= 0.92) {
+        const blend = (pClamped - 0.92) / 0.08;
         opacity = Math.max(0, 1 - blend);
       } else {
         opacity = 1;
       }
 
-      const isActive = isTakingOff && flightP < 1.0 && visionRect.top > -20;
-
-      prevProgressRef.current = flightP;
-
       setState({
-        active: isActive,
-        progress: flightP,
+        active: true,
+        progress: pClamped,
         x: curX,
         y: curY,
         width: jetWidth,
@@ -321,46 +272,22 @@ export default function ScrollFlightJet() {
         yaw: curYaw,
         pitch: curPitch,
         roll: curRoll,
-        thrust: effectiveThrust,
         opacity,
         showAirStreaks,
       });
+
+      animId = requestAnimationFrame(updateLoop);
     };
 
-    const onScroll = () => {
-      isScrollingRef.current = true;
-      if (scrollIdleTimerRef.current) {
-        clearTimeout(scrollIdleTimerRef.current);
-      }
-      scrollIdleTimerRef.current = setTimeout(() => {
-        isScrollingRef.current = false;
-        // Trigger flight update to cleanly hide air streaks and lower thrust to idle
-        updateFlight();
-      }, 100);
-
-      updateFlight();
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    // Initial check
-    updateFlight();
-
-    // Check timer expiration in case user paused at Ecosystem view
-    const timerInterval = setInterval(() => {
-      if (viewEnteredAtRef.current !== null && takeoffScrollRef.current === null) {
-        updateFlight();
-      }
-    }, 200);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    handleScroll();
+    animId = requestAnimationFrame(updateLoop);
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      clearInterval(timerInterval);
-      if (scrollIdleTimerRef.current) {
-        clearTimeout(scrollIdleTimerRef.current);
-      }
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
@@ -373,40 +300,23 @@ export default function ScrollFlightJet() {
         visibility: state.active && state.opacity > 0.01 ? "visible" : "hidden",
       }}
     >
-      {/* ── LIFTOFF THRUST AIR EFFECT ON PLATFORM (SHOCKWAVE RINGS & DOWNWASH) ── */}
-      {state.progress > 0.002 && state.progress < 0.24 && (
+      {/* ── LIFTOFF DOWNWASH & CONTACT SHADOW (Only in initial 18% of takeoff) ── */}
+      {state.progress > 0.002 && state.progress < 0.18 && (
         <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-          {/* Expanding Aerodynamic Thrust Air Ring Shockwave 1 */}
+          {/* Expanding Aerodynamic Thrust Air Ring Shockwave */}
           <div
             style={{
               position: "absolute",
               left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
-              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
-              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.24) * 3.8})`,
-              width: "320px",
-              height: "100px",
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 60,
+              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.18) * 3.2})`,
+              width: "300px",
+              height: "90px",
               borderRadius: "50%",
-              border: `2px solid rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.22) * 0.75})`,
-              boxShadow: `0 0 25px rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.22) * 0.5}), inset 0 0 15px rgba(255, 255, 255, ${Math.max(0, 1 - state.progress / 0.22) * 0.4})`,
-              opacity: Math.max(0, 1 - state.progress / 0.22),
-              filter: "blur(1.5px)",
-            }}
-          />
-
-          {/* Expanding Aerodynamic Thrust Air Ring Shockwave 2 */}
-          <div
-            style={{
-              position: "absolute",
-              left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
-              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
-              transform: `translate(-50%, -50%) scale(${0.6 + (state.progress / 0.24) * 2.6})`,
-              width: "240px",
-              height: "75px",
-              borderRadius: "50%",
-              border: `1.5px solid rgba(186, 230, 253, ${Math.max(0, 1 - state.progress / 0.20) * 0.85})`,
-              boxShadow: `0 0 35px rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.20) * 0.6})`,
-              opacity: Math.max(0, 1 - state.progress / 0.20),
-              filter: "blur(0.8px)",
+              border: `1.5px solid rgba(186, 230, 253, ${Math.max(0, 1 - state.progress / 0.18) * 0.75})`,
+              boxShadow: `0 0 20px rgba(56, 189, 248, ${Math.max(0, 1 - state.progress / 0.18) * 0.45})`,
+              opacity: Math.max(0, 1 - state.progress / 0.18),
+              filter: "blur(1px)",
             }}
           />
 
@@ -415,48 +325,20 @@ export default function ScrollFlightJet() {
             style={{
               position: "absolute",
               left: takeoffPosRef.current ? takeoffPosRef.current.x : "50%",
-              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 70,
-              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.24) * 1.5})`,
-              width: "360px",
-              height: "70px",
+              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 60,
+              transform: `translate(-50%, -50%) scale(${1 + (state.progress / 0.18) * 1.4})`,
+              width: "340px",
+              height: "65px",
               borderRadius: "50%",
-              background: "rgba(0, 0, 0, 0.75)",
-              filter: `blur(${12 + (state.progress / 0.24) * 30}px)`,
-              opacity: Math.max(0, 1 - state.progress / 0.18),
-            }}
-          />
-
-          {/* Dual Turbine Downwash Air Streaks */}
-          <div
-            style={{
-              position: "absolute",
-              left: (takeoffPosRef.current ? takeoffPosRef.current.x : 500) - 45,
-              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 30,
-              width: "18px",
-              height: `${60 + (state.progress / 0.24) * 90}px`,
-              background: "linear-gradient(to bottom, rgba(56,189,248,0.7) 0%, rgba(255,255,255,0.4) 40%, transparent 100%)",
-              filter: "blur(3px)",
-              transform: "rotate(-12deg)",
-              opacity: Math.max(0, 1 - state.progress / 0.22),
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: (takeoffPosRef.current ? takeoffPosRef.current.x : 500) + 35,
-              top: (takeoffPosRef.current ? takeoffPosRef.current.y : 450) + 30,
-              width: "18px",
-              height: `${60 + (state.progress / 0.24) * 90}px`,
-              background: "linear-gradient(to bottom, rgba(56,189,248,0.7) 0%, rgba(255,255,255,0.4) 40%, transparent 100%)",
-              filter: "blur(3px)",
-              transform: "rotate(12deg)",
-              opacity: Math.max(0, 1 - state.progress / 0.22),
+              background: "rgba(0, 0, 0, 0.70)",
+              filter: `blur(${10 + (state.progress / 0.18) * 24}px)`,
+              opacity: Math.max(0, 1 - state.progress / 0.16),
             }}
           />
         </div>
       )}
 
-      {/* ── 3D Bombardier Windjet 365 Aircraft in Flight / Swooping into Runway ── */}
+      {/* ── 3D Aircraft in Fluid 60fps Flight: Sweeping elegantly across towards Runway ── */}
       <div
         className="absolute top-0 left-0 will-change-transform z-15"
         style={{
@@ -467,7 +349,7 @@ export default function ScrollFlightJet() {
         }}
       >
         <div className="relative w-full h-full">
-          {/* ── Flight Air Lines Effect (Slipstream streaks active during cruising) ── */}
+          {/* ── Continuous Flight Air Lines Effect (Slipstream streaks flowing during flight) ── */}
           {state.showAirStreaks && (
             <div
               className="absolute inset-0 pointer-events-none overflow-visible z-25"
@@ -485,7 +367,7 @@ export default function ScrollFlightJet() {
                       width: s.width,
                       height: s.h,
                       background: `linear-gradient(to right, transparent 0%, rgba(255,255,255,${s.opacity}) 35%, rgba(186,230,253,${s.opacity * 0.7}) 70%, transparent 100%)`,
-                      boxShadow: "0 0 4px rgba(255,255,255,0.45)",
+                      boxShadow: "0 0 5px rgba(255,255,255,0.5)",
                       filter: "blur(0.3px)",
                       "--dur": s.duration,
                       "--delay": s.delay,
@@ -496,14 +378,13 @@ export default function ScrollFlightJet() {
             </div>
           )}
 
-          {/* Real-time 3D Bombardier Windjet 365 WebGL Jet */}
+          {/* Real-time 3D Bombardier Windjet 365 in Executive Light Platinum Titanium */}
           <Jet3DViewer
             yaw={state.yaw}
             pitch={state.pitch}
             roll={state.roll}
-            engineThrust={state.thrust}
             modelScale={1.55}
-            lightIntensity={1.2}
+            lightIntensity={1.3}
             immediate={true}
           />
         </div>

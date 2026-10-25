@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-// Cached parsed GLTF result to prevent re-fetching the 74MB Bombardier model
-let cachedScene: THREE.Group | null = null;
-let loadPromise: Promise<THREE.Group> | null = null;
+// Cached parsed GLTF results per model path to prevent re-fetching large 3D models
+const cachedScenes = new Map<string, THREE.Group>();
+const loadPromises = new Map<string, Promise<THREE.Group>>();
 
 export interface JetColorConfig {
   fuselageColor?: string; // Main aircraft body paint (e.g. "#0f172a", "#ffffff", "#000000")
@@ -13,12 +13,12 @@ export interface JetColorConfig {
 }
 
 /**
- * Dynamically applies custom paint and material colors to any Bombardier Windjet 365 3D instance.
+ * Dynamically applies custom paint and material colors to any 3D jet instance.
  */
 export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
-  root.traverse((child: any) => {
-    if (child.isMesh && child.material) {
-      const mat = child.material;
+  root.traverse((child: THREE.Object3D) => {
+    if (child instanceof THREE.Mesh && child.material) {
+      const mat = child.material as THREE.MeshStandardMaterial;
       const matName = (mat.name || "").toLowerCase();
 
       // Clone material if it hasn't been cloned for this instance
@@ -26,17 +26,27 @@ export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
         child.material = mat.clone();
         child.material.userData = { ...(child.material.userData || {}), isInstanceCloned: true };
       }
-      const instanceMat = child.material;
+      const instanceMat = child.material as THREE.MeshStandardMaterial;
 
-      // 1. Primary fuselage paint
-      if (
-        config.fuselageColor &&
-        (matName.includes("fuselage") ||
-          matName.includes("fuselage2") ||
-          matName.includes("fuselage_blue"))
-      ) {
-        instanceMat.color = new THREE.Color(config.fuselageColor);
-        instanceMat.needsUpdate = true;
+      // 1. Primary fuselage and main airframe paint
+      if (config.fuselageColor) {
+        if (
+          matName.includes("fuselage") ||
+          matName.startsWith("material_") ||
+          matName.includes("gray") ||
+          matName.includes("nose_door") ||
+          matName.includes("body") ||
+          matName.includes("main") ||
+          matName.includes("wing") ||
+          matName.includes("fin") ||
+          matName.includes("turbine") ||
+          matName.includes("private_jet_black")
+        ) {
+          instanceMat.color = new THREE.Color(config.fuselageColor);
+          instanceMat.metalness = 0.88;
+          instanceMat.roughness = 0.22;
+          instanceMat.needsUpdate = true;
+        }
       }
 
       // 2. Wingpod & Livery Accents
@@ -48,6 +58,8 @@ export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
           matName.includes("crimson_red"))
       ) {
         instanceMat.color = new THREE.Color(config.accentColor);
+        instanceMat.metalness = 0.85;
+        instanceMat.roughness = 0.16;
         instanceMat.needsUpdate = true;
       }
 
@@ -60,12 +72,19 @@ export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
         instanceMat.needsUpdate = true;
       }
 
-      // 4. Titanium trim
+      // 4. Titanium trim & leading edge deicing
       if (
         config.trimMetalColor &&
-        (matName.includes("titanium") || matName.includes("deicing") || matName.includes("dark_metal"))
+        (matName.includes("titanium") ||
+          matName.includes("deicing") ||
+          matName.includes("dark_metal") ||
+          matName.includes("copper") ||
+          matName.includes("nacelle_inside") ||
+          matName.includes("engine_axle"))
       ) {
         instanceMat.color = new THREE.Color(config.trimMetalColor);
+        instanceMat.metalness = 0.94;
+        instanceMat.roughness = 0.12;
         instanceMat.needsUpdate = true;
       }
     }
@@ -73,31 +92,36 @@ export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
 }
 
 /**
- * Loads and preprocesses the Bombardier Windjet 365 3D aircraft model.
+ * Loads and preprocesses a 3D aircraft model.
  * - Centers the geometry pivot at the center of gravity.
- * - Upgrades materials with luxury aeronautical metallic finish and tinted glass canopy.
- * - Replaces any dots with authentic supersonic propulsion flame cones that only engage at high thrust.
+ * - Normalizes scale across models for consistent framing.
+ * - Upgrades materials with luxury aeronautical finishes.
  */
-export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
-  if (cachedScene) {
-    const clone = cachedScene.clone(true);
+export function getJetModel(
+  colors?: JetColorConfig,
+  modelPath: string = "/models/bombardier_windjet_365/scene.gltf"
+): Promise<THREE.Group> {
+  const cached = cachedScenes.get(modelPath);
+  if (cached) {
+    const clone = cached.clone(true);
     if (colors) applyJetColors(clone, colors);
     return Promise.resolve(clone);
   }
 
-  if (loadPromise) {
-    return loadPromise.then((scene) => {
+  const existingPromise = loadPromises.get(modelPath);
+  if (existingPromise) {
+    return existingPromise.then((scene) => {
       const clone = scene.clone(true);
       if (colors) applyJetColors(clone, colors);
       return clone;
     });
   }
 
-  loadPromise = new Promise<THREE.Group>((resolve, reject) => {
+  const promise = new Promise<THREE.Group>((resolve, reject) => {
     const loader = new GLTFLoader();
 
     loader.load(
-      "/models/bombardier_windjet_365/scene.gltf",
+      modelPath,
       (gltf) => {
         const root = gltf.scene;
 
@@ -107,7 +131,8 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
         const size = box.getSize(new THREE.Vector3());
 
         // Center pivot at model center of gravity to ensure entire nose and tail are visible
-        root.position.set(-center.x + 0.4, -center.y, -center.z);
+        const xOffset = modelPath.includes("bombardier") ? 0.4 : 0;
+        root.position.set(-center.x + xOffset, -center.y, -center.z);
 
         // Wrap inside a normalized pivot group
         const pivot = new THREE.Group();
@@ -123,17 +148,17 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
         }
 
         // 2. Enhance materials for ultra-premium M1 aerospace aesthetic
-        root.traverse((child: any) => {
-          if (child.isMesh) {
+        root.traverse((child: THREE.Object3D) => {
+          if (child instanceof THREE.Mesh) {
             child.castShadow = true;
             child.receiveShadow = true;
 
-            const mat = child.material;
+            const mat = child.material as THREE.MeshStandardMaterial;
             if (mat) {
               const matName = (mat.name || "").toLowerCase();
               const childName = (child.name || "").toLowerCase();
 
-              // Completely remove the visible dotted wire / HF antenna line along the top of the aircraft
+              // Completely remove any visible dotted wire / HF antenna lines
               if (
                 matName.includes("wire") ||
                 childName.includes("wire") ||
@@ -145,12 +170,21 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
                 return;
               }
 
-              // Remove noisy patchwork camo textures to ensure a smooth, uniform, aesthetic luxury surface
-              if (mat.map) {
+              // Special handling for private_jet_black.glb model
+              if (modelPath.includes("private_jet_black")) {
+                mat.roughness = 0.24;
+                mat.metalness = 0.90;
+                mat.envMapIntensity = 2.4;
+                mat.needsUpdate = true;
+                return;
+              }
+
+              // Remove noisy patchwork camo textures
+              if (mat.map && !matName.includes("texture")) {
                 mat.map = null;
               }
 
-              // A. Luxury Gold / Champagne Brass Metallic Accents (Engine cowlings, de-icing rings, exhaust rims)
+              // A. Luxury Gold / Champagne Brass Metallic Accents
               if (
                 matName.includes("deicing") ||
                 matName.includes("titanium_burnt") ||
@@ -159,20 +193,20 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
                 matName.includes("engine_axle") ||
                 matName.includes("antenna_metal_glossy")
               ) {
-                mat.color = new THREE.Color(0xd4af37); // Rich 24K Champagne Gold
+                mat.color = new THREE.Color(0xd4af37);
                 mat.metalness = 0.94;
                 mat.roughness = 0.12;
                 mat.envMapIntensity = 2.4;
                 mat.needsUpdate = true;
               }
-              // B. Electric / Deep Sapphire Blue Aerodynamic Highlights (Wingpods, wingtip edges, aero livery lines)
+              // B. Electric / Deep Sapphire Blue Aerodynamic Highlights
               else if (
                 matName.includes("wingpod") ||
                 matName.includes("sky_blue") ||
                 matName.includes("crimson_red") ||
                 matName.includes("fuselage_blue")
               ) {
-                mat.color = new THREE.Color(0x0ea5e9); // Electric Cyan / Sapphire Blue
+                mat.color = new THREE.Color(0x0ea5e9);
                 mat.metalness = 0.82;
                 mat.roughness = 0.15;
                 mat.envMapIntensity = 2.2;
@@ -185,102 +219,52 @@ export function getJetModel(colors?: JetColorConfig): Promise<THREE.Group> {
                 matName.includes("cockpit")
               ) {
                 mat.transparent = true;
-                mat.opacity = 0.90;
-                mat.color = new THREE.Color(0x030a14); // Deep Midnight Sapphire
+                mat.opacity = 0.92;
+                mat.color = new THREE.Color(0x050e18);
                 mat.metalness = 0.96;
-                mat.roughness = 0.08;
+                mat.roughness = 0.06;
                 mat.envMapIntensity = 2.5;
                 mat.needsUpdate = true;
               }
-              // D. Machined Titanium / Dark Metal Mechanical Trim
+              // D. Machined Titanium / Mechanical Trim
               else if (
                 matName.includes("titanium") ||
                 matName.includes("dark_metal") ||
                 matName.includes("metal") ||
                 matName.includes("landing_gear")
               ) {
-                mat.color = new THREE.Color(0x283140); // Dark Titanium Alloy
-                mat.metalness = 0.88;
-                mat.roughness = 0.18;
+                mat.color = new THREE.Color(0x475569);
+                mat.metalness = 0.85;
+                mat.roughness = 0.20;
                 mat.needsUpdate = true;
               }
-              // E. Main Airframe: Ultra-Smooth, Consistent, Deep Dark Obsidian Metallic Composite
+              // E. Main Airframe: Light Luxury Aerospace Platinum Titanium Silver
               else {
-                mat.color = new THREE.Color(0x151e2c); // Deep metallic midnight obsidian
-                mat.metalness = 0.62;
-                mat.roughness = 0.22;
-                mat.envMapIntensity = 2.4;
+                mat.color = new THREE.Color(0xc2cdda);
+                mat.metalness = 0.78;
+                mat.roughness = 0.18;
+                mat.envMapIntensity = 2.5;
                 mat.needsUpdate = true;
               }
             }
           }
         });
 
-        // 3. Supersonic Propulsion Exhaust Flame Cones (NO WEIRD DOTS)
-        // Only active during high-speed flight maneuvers (invisible when parked or showcase)
-        const engineGlowGroup = new THREE.Group();
-        engineGlowGroup.name = "EngineGlowGroup";
-        engineGlowGroup.visible = false; // Hidden by default (completely off when parked)
-
-        // Realistic elongated supersonic thrust flame cone
-        // Cylinder pointing along +X (tail direction)
-        const flameGeo = new THREE.CylinderGeometry(0.04, 0.22, 2.2, 16, 1, true);
-        flameGeo.rotateZ(Math.PI / 2); // Point along +X axis
-        flameGeo.translate(1.1, 0, 0); // Origin at nozzle
-
-        const flameMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(0x38bdf8),
-          transparent: true,
-          opacity: 0.85,
-          blending: THREE.AdditiveBlending,
-          side: THREE.DoubleSide,
-          depthWrite: false,
-        });
-
-        // Inner white-hot supersonic core cone
-        const coreGeo = new THREE.CylinderGeometry(0.02, 0.12, 1.4, 16, 1, true);
-        coreGeo.rotateZ(Math.PI / 2);
-        coreGeo.translate(0.7, 0, 0);
-
-        const coreMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(0xffffff),
-          transparent: true,
-          opacity: 0.95,
-          blending: THREE.AdditiveBlending,
-          side: THREE.DoubleSide,
-          depthWrite: false,
-        });
-
-        // Left turbine assembly
-        const leftEngine = new THREE.Group();
-        leftEngine.position.set(1.2, 0.45, -1.18);
-        leftEngine.add(new THREE.Mesh(flameGeo, flameMaterial));
-        leftEngine.add(new THREE.Mesh(coreGeo, coreMaterial));
-        engineGlowGroup.add(leftEngine);
-
-        // Right turbine assembly
-        const rightEngine = new THREE.Group();
-        rightEngine.position.set(1.2, 0.45, 1.18);
-        rightEngine.add(new THREE.Mesh(flameGeo, flameMaterial));
-        rightEngine.add(new THREE.Mesh(coreGeo, coreMaterial));
-        engineGlowGroup.add(rightEngine);
-
-        root.add(engineGlowGroup);
-
-        cachedScene = pivot;
+        cachedScenes.set(modelPath, pivot);
         const result = pivot.clone(true);
         if (colors) applyJetColors(result, colors);
         resolve(result);
       },
       undefined,
       (err) => {
-        console.error("Failed to load Bombardier Windjet 365 model:", err);
+        console.error(`Failed to load 3D jet model at ${modelPath}:`, err);
         reject(err);
       }
     );
   });
 
-  return loadPromise.then((scene) => {
+  loadPromises.set(modelPath, promise);
+  return promise.then((scene) => {
     const clone = scene.clone(true);
     if (colors) applyJetColors(clone, colors);
     return clone;

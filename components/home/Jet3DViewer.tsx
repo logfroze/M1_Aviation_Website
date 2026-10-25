@@ -17,6 +17,9 @@ interface Jet3DViewerProps {
   engineThrust?: number; // Propulsion thrust (0 to 1). < 0.45 = completely off, > 0.45 = supersonic exhaust cones
   immediate?: boolean; // When true, bypasses interpolation lag so rotation syncs 1:1 with scroll
   customColors?: JetColorConfig; // Programmatic paint colors
+  modelPath?: string; // Optional custom 3D model asset path
+  lightingTheme?: "default" | "tunnel"; // Lighting style
+  cameraPos?: [number, number, number]; // Custom camera position
   className?: string;
   style?: React.CSSProperties;
   onLoaded?: () => void;
@@ -35,6 +38,9 @@ export default function Jet3DViewer({
   engineThrust = 0,
   immediate = false,
   customColors,
+  modelPath = "/models/bombardier_windjet_365/scene.gltf",
+  lightingTheme = "default",
+  cameraPos,
   className = "",
   style,
   onLoaded,
@@ -108,7 +114,11 @@ export default function Jet3DViewer({
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 500;
     const camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 100);
-    camera.position.set(0.3, 1.5, 27);
+    if (cameraPos) {
+      camera.position.set(...cameraPos);
+    } else {
+      camera.position.set(0.3, 1.5, 27);
+    }
     camera.lookAt(0.3, 0, 0);
     cameraRef.current = camera;
 
@@ -118,52 +128,77 @@ export default function Jet3DViewer({
       alpha: true,
       antialias: true,
       powerPreference: "high-performance",
+      preserveDrawingBuffer: true,
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25 * lightIntensity;
+    renderer.toneMappingExposure = (lightingTheme === "tunnel" ? 1.15 : 1.25) * lightIntensity;
     rendererRef.current = renderer;
 
-    // 4. Lighting setup for sleek Dark Jet with vivid Blue & Gold metallic sheen
-    const ambientLight = new THREE.AmbientLight(0x2a384c, 2.0);
-    scene.add(ambientLight);
+    // 4. Lighting setup tailored to theme
+    if (lightingTheme === "tunnel") {
+      // Atmospheric deep petroleum teal ambient
+      const ambientLight = new THREE.AmbientLight(0x061822, 1.3);
+      scene.add(ambientLight);
 
-    // Primary key sunlight from upper-right (crisp white specular highlights)
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
-    keyLight.position.set(12, 18, 14);
-    scene.add(keyLight);
+      // Cyan key rim light from left
+      const cyanRimL = new THREE.DirectionalLight(0x00e5ff, 3.4);
+      cyanRimL.position.set(-18, 8, 8);
+      scene.add(cyanRimL);
 
-    // Vibrant Electric / Sapphire Blue rim light (creates vivid blue metallic sheen along wings & spine)
-    const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 4.5);
-    blueRimLight.position.set(-16, 10, 8);
-    scene.add(blueRimLight);
+      // Cyan key rim light from right
+      const cyanRimR = new THREE.DirectionalLight(0x00e5ff, 3.4);
+      cyanRimR.position.set(18, 8, 8);
+      scene.add(cyanRimR);
 
-    // Luxury Warm 24K Gold specular rim light (creates warm gold glints along curves as it turns)
-    const goldRimLight = new THREE.DirectionalLight(0xfbbf24, 3.6);
-    goldRimLight.position.set(14, -2, 12);
-    scene.add(goldRimLight);
+      // Tunnel forward portal illumination (front nose glow from rings)
+      const tunnelForwardLight = new THREE.DirectionalLight(0x00e5ff, 2.2);
+      tunnelForwardLight.position.set(0, 4, -18);
+      scene.add(tunnelForwardLight);
 
-    // Subtle blue fill light from below
-    const fillLight = new THREE.DirectionalLight(0x60a5fa, 1.8);
-    fillLight.position.set(0, -10, 6);
-    scene.add(fillLight);
+      // Subtle top specular highlight
+      const topSpecular = new THREE.DirectionalLight(0xffffff, 1.5);
+      topSpecular.position.set(0, 18, 10);
+      scene.add(topSpecular);
+
+      // Underbody road reflection light
+      const roadLight = new THREE.DirectionalLight(0x00e5ff, 1.4);
+      roadLight.position.set(0, -10, 4);
+      scene.add(roadLight);
+    } else {
+      // Default lighting for Light Luxury Platinum Titanium Jet
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+      scene.add(ambientLight);
+
+      // Primary key sunlight from upper-right
+      const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
+      keyLight.position.set(12, 18, 14);
+      scene.add(keyLight);
+
+      // Subtle Electric / Sapphire Blue rim light
+      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
+      blueRimLight.position.set(-16, 10, 8);
+      scene.add(blueRimLight);
+
+      // Luxury Warm 24K Gold specular rim light
+      const goldRimLight = new THREE.DirectionalLight(0xfbbf24, 2.0);
+      goldRimLight.position.set(14, -2, 12);
+      scene.add(goldRimLight);
+
+      // Subtle fill light from below
+      const fillLight = new THREE.DirectionalLight(0xe2e8f0, 1.5);
+      fillLight.position.set(0, -10, 6);
+      scene.add(fillLight);
+    }
 
     // 5. Load preprocessed 3D Jet model
-    getJetModel(customColors)
+    getJetModel(customColors, modelPath)
       .then((jetModel) => {
         if (destroyed) return;
 
         modelPivotRef.current = jetModel;
         scene.add(jetModel);
-
-        // Find engine propulsion flame group
-        const engineGlow = jetModel.getObjectByName("EngineGlowGroup");
-        if (engineGlow) {
-          engineGroupRef.current = engineGlow as THREE.Group;
-          // Ensure propulsion flames start hidden if thrust is 0
-          engineGroupRef.current.visible = engineThrust > 0.45;
-        }
 
         isLoadedRef.current = true;
         onLoaded?.();
@@ -245,25 +280,6 @@ export default function Jet3DViewer({
         const targetScale = target.scale;
         model.scale.set(targetScale, targetScale, targetScale);
 
-        // Supersonic propulsion flames:
-        // Only visible when thrust > 0.45 during flight maneuvers.
-        // On showcase pedestal or low idle, visibility is strictly FALSE (ZERO flame, ZERO weird dots).
-        if (engineGroupRef.current) {
-          const thrust = target.thrust;
-          if (thrust > 0.45) {
-            engineGroupRef.current.visible = true;
-            // Scale propulsion flame along length (+X) and slightly expand diameter with thrust
-            const flameIntensity = (thrust - 0.45) / 0.55;
-            const flicker = 0.94 + Math.sin(now * 0.04) * 0.06;
-            engineGroupRef.current.scale.set(
-              (0.8 + flameIntensity * 0.7) * flicker,
-              0.85 + flameIntensity * 0.3,
-              0.85 + flameIntensity * 0.3
-            );
-          } else {
-            engineGroupRef.current.visible = false;
-          }
-        }
       }
 
       if (rendererRef.current && sceneRef.current && cameraRef.current) {
