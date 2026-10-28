@@ -16,17 +16,14 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-function easeInOut(t: number) {
-  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-}
 
-// Executive Light Luxury Platinum Titanium Paint Scheme
-// (Exact match to the 3D model in ScrollFlightJet that flies down into this section)
-const EXECUTIVE_TITANIUM_COLORS: JetColorConfig = {
-  fuselageColor: "#c2cdda", // Light Luxury Platinum Titanium Silver airframe
-  accentColor: "#0ea5e9",   // Luminous Sapphire Blue wingpod & aerodynamic accents
-  trimMetalColor: "#d4af37",// Champagne Gold / Titanium nacelles & deicing trim
-  glassColor: "#050e18",    // Deep Tinted Sapphire Aerospace Cockpit Glass
+// Cyber-Luminous Electric Shiny Blue Paint Scheme
+// (User Requirement: matches the cyber-aeronautical road, rings, and tunnel theme)
+const VISION_SHINY_BLUE_COLORS: JetColorConfig = {
+  fuselageColor: "#0b253a", // Deep lustrous metallic sapphire blue airframe
+  accentColor: "#00e5ff",   // Electric cyan wingpods & aerodynamic accents
+  trimMetalColor: "#38bdf8",// Gleaming sky-cyan titanium & deicing trim
+  glassColor: "#020d18",    // Ultra-deep tinted aerospace cockpit glass
 };
 
 export default function VisionTimeline() {
@@ -50,16 +47,11 @@ export default function VisionTimeline() {
       // Global normalized scroll progress from 0.0 to 1.0
       const p = clamp(-rect.top / scrollable, 0, 1);
       targetRef.current = p;
-
-      // Strict single-plane handoff from previous section
-      const landingRatio = clamp((40 - rect.top) / 40, 0, 1);
-      setLandingProgress(landingRatio);
-      setIsLandedAtRunway(rect.top <= 40 || p > 0);
     };
 
     const loop = () => {
-      // Silky 60fps / 120fps physics lerp interpolation
-      smoothRef.current += (targetRef.current - smoothRef.current) * 0.085;
+      // Silky 60fps / 120fps physics lerp interpolation (smoother, more relaxed cinematic flight pacing)
+      smoothRef.current += (targetRef.current - smoothRef.current) * 0.07;
       const p = smoothRef.current;
       setProgress(p);
 
@@ -67,6 +59,32 @@ export default function VisionTimeline() {
       const roadmapSegment = clamp((p - 0.04) / 0.76, 0, 0.999);
       const ni = clamp(Math.floor(roadmapSegment * TOTAL), 0, TOTAL - 1);
       setActiveIndex(ni);
+
+      // Strict single-plane handoff synchronized with ScrollFlightJet touchdown
+      const isFlightActive =
+        typeof window !== "undefined" &&
+        !!(window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE;
+      const flightLandingP =
+        typeof window !== "undefined"
+          ? (window as unknown as { __M1_SCROLL_JET_LANDING_P?: number }).__M1_SCROLL_JET_LANDING_P ?? 1.0
+          : 1.0;
+
+      if (isFlightActive) {
+        // While flight jet is approaching, keep runway jet hidden.
+        // The instant flight jet touches down (flightLandingP >= 0.98), activate runway jet with zero double-plane ghosting
+        const isLanded = flightLandingP >= 0.98;
+        setLandingProgress(isLanded ? 1.0 : 0.0);
+        setIsLandedAtRunway(isLanded || p > 0);
+      } else {
+        // Fallback when scrolled directly into vision or flight completed
+        if (sectionRef.current) {
+          const rect = sectionRef.current.getBoundingClientRect();
+          setIsLandedAtRunway(rect.top <= 20 || p > 0);
+        } else {
+          setIsLandedAtRunway(true);
+        }
+        setLandingProgress(1.0);
+      }
 
       rafRef.current = requestAnimationFrame(loop);
     };
@@ -87,8 +105,8 @@ export default function VisionTimeline() {
     const scrollY = window.scrollY;
     const docTop = scrollY + rect.top;
     const scrollable = sectionRef.current.offsetHeight - window.innerHeight;
-    // Map milestone index to its focal scroll position
-    const targetP = 0.08 + index * 0.125;
+    // Map milestone index to its focal scroll position across roadmap
+    const targetP = 0.04 + (index / (TOTAL - 1)) * 0.76;
     window.scrollTo({
       top: docTop + targetP * scrollable,
       behavior: "smooth",
@@ -109,12 +127,10 @@ export default function VisionTimeline() {
     }
   };
 
-  const eased = easeInOut(progress);
 
   // ── 1. CONSTANT LOW-ALTITUDE CRUISE & EXACT ENDING ANGLE MATCH ──
-  // User Requirement: "make sure plane stays at the same distance above from the road."
-  // User Requirement: "Match the ending angle of vision time line plane to exactly as that next contact section plane is."
-  const baseJetBottom = 11.5; // Locked constant distance directly above the metallic road
+  // User Requirement: "First of all bring the plane lower. Closer to the road. Reduce it's altitude."
+  const baseJetBottom = 0.0; // Jet flies low, hugging closely down right above the road surface
 
   // End of roadmap transition (progress 0.83 -> 1.00)
   const exitProgress = clamp((progress - 0.83) / 0.14, 0, 1);
@@ -127,33 +143,37 @@ export default function VisionTimeline() {
   const roadScale = 1.0 + progress * 0.22 + exitEase * 0.30;
   const envOpacity = clamp(1 - exitEase * 1.35, 0, 1);
 
-  // Normal pilot aerodynamic banking while cruising down the road
-  const bankWave = Math.sin(progress * Math.PI * TOTAL);
-  const cruisingDrift = bankWave * 26;
-  const cruisingRoll = bankWave * 2.8;
-  const cruisingYaw = -90 - bankWave * 1.2; // Rear view down runway
-  const cruisingPitch = 0.8;
+  // Aerodynamic banking down the runway in True 3D (Refined, smooth flight flow)
+  // User Requirement: "reduce the turning little" and "move ahead correctly like a proper flow"
+  // User Requirement: "when the plane goes towards side of the road and tilts inside then the tip of the plane should also tilts inwards"
+  const roadmapSegment = clamp((progress - 0.04) / 0.76, 0, 1);
+  const bankWave = Math.sin(roadmapSegment * Math.PI * 3.5);
+  const cruisingDrift = bankWave * 36; // Subtle, controlled lateral drift
+  const cruisingRoll3D = bankWave * 8.5; // Gentle inward banking (plane leans left when on right, leans right when on left)
+  const cruisingYaw = -90 - bankWave * 5.5; // Natural steering cut: tip points subtly inwards without turning heavily sideways
+  const cruisingPitch = 0.4; // Level aerodynamic forward cruise pitch
 
   // Final twist to match ContactFlightJet / footer-jet angle EXACTLY:
-  // In Three.js with model pivot:
-  // - yaw: -176° turns the aircraft to face right (+X) with starboard/right profile facing user
-  // - pitch: -14.0° pitches the nose UP by +14° to the right (climbing angle)
-  // - roll: 0°
-  // - 2D wrapper rotation: 0°
-  const finalYaw = lerp(cruisingYaw, -176, exitEase);
-  const finalPitch = lerp(cruisingPitch, -14.0, exitEase);
+  // - yaw: -168° faces the starboard right side with rear-quarter climb
+  // - pitch: -16.0° pitches the nose UP showing the underside
+  // - roll: 5.5° gentle starboard bank
+  // - cameraY: -3.5 drops camera below aircraft to look up at the underside
+  const finalYaw = lerp(cruisingYaw, -168, exitEase);
+  const finalPitch = lerp(cruisingPitch, -16.0, exitEase);
   const finalLateralX = lerp(cruisingDrift, 58, exitEase);
   const finalBottom = lerp(baseJetBottom, 20.5, exitEase);
-  const finalScale = lerp(1.35, 1.48, exitEase);
-  const wrapperRotation = lerp(cruisingRoll, 0, exitEase);
+  const finalScale = lerp(1.50, 1.68, exitEase);
+  const finalRoll3D = lerp(cruisingRoll3D, 0, exitEase);
+  const wrapperRotation = lerp(-bankWave * 0.8, 5.5, exitEase);
+  const finalCameraY = lerp(0.65, -3.5, exitEase); // Lower camera angle level with road surface
 
-  // Rear exhaust afterburners fade down as plane turns side-on
-  const afterburnerOpacity = clamp(1 - exitEase * 2.2, 0, 1) * (0.92 + eased * 0.08);
+  // Rings appear smoothly as user scrolls into the roadmap (clean start as in Image 3)
+  const ringsEntranceOpacity = clamp((progress - 0.015) / 0.04, 0, 1);
 
   // Visibility handoff to ContactFlightJet at progress >= 0.99
   const jetOpacity = progress < 0.99 ? 1 : clamp(1 - (progress - 0.99) / 0.01, 0, 1);
   const centralJetOpacity = isLandedAtRunway
-    ? jetOpacity * Math.max(landingProgress, progress > 0 ? 1 : 0)
+    ? jetOpacity * (progress > 0.02 ? 1 : landingProgress)
     : 0;
 
   // ── 2. MILESTONE CARD LOGIC (ALTERNATING SIDES, HIDDEN AT START & AT FINAL EXIT) ──
@@ -161,9 +181,14 @@ export default function VisionTimeline() {
   const isLeftCard = activeIndex % 2 === 0;
   const currentMilestone = VISION_MILESTONES[activeIndex];
 
-  // Dynamic spline cable anchor at jet tail (follows aircraft lateral banking)
-  const splineStartX = 600 + finalLateralX * 0.72;
-  const splineStartY = 765;
+  // Dynamic animated winding guide path along the road that leads the aircraft smoothly
+  // User Requirement: "The line should follow the current plane path and movement. Like it should resembles that as plane is moving and following that line."
+  const pPlaneX = 600 + finalLateralX;
+  const pPlaneY = 805;
+  const roadSplinePath = `M 600 482
+    C ${600 + finalLateralX * 0.18} 560, ${600 + finalLateralX * 0.50} 650, ${600 + finalLateralX * 0.82} 740
+    S ${pPlaneX} 785, ${pPlaneX} ${pPlaneY}
+    C ${pPlaneX} 835, ${600 + finalLateralX * 1.18} 868, ${600 + finalLateralX * 1.30} 900`;
 
   return (
     <section
@@ -171,7 +196,7 @@ export default function VisionTimeline() {
       id="vision"
       aria-label="The 10-Year Vision Roadmap"
       className="relative w-full select-none"
-      style={{ height: "600vh" }}
+      style={{ height: "1000vh" }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#01050a] flex items-center justify-center">
 
@@ -218,8 +243,8 @@ export default function VisionTimeline() {
             <defs>
               {/* Controlled Cyan Neon Glow Filter for Active Ring */}
               <filter id="cyan-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur1" />
-                <feGaussianBlur in="SourceGraphic" stdDeviation="9.0" result="blur2" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3.0" result="blur1" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="7.5" result="blur2" />
                 <feMerge>
                   <feMergeNode in="blur2" />
                   <feMergeNode in="blur1" />
@@ -227,21 +252,21 @@ export default function VisionTimeline() {
                 </feMerge>
               </filter>
 
-              {/* Depth of Field Blur Filters for Previous & Next Inactive Rings */}
-              <filter id="dof-blur-near" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="7.0" />
-              </filter>
-
-              <filter id="dof-blur-far" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="15.0" />
+              {/* Soft Atmospheric Glow Filter for Upcoming Distant Rings (Clean, distinct, keeps rings visible) */}
+              <filter id="cyan-glow-distant" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2.0" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
               </filter>
 
               {/* Metallic Runway Gradient */}
               <linearGradient id="metallic-road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#01070e" stopOpacity="0.95" />
-                <stop offset="40%" stopColor="#02141e" stopOpacity="0.90" />
-                <stop offset="85%" stopColor="#031e2b" stopOpacity="0.88" />
-                <stop offset="100%" stopColor="#021622" stopOpacity="0.95" />
+                <stop offset="0%" stopColor="#01070e" stopOpacity="0.98" />
+                <stop offset="40%" stopColor="#02141e" stopOpacity="0.96" />
+                <stop offset="85%" stopColor="#031e2b" stopOpacity="0.94" />
+                <stop offset="100%" stopColor="#021622" stopOpacity="0.98" />
               </linearGradient>
 
               {/* Glowing Spline Gradient */}
@@ -252,7 +277,167 @@ export default function VisionTimeline() {
               </linearGradient>
             </defs>
 
-            {/* ── A. THE METALLIC FLIGHT ROAD (SYNCHRONIZED FORWARD TRAVEL WITH SCROLL) ── */}
+            {/* ── A. 6 CONCENTRIC CONICAL NEON TUNNEL RINGS (RENDERED BEHIND ROAD) ── */}
+            {/* User Requirement: "Now increase the width of all vision rings in this section. Make them more wide." */}
+            {/* User Requirement: "The previous rings should be disappear, and current ring should be fully visbile, and the next rings should be slightly faded." */}
+            {/* User Requirement: "transition between rings is very fast and rigid. So make the transition between rings smoother." */}
+            <g className="vision-conical-rings">
+              {VISION_MILESTONES.map((milestone, i) => {
+                // Continuous milestone progress from 0.0 to 5.0 across the 6 milestones
+                const roadmapSegment = clamp((progress - 0.04) / 0.76, 0, 1);
+                const continuousMilestone = roadmapSegment * (TOTAL - 1);
+                const ringDiff = continuousMilestone - i; // positive = passed/previous, negative = upcoming/next
+
+                // Silky continuous focus bell curve around ringDiff === 0
+                const focusDist = Math.abs(ringDiff);
+                const rawFocus = clamp(1 - focusDist, 0, 1);
+                const smoothFocus = rawFocus * rawFocus * (3 - 2 * rawFocus);
+
+                // Perspective concentric tunnel spacing with guaranteed open distance between every ring
+                // User Requirement: "increase their width and keep space between all rings."
+                let r: number;
+                if (ringDiff <= 0) {
+                  // Upcoming rings ahead down the tunnel corridor
+                  // Geometric 0.58 decay spacing guarantees generous dark space between every ring
+                  const z = -ringDiff;
+                  r = 440 * Math.pow(0.58, z);
+                } else {
+                  // Ring passed camera: expands outward smoothly
+                  r = 440 + ringDiff * 320;
+                }
+
+                // Opacity rules:
+                // 1. "The previous rings should be disappear" -> As ring passes viewer (ringDiff > 0), fade to 0 quickly
+                // 2. "current ring should be fully visible" -> smoothFocus == 1 -> opacity 1.0
+                // 3. "the next rings should be slightly faded" -> All upcoming rings (ringDiff < 0) are kept visible, subtly atmospheric
+                let ringOpacity: number;
+                if (ringDiff > 0) {
+                  // Previous ring: disappears smoothly as user passes it
+                  ringOpacity = clamp(1 - ringDiff * 2.5, 0, 1);
+                } else {
+                  // Upcoming rings: visible in receding tunnel, slightly faded (0.30 to 0.46)
+                  const z = -ringDiff;
+                  const distanceFade = clamp(0.46 - z * 0.05, 0.26, 0.46);
+                  ringOpacity = lerp(distanceFade, 1.0, smoothFocus);
+                }
+
+                const finalRingOpacity = ringOpacity * envOpacity * ringsEntranceOpacity;
+                if (finalRingOpacity <= 0.005) return null;
+
+                // Wide architectural conical collar band with generous separation distance:
+                // User Requirement: "increase their width and keep space between all rings"
+                // rInner is 74% of r (collar band is 26% of r wide - thick, substantial, bold neon band!)
+                // The 0.58 decay guarantees a clear 14px to 70px dark space gap between all consecutive rings!
+                const rInner = Math.max(8, r * 0.74);
+
+                const filterUrl = smoothFocus > 0.4 ? "url(#cyan-glow)" : "url(#cyan-glow-distant)";
+
+                return (
+                  <g key={`vision-ring-${milestone.phase}`} opacity={finalRingOpacity}>
+                    {/* Conical Tunnel Collar Wall (Wide, glowing cyan band with smooth continuous opacity) */}
+                    <path
+                      d={`M 600 ${482 - r}
+                          A ${r} ${r} 0 1 0 600 ${482 + r}
+                          A ${r} ${r} 0 1 0 600 ${482 - r}
+                          Z
+                          M 600 ${482 - rInner}
+                          A ${rInner} ${rInner} 0 1 1 600 ${482 + rInner}
+                          A ${rInner} ${rInner} 0 1 1 600 ${482 - rInner}
+                          Z`}
+                      fill="#00e5ff"
+                      fillOpacity={lerp(0.12, 0.36, smoothFocus)}
+                      fillRule="evenodd"
+                      filter={filterUrl}
+                    />
+
+                    {/* Architectural Radial Ribs across the wide ring collar (Subtle on distant rings, crisp on active ring) */}
+                    {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((segIdx) => {
+                      const angle = (segIdx / 16) * Math.PI * 2;
+                      const x1 = 600 + rInner * Math.cos(angle);
+                      const y1 = 482 + rInner * Math.sin(angle);
+                      const x2 = 600 + r * Math.cos(angle);
+                      const y2 = 482 + r * Math.sin(angle);
+                      return (
+                        <line
+                          key={`radial-seg-${segIdx}`}
+                          x1={x1}
+                          y1={y1}
+                          x2={x2}
+                          y2={y2}
+                          stroke="#00e5ff"
+                          strokeWidth={lerp(1.0, 1.8, smoothFocus)}
+                          opacity={lerp(0.08, 0.75, smoothFocus)}
+                          filter={filterUrl}
+                        />
+                      );
+                    })}
+
+                    {/* Outer Front Rim (Wider, vibrant neon stroke) */}
+                    <circle
+                      cx="600"
+                      cy="482"
+                      r={r}
+                      fill="none"
+                      stroke="#00e5ff"
+                      strokeWidth={lerp(2.4, 4.4, smoothFocus)}
+                      filter={filterUrl}
+                    />
+
+                    {/* Inner Back Rim */}
+                    <circle
+                      cx="600"
+                      cy="482"
+                      r={rInner}
+                      fill="none"
+                      stroke="#00e5ff"
+                      strokeWidth={lerp(1.4, 2.4, smoothFocus)}
+                      opacity={lerp(0.60, 0.88, smoothFocus)}
+                      filter={filterUrl}
+                    />
+
+                    {/* Milestone Indicator Tag (Smoothly fades in on active focal ring) */}
+                    {smoothFocus > 0.55 && r > 160 && r < 560 && (
+                      <g
+                        transform={`translate(${600 + r * Math.cos(-Math.PI * 0.72)}, ${
+                          482 + r * Math.sin(-Math.PI * 0.72)
+                        })`}
+                        filter="url(#cyan-glow)"
+                        opacity={clamp((smoothFocus - 0.55) / 0.35, 0, 1)}
+                      >
+                        <rect
+                          x="-28"
+                          y="-10"
+                          width="56"
+                          height="20"
+                          rx="10"
+                          fill="#00e5ff"
+                          stroke="#00e5ff"
+                          strokeWidth="1.2"
+                        />
+                        <text
+                          x="0"
+                          y="4"
+                          textAnchor="middle"
+                          fill="#000000"
+                          fontSize="10"
+                          fontFamily="monospace"
+                          fontWeight="bold"
+                          letterSpacing="0.08em"
+                        >
+                          {milestone.phase}
+                        </text>
+                      </g>
+                    )}
+                  </g>
+                );
+              })}
+            </g>
+
+            {/* ── B. THE METALLIC FLIGHT ROAD (RENDERED ON TOP OF RINGS, OCCLUDES BOTTOM OF RINGS) ── */}
+            {/* User Requirement: "make the starting point of the road little more wider" -> 210 to 990 (780px wide)
+                User Requirement: "parts of rings below road should be hidden" -> Solid opaque base polygon completely blocks rings below
+                User Requirement: "make road more minimalist. Like no border shines and less dotted lines visible"
+                User Requirement: "remove straight lines below road" */}
             <g
               opacity={envOpacity}
               style={{
@@ -261,204 +446,93 @@ export default function VisionTimeline() {
                 transition: "transform 0.05s linear, opacity 0.08s linear",
               }}
             >
-              {/* Dark Metallic Runway Surface */}
+              {/* 100% Opaque Road Underlay (Arrow tip at 600,482 - physically blocks rings below) */}
+              {/* User Requirement: "end of the road tips were joined together and seemed like a tip of arrow so restore that" */}
               <polygon
-                points="588,482 612,482 860,900 340,900"
+                points="600,482 990,900 210,900"
+                fill="#01060c"
+              />
+
+              {/* Minimalist Dark Metallic Runway Surface */}
+              <polygon
+                points="600,482 990,900 210,900"
                 fill="url(#metallic-road-grad)"
               />
 
-              {/* Illuminated Runway Border Beams */}
+              {/* Minimalist Runway Border Beams meeting at Arrow Tip (600, 482) */}
               <line
-                x1="588"
+                x1="600"
                 y1="482"
-                x2="340"
+                x2="210"
                 y2="900"
                 stroke="#00e5ff"
-                strokeWidth="3.2"
+                strokeWidth="2.4"
                 filter="url(#cyan-glow)"
               />
               <line
-                x1="612"
+                x1="600"
                 y1="482"
-                x2="860"
+                x2="990"
                 y2="900"
                 stroke="#00e5ff"
-                strokeWidth="3.2"
+                strokeWidth="2.4"
                 filter="url(#cyan-glow)"
               />
 
-              {/* Dynamic Perspective Runway Markers streaming forward as user scrolls */}
-              {[0, 1, 2, 3, 4, 5, 6].map((idx) => {
-                const u = ((idx / 7) + progress * 2.2) % 1;
+              {/* Perspective Runway Horizontal Markers (Matching Image 4 and Image 2) */}
+              {[0, 1, 2, 3, 4, 5].map((idx) => {
+                const u = ((idx / 6) + progress * 2.0) % 1;
                 const yPos = 482 + (900 - 482) * Math.pow(u, 2.2);
-                const halfW = 12 + (260 - 12) * Math.pow(u, 2.0);
-                const markerOpacity = u < 0.15 ? u / 0.15 : u > 0.85 ? (1 - u) / 0.15 : 0.75;
+                const halfW = 14 + (280 - 14) * Math.pow(u, 2.0);
+                const markerOpacity = u < 0.15 ? u / 0.15 : u > 0.85 ? (1 - u) / 0.15 : 0.65;
 
                 return (
                   <line
                     key={`runway-marker-${idx}`}
-                    x1={600 - halfW * 0.45}
+                    x1={600 - halfW * 0.42}
                     y1={yPos}
-                    x2={600 + halfW * 0.45}
+                    x2={600 + halfW * 0.42}
                     y2={yPos}
                     stroke="#00e5ff"
-                    strokeWidth={lerp(1.2, 3.5, u)}
-                    opacity={markerOpacity * 0.6}
-                    filter="url(#cyan-glow)"
+                    strokeWidth={lerp(1.2, 2.6, u)}
+                    opacity={markerOpacity * 0.35}
                   />
                 );
               })}
 
-              {/* Glowing Winding Spline Data Cable */}
+              {/* Dynamic Animated Winding Guidance Spline on Road */}
+              {/* User Requirement: "make that line move more and faster. The line should follow the current plane path and movement. Like it should resembles that as plane is moving and following that line." */}
+              {/* Layer 1: Wide Atmospheric Cyan Neon Glow */}
               <path
-                d={`M ${splineStartX} ${splineStartY} 
-                    C ${600 + 48 + Math.sin(progress * 12) * 16} 710, 
-                      ${600 - 46 - Math.sin(progress * 12) * 16} 595, 
-                      ${600 + 14 + Math.sin(progress * 12) * 8} 525
-                    S 596 495, 600 482`}
+                d={roadSplinePath}
                 fill="none"
                 stroke="url(#spline-cyan-grad)"
                 strokeWidth="5.0"
                 filter="url(#cyan-glow)"
-                className="opacity-95"
+                opacity="0.95"
               />
+
+              {/* Layer 2: Fast High-Tech Streaming Energy Dash Stream */}
               <path
-                d={`M ${splineStartX} ${splineStartY} 
-                    C ${600 + 48 + Math.sin(progress * 12) * 16} 710, 
-                      ${600 - 46 - Math.sin(progress * 12) * 16} 595, 
-                      ${600 + 14 + Math.sin(progress * 12) * 8} 525
-                    S 596 495, 600 482`}
+                d={roadSplinePath}
+                fill="none"
+                stroke="#00e5ff"
+                strokeWidth="3.4"
+                strokeDasharray="22 14"
+                strokeDashoffset={`${-progress * 680}`}
+                filter="url(#cyan-glow)"
+                opacity="0.85"
+              />
+
+              {/* Layer 3: High-Intensity Razor White Core Beam */}
+              <path
+                d={roadSplinePath}
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="1.4"
-                className="opacity-95"
+                strokeWidth="1.6"
+                opacity="0.92"
               />
             </g>
-
-            {/* ── B. STRICTLY 6 CONCENTRIC NEON TUNNEL RINGS (THICK WIDE STRIPS + DOF BLUR) ── */}
-            {/* User Requirement: "Reduce the rings passing by speed a little bit."
-                User Requirement: "And make all the rings thicker. Like wide strips."
-                User Requirement: "when user starts scrolling, then blurrs the previous and next vision rings and only properly show the current rings." */}
-            {VISION_MILESTONES.map((milestone, i) => {
-              // Focal scroll position where ring reaches primary framing radius (~382px)
-              const focusP = 0.08 + i * 0.125;
-              const delta = progress - focusP;
-
-              let r: number;
-              let ringOpacity: number;
-
-              if (delta < 0) {
-                // Slower, majestic perspective approach from distance
-                const z = Math.max(0, 1.0 + delta * 1.85);
-                r = 24 + (382 - 24) * Math.pow(z, 2.0);
-                ringOpacity = z < 0.1 ? z / 0.1 : 0.88;
-              } else {
-                // Smooth, majestic expansion as ring passes viewer
-                const passT = Math.min(1, delta * 2.1);
-                r = 382 + 450 * Math.pow(passT, 1.3);
-                ringOpacity = Math.max(0, 0.88 * (1 - passT));
-              }
-
-              const finalRingOpacity = ringOpacity * envOpacity;
-              if (finalRingOpacity <= 0.01) return null;
-
-              const isCurrent = i === activeIndex;
-              const dist = Math.abs(i - activeIndex);
-
-              // ── Depth of Field: Blur previous and next rings while scrolling, only current is sharp ──
-              const isScrolling = progress >= 0.02 && progress <= 0.84;
-              let filterUrl = "url(#cyan-glow)";
-              let ringDimFactor = 1.0;
-
-              if (isScrolling && !isCurrent) {
-                if (dist === 1) {
-                  filterUrl = "url(#dof-blur-near)";
-                  ringDimFactor = 0.38;
-                } else {
-                  filterUrl = "url(#dof-blur-far)";
-                  ringDimFactor = 0.15;
-                }
-              }
-
-              // ── Wide Strip Thickness Dimensions ──
-              // Strip width scales dynamically with perspective radius
-              const stripThickness = isCurrent
-                ? lerp(8, 26, Math.min(1, r / 382))
-                : lerp(5, 16, Math.min(1, r / 382));
-
-              return (
-                <g key={`vision-ring-${milestone.phase}`} opacity={finalRingOpacity * ringDimFactor}>
-                  {/* Layer 1: Wide Outer Atmospheric Neon Glow Aura */}
-                  <circle
-                    cx="600"
-                    cy="482"
-                    r={r}
-                    fill="none"
-                    stroke="#00e5ff"
-                    strokeWidth={stripThickness * 1.6}
-                    filter={filterUrl}
-                    opacity={isCurrent ? 0.45 : 0.20}
-                  />
-
-                  {/* Layer 2: Wide Architectural Luminous Band / Strip Body */}
-                  <circle
-                    cx="600"
-                    cy="482"
-                    r={r}
-                    fill="none"
-                    stroke={isCurrent ? "#00e5ff" : "rgba(0, 229, 255, 0.72)"}
-                    strokeWidth={stripThickness}
-                    filter={filterUrl}
-                    opacity={isCurrent ? 0.95 : 0.65}
-                  />
-
-                  {/* Layer 3: Razor Sharp White Energy Core Strip */}
-                  <circle
-                    cx="600"
-                    cy="482"
-                    r={r}
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth={isCurrent ? Math.max(1.5, stripThickness * 0.22) : Math.max(0.8, stripThickness * 0.14)}
-                    filter={isCurrent ? undefined : filterUrl}
-                    opacity={isCurrent ? 0.95 : 0.45}
-                  />
-
-                  {/* Milestone Indicator Tag (Only displayed clearly on the active ring to prevent clutter) */}
-                  {isCurrent && r > 160 && r < 560 && (
-                    <g
-                      transform={`translate(${600 + r * Math.cos(-Math.PI * 0.72)}, ${
-                        482 + r * Math.sin(-Math.PI * 0.72)
-                      })`}
-                      filter="url(#cyan-glow)"
-                    >
-                      <rect
-                        x="-28"
-                        y="-10"
-                        width="56"
-                        height="20"
-                        rx="10"
-                        fill="#00e5ff"
-                        stroke="#ffffff"
-                        strokeWidth="1.2"
-                      />
-                      <text
-                        x="0"
-                        y="4"
-                        textAnchor="middle"
-                        fill="#000000"
-                        fontSize="10"
-                        fontFamily="monospace"
-                        fontWeight="bold"
-                        letterSpacing="0.08em"
-                      >
-                        {milestone.phase}
-                      </text>
-                    </g>
-                  )}
-                </g>
-              );
-            })}
           </svg>
         </div>
 
@@ -481,7 +555,7 @@ export default function VisionTimeline() {
           style={{
             bottom: `${finalBottom}%`,
             transform: `translateX(calc(-50% + ${finalLateralX}px)) scale(${finalScale})`,
-            width: "clamp(420px, 36vw, 640px)",
+            width: "clamp(520px, 46vw, 820px)",
             opacity: centralJetOpacity,
             transition: "bottom 0.05s linear, opacity 0.08s linear",
           }}
@@ -501,159 +575,148 @@ export default function VisionTimeline() {
                 className="absolute left-1/2 -translate-x-1/2 rounded-full pointer-events-none"
                 style={{
                   bottom: "-6px",
-                  width: "78%",
-                  height: "20px",
+                  width: "82%",
+                  height: "24px",
                   background:
-                    "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0, 229, 255, 0.28) 42%, transparent 75%)",
+                    "radial-gradient(ellipse at center, rgba(0,0,0,0.95) 0%, rgba(0, 229, 255, 0.32) 42%, transparent 75%)",
                   filter: "blur(6px)",
                   opacity: 0.90 * envOpacity,
                   transition: "opacity 0.08s linear",
                 }}
               />
 
-              {/* 3D Model: Executive Platinum Titanium Silver (Identical to ScrollFlightJet) */}
-              <div className="w-full h-[270px] sm:h-[330px] relative pointer-events-none select-none">
+              {/* 3D Model: Electric Shiny Blue Aircraft in Tunnel Lighting Theme */}
+              {/* User Requirement: "Remove the plane thrusters. Those 2 shiny dots looking ones." */}
+              <div className="w-full h-[320px] sm:h-[390px] relative pointer-events-none select-none">
                 <Jet3DViewer
                   yaw={finalYaw}
                   pitch={finalPitch}
-                  roll={0}
-                  modelScale={1.35}
-                  engineThrust={0.65 + eased * 0.75}
-                  lightIntensity={1.35}
-                  customColors={EXECUTIVE_TITANIUM_COLORS}
-                  lightingTheme="default"
+                  roll={finalRoll3D}
+                  cameraY={finalCameraY}
+                  modelScale={1.65}
+                  engineThrust={0}
+                  lightIntensity={1.4}
+                  customColors={VISION_SHINY_BLUE_COLORS}
+                  lightingTheme="tunnel"
                 />
               </div>
-
-              {/* ── DUAL SUPERSONIC TURBINE ENGINE EXHAUST AFTERBURNERS (EXACT NOZZLE ALIGNMENT) ── */}
-              {/* Left Engine Turbine Glow */}
-              <div
-                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-all duration-75"
-                style={{
-                  left: "46.8%",
-                  top: "62.0%",
-                  width: `${20 + eased * 8}px`,
-                  height: `${20 + eased * 8}px`,
-                  background:
-                    "radial-gradient(circle, #ffffff 15%, #38bdf8 45%, #00e5ff 75%, transparent 100%)",
-                  boxShadow: `0 0 16px #00e5ff, 0 0 28px rgba(0, 229, 255, 0.9), 0 0 45px rgba(0, 229, 255, 0.5)`,
-                  opacity: afterburnerOpacity,
-                }}
-              />
-              {/* Right Engine Turbine Glow */}
-              <div
-                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none transition-all duration-75"
-                style={{
-                  left: "53.2%",
-                  top: "62.0%",
-                  width: `${20 + eased * 8}px`,
-                  height: `${20 + eased * 8}px`,
-                  background:
-                    "radial-gradient(circle, #ffffff 15%, #38bdf8 45%, #00e5ff 75%, transparent 100%)",
-                  boxShadow: `0 0 16px #00e5ff, 0 0 28px rgba(0, 229, 255, 0.9), 0 0 45px rgba(0, 229, 255, 0.5)`,
-                  opacity: afterburnerOpacity,
-                }}
-              />
             </div>
           </div>
         </div>
 
-        {/* ── 6. LAYER 6: FROSTED GLASS VISION MILESTONE CARD (EXACT STYLE MATCH TO REFERENCE IMAGE) ── */}
-        <div
-          className="absolute z-[32] transition-all duration-500 ease-out"
-          style={{
-            top: "50%",
-            transform: `translateY(-50%) ${
-              showCards
-                ? "translateX(0) scale(1)"
-                : isLeftCard
-                ? "translateX(-70px) scale(0.92)"
-                : "translateX(70px) scale(0.92)"
-            }`,
-            left: isLeftCard ? "clamp(24px, 5.5vw, 110px)" : "auto",
-            right: !isLeftCard ? "clamp(24px, 5.5vw, 110px)" : "auto",
-            width: "clamp(310px, 25vw, 410px)",
-            opacity: showCards ? 1 : 0,
-            pointerEvents: showCards ? "auto" : "none",
-          }}
-        >
-          {/* Glass Card Container */}
-          <div
-            key={currentMilestone.year}
-            className="relative rounded-[22px] p-6 sm:p-7 flex flex-col gap-4 backdrop-blur-2xl transition-all duration-300 select-text"
-            style={{
-              background: "rgba(6, 12, 20, 0.68)",
-              border: "1px solid rgba(255, 255, 255, 0.16)",
-              boxShadow: "0 25px 50px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.22)",
-            }}
-          >
-            {/* Top Pill Badge: Solid Turquoise/Cyan Pill with Dark Black Bold Text */}
-            <div className="inline-flex self-start items-center px-3.5 py-1 rounded-full bg-[#00e5ff] text-black font-bold text-xs font-mono tracking-wider uppercase shadow-[0_0_12px_rgba(0,229,255,0.4)]">
-              {currentMilestone.phase} / {currentMilestone.year}
-            </div>
+        {/* ── 6. LAYER 6: FROSTED GLASS VISION MILESTONE CARDS (SLIDING-APPEAR ANIMATION) ── */}
+        {/* User Requirement: "add very basic sliding-appear animation to all cards so that they appears sliding-in from the sides with fade-in effect and disappears to the sides by fade-out." */}
+        {VISION_MILESTONES.map((milestone, idx) => {
+          const continuousMilestone = roadmapSegment * (TOTAL - 1);
+          const cardDiff = continuousMilestone - idx;
+          const dist = Math.abs(cardDiff);
 
-            {/* Large Bold White Title */}
-            <h3 className="text-3xl sm:text-[34px] font-bold text-white tracking-tight leading-tight">
-              {currentMilestone.title}
-            </h3>
+          // Card focus window around active index: appears and disappears smoothly
+          const cardFocus = clamp(1 - dist * 1.5, 0, 1);
+          const cardEase = cardFocus * cardFocus * (3 - 2 * cardFocus);
+          if (cardEase <= 0.005 || !showCards) return null;
 
-            {/* Clean Minimal Statement Copy */}
-            <p className="text-xs sm:text-[14px] text-zinc-300 font-light leading-relaxed min-h-[44px]">
-              {currentMilestone.statement}
-            </p>
+          const isLeft = idx % 2 === 0;
+          // Smooth slide-in from side (-80px on left, +80px on right) and slide-out to side
+          const slideX = isLeft ? -80 * (1 - cardEase) : 80 * (1 - cardEase);
+          const cardOpacity = cardEase * envOpacity;
 
-            {/* Subtle, Minimal Bottom Controls */}
-            <div className="flex items-center justify-between pt-2 border-t border-white/10">
-              {/* Minimal Step Indicator Dots */}
-              <div className="flex items-center gap-1.5">
-                {VISION_MILESTONES.map((item, i) => (
-                  <button
-                    key={item.year}
-                    type="button"
-                    onClick={() => scrollToMilestone(i)}
-                    aria-label={`Jump to ${item.year}`}
-                    className="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
-                    style={{
-                      width: i === activeIndex ? "20px" : "6px",
-                      background: i === activeIndex ? "#00e5ff" : "rgba(255, 255, 255, 0.2)",
-                    }}
-                  />
-                ))}
+          return (
+            <div
+              key={milestone.year}
+              className="absolute z-[32] will-change-transform pointer-events-auto"
+              style={{
+                top: "50%",
+                left: isLeft ? "clamp(24px, 5.5vw, 110px)" : "auto",
+                right: !isLeft ? "clamp(24px, 5.5vw, 110px)" : "auto",
+                width: "clamp(310px, 25vw, 410px)",
+                opacity: cardOpacity,
+                transform: `translateY(-50%) translateX(${slideX}px) scale(${0.92 + 0.08 * cardEase})`,
+                transition: "opacity 0.08s linear, transform 0.08s linear",
+              }}
+            >
+              {/* Glass Card Container */}
+              <div
+                className="relative rounded-[22px] p-6 sm:p-7 flex flex-col gap-4 backdrop-blur-2xl select-text"
+                style={{
+                  background: "rgba(6, 12, 20, 0.68)",
+                  border: "1px solid rgba(255, 255, 255, 0.16)",
+                  boxShadow: "0 25px 50px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.22)",
+                }}
+              >
+                {/* Top Pill Badge: Solid Turquoise/Cyan Pill with Dark Black Bold Text */}
+                <div className="inline-flex self-start items-center px-3.5 py-1 rounded-full bg-[#00e5ff] text-black font-bold text-xs font-mono tracking-wider uppercase shadow-[0_0_12px_rgba(0,229,255,0.4)]">
+                  {milestone.phase} / {milestone.year}
+                </div>
+
+                {/* Large Bold White Title */}
+                <h3 className="text-3xl sm:text-[34px] font-bold text-white tracking-tight leading-tight">
+                  {milestone.title}
+                </h3>
+
+                {/* Clean Minimal Statement Copy */}
+                <p className="text-xs sm:text-[14px] text-zinc-300 font-light leading-relaxed min-h-[44px]">
+                  {milestone.statement}
+                </p>
+
+                {/* Subtle, Minimal Bottom Controls */}
+                <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                  {/* Minimal Step Indicator Dots */}
+                  <div className="flex items-center gap-1.5">
+                    {VISION_MILESTONES.map((item, dotIdx) => (
+                      <button
+                        key={item.year}
+                        type="button"
+                        onClick={() => scrollToMilestone(dotIdx)}
+                        aria-label={`Jump to ${item.year}`}
+                        className="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                        style={{
+                          width: dotIdx === idx ? "20px" : "6px",
+                          background: dotIdx === idx ? "#00e5ff" : "rgba(255, 255, 255, 0.2)",
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Clean Prev / Next Chevrons */}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handlePrev}
+                      disabled={idx === 0}
+                      aria-label="Previous milestone"
+                      className="w-6 h-6 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/60 text-zinc-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition-all cursor-pointer"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      disabled={idx === TOTAL - 1}
+                      aria-label="Next milestone"
+                      className="w-6 h-6 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/60 text-zinc-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition-all cursor-pointer"
+                    >
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              {/* Clean Prev / Next Chevrons */}
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  disabled={activeIndex === 0}
-                  aria-label="Previous milestone"
-                  className="w-6 h-6 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/60 text-zinc-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition-all cursor-pointer"
-                >
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={activeIndex === TOTAL - 1}
-                  aria-label="Next milestone"
-                  className="w-6 h-6 rounded-full flex items-center justify-center border border-zinc-700/60 bg-zinc-900/60 text-zinc-300 hover:text-white disabled:opacity-25 disabled:pointer-events-none transition-all cursor-pointer"
-                >
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
 
-        {/* ── 7. LAYER 7: TOP HEADER & INTRODUCTION (EXACT MATCH TO REFERENCE IMAGE) ── */}
+        {/* ── 7. LAYER 7: TOP HEADER & INTRODUCTION (FADES OUT ON SCROLL) ── */}
+        {/* User Requirement: "when user enters this vision section and starts scrolling then we should hide this section title and text from top... so all focus is on animation and scroll" */}
         <div
           className="absolute top-8 left-0 right-0 flex flex-col items-center z-[30] pointer-events-none transition-opacity duration-300"
-          style={{ opacity: clamp(1 - progress * 4.2, 0, 1) * envOpacity }}
+          style={{
+            opacity: clamp(1 - progress / 0.035, 0, 1) * envOpacity,
+            pointerEvents: progress < 0.035 ? "auto" : "none",
+          }}
         >
           {/* Pill Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-zinc-700/60 bg-zinc-950/70 backdrop-blur-md mb-2 shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
@@ -669,17 +732,6 @@ export default function VisionTimeline() {
           <p className="mt-1 text-xs sm:text-sm text-zinc-400 font-mono tracking-widest drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             A journey towards the next era of Aviation.
           </p>
-        </div>
-
-        {/* ── 8. LAYER 8: SCROLL HINT (FADES AWAY AS USER SCROLLS) ── */}
-        <div
-          className="absolute bottom-24 left-0 right-0 flex flex-col items-center gap-1.5 z-[28] pointer-events-none transition-opacity duration-300"
-          style={{ opacity: clamp(1 - progress * 8, 0, 0.7) }}
-        >
-          <span className="text-[10px] font-mono tracking-[0.3em] text-zinc-400 uppercase">
-            Scroll to explore roadmap
-          </span>
-          <div className="w-px h-5 bg-gradient-to-b from-cyan-400/60 to-transparent animate-pulse" />
         </div>
 
       </div>

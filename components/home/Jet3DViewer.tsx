@@ -20,6 +20,7 @@ interface Jet3DViewerProps {
   modelPath?: string; // Optional custom 3D model asset path
   lightingTheme?: "default" | "tunnel"; // Lighting style
   cameraPos?: [number, number, number]; // Custom camera position
+  cameraY?: number; // Dynamic camera vertical position for elevation/perspective adjustments
   className?: string;
   style?: React.CSSProperties;
   onLoaded?: () => void;
@@ -41,6 +42,7 @@ export default function Jet3DViewer({
   modelPath = "/models/bombardier_windjet_365/scene.gltf",
   lightingTheme = "default",
   cameraPos,
+  cameraY,
   className = "",
   style,
   onLoaded,
@@ -57,7 +59,8 @@ export default function Jet3DViewer({
   const animFrameRef = useRef<number | null>(null);
   const isLoadedRef = useRef(false);
   const autoYawRef = useRef(0);
-  const lastTimeRef = useRef(performance.now());
+  const lastTimeRef = useRef(0);
+  const curCamYRef = useRef(cameraY ?? (cameraPos ? cameraPos[1] : 1.5));
 
   // Dynamic values ref for smooth animation loop
   const targetTransformRef = useRef({
@@ -71,6 +74,7 @@ export default function Jet3DViewer({
     immediate,
     autoRotate,
     autoRotateSpeed,
+    cameraY: cameraY ?? (cameraPos ? cameraPos[1] : 1.5),
   });
 
   // Keep target transform updated
@@ -83,7 +87,8 @@ export default function Jet3DViewer({
     targetTransformRef.current.immediate = immediate;
     targetTransformRef.current.autoRotate = autoRotate;
     targetTransformRef.current.autoRotateSpeed = autoRotateSpeed;
-  }, [yaw, pitch, roll, modelScale, engineThrust, immediate, autoRotate, autoRotateSpeed]);
+    targetTransformRef.current.cameraY = cameraY ?? (cameraPos ? cameraPos[1] : 1.5);
+  }, [yaw, pitch, roll, modelScale, engineThrust, immediate, autoRotate, autoRotateSpeed, cameraY, cameraPos]);
 
   useEffect(() => {
     if (mouseOffset) {
@@ -114,12 +119,13 @@ export default function Jet3DViewer({
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 500;
     const camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 100);
+    const camX = cameraPos ? cameraPos[0] : 0;
     if (cameraPos) {
       camera.position.set(...cameraPos);
     } else {
-      camera.position.set(0.3, 1.5, 27);
+      camera.position.set(0, 1.5, 27);
     }
-    camera.lookAt(0.3, 0, 0);
+    camera.lookAt(camX, 0, 0);
     cameraRef.current = camera;
 
     // 3. Renderer setup
@@ -166,6 +172,11 @@ export default function Jet3DViewer({
       const roadLight = new THREE.DirectionalLight(0x00e5ff, 1.4);
       roadLight.position.set(0, -10, 4);
       scene.add(roadLight);
+
+      // Underside & flank illumination for exit transition into deep space
+      const exitBellyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+      exitBellyLight.position.set(6, -14, 18);
+      scene.add(exitBellyLight);
     } else {
       // Default lighting for Light Luxury Platinum Titanium Jet
       const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
@@ -231,6 +242,16 @@ export default function Jet3DViewer({
       const deltaSec = Math.min((now - lastTimeRef.current) / 1000, 0.1);
       lastTimeRef.current = now;
 
+      if (cameraRef.current) {
+        const targetCamY = targetTransformRef.current.cameraY;
+        curCamYRef.current += (targetCamY - curCamYRef.current) * 0.12;
+        const camX = cameraPos ? cameraPos[0] : 0;
+        cameraRef.current.position.x = camX;
+        cameraRef.current.position.y = curCamYRef.current;
+        const lookY = curCamYRef.current < 0 ? 0.35 : 0;
+        cameraRef.current.lookAt(camX, lookY, 0);
+      }
+
       const model = modelPivotRef.current;
       if (model) {
         const target = targetTransformRef.current;
@@ -267,7 +288,7 @@ export default function Jet3DViewer({
 
         // Broadcast current live orientation for seamless scroll takeoff handoff
         if (target.autoRotate && typeof window !== "undefined") {
-          (window as any).__M1_PLATFORM_JET_YAW = totalYawDeg;
+          (window as unknown as Record<string, unknown>).__M1_PLATFORM_JET_YAW = totalYawDeg;
         }
 
         // In our model:
