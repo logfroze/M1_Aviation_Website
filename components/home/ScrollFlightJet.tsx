@@ -2,27 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Jet3DViewer from "./Jet3DViewer";
-import { JetColorConfig } from "./jetModelManager";
-
-const VISION_SHINY_BLUE_COLORS: JetColorConfig = {
-  fuselageColor: "#0b253a",
-  accentColor: "#00e5ff",
-  trimMetalColor: "#38bdf8",
-  glassColor: "#020d18",
-};
-
-// Dynamic continuous supersonic slipstream air streaks during flight (like ContactFlightJet)
-const AIR_STREAKS = [
-  { top: "58%", left: "8%",  width: "28%", delay: "0s",    duration: "0.46s", opacity: 0.65, h: "1.5px" },
-  { top: "44%", left: "16%", width: "32%", delay: "0.10s", duration: "0.50s", opacity: 0.70, h: "1.5px" },
-  { top: "34%", left: "14%", width: "26%", delay: "0.05s", duration: "0.44s", opacity: 0.60, h: "1.5px" },
-  { top: "48%", left: "28%", width: "36%", delay: "0.12s", duration: "0.48s", opacity: 0.65, h: "1.5px" },
-  { top: "38%", left: "42%", width: "30%", delay: "0.03s", duration: "0.46s", opacity: 0.60, h: "1.5px" },
-  { top: "66%", left: "38%", width: "34%", delay: "0.15s", duration: "0.52s", opacity: 0.55, h: "1.5px" },
-  { top: "24%", left: "50%", width: "26%", delay: "0.08s", duration: "0.45s", opacity: 0.60, h: "1.5px" },
-  { top: "52%", left: "56%", width: "28%", delay: "0.13s", duration: "0.47s", opacity: 0.58, h: "1.5px" },
-  { top: "30%", left: "30%", width: "35%", delay: "0.17s", duration: "0.43s", opacity: 0.55, h: "1.5px" },
-];
+import { LIGHT_PLATINUM_TITANIUM_COLORS } from "./jetModelManager";
 
 interface FlightState {
   active: boolean;
@@ -35,8 +15,6 @@ interface FlightState {
   pitch: number;
   roll: number;
   opacity: number;
-  flightAngle: number;
-  showAirStreaks: boolean;
   takeoffX?: number;
   takeoffY?: number;
 }
@@ -49,12 +27,10 @@ export default function ScrollFlightJet() {
     y: 0,
     width: 1100,
     scale: 1.0,
-    yaw: 24,
+    yaw: 28,
     pitch: 2,
     roll: 0,
     opacity: 0,
-    flightAngle: -28,
-    showAirStreaks: false,
     takeoffX: undefined,
     takeoffY: undefined,
   });
@@ -79,17 +55,15 @@ export default function ScrollFlightJet() {
       const sourceRect = sourceEl.getBoundingClientRect();
       const visionRect = visionContainer.getBoundingClientRect();
 
-      // Document scroll coordinates of platform center and vision entrance
+      // Platform center in document coordinates
       const docPlatformCenter = scrollY + sourceRect.top + sourceRect.height * 0.5;
       const docVisionTop = scrollY + visionRect.top;
 
-      // Liftoff begins earlier: as user scrolls down past the Ecosystem platform
-      // User Requirement: "make this flight earlier, like it was before"
-      const takeoffScroll = docPlatformCenter - vh * 0.20;
-      // Landing completes when vision section arrives at top of viewport
+      // Liftoff begins as user scrolls down past the Ecosystem platform
+      const takeoffScroll = docPlatformCenter - vh * 0.15;
       const landingScroll = docVisionTop;
-      // Exact alignment: flight progresses from 0.0 at takeoff to 1.0 at runway landing
-      const flightDistance = Math.max(450, landingScroll - takeoffScroll);
+      // Generous flight distance ensuring the 3D maneuver has ample cinematic scroll runway
+      const flightDistance = Math.max(900, landingScroll - takeoffScroll);
 
       const rawProgress = (scrollY - takeoffScroll) / flightDistance;
       targetProgressRef.current = Math.min(1.05, Math.max(-0.05, rawProgress));
@@ -102,11 +76,11 @@ export default function ScrollFlightJet() {
       const vw = window.innerWidth;
 
       // ── FLUID 60FPS/120FPS PHYSICS LERP (Responsive & Buttery Smooth) ──
-      currentProgressRef.current += (targetProgressRef.current - currentProgressRef.current) * 0.12;
+      currentProgressRef.current += (targetProgressRef.current - currentProgressRef.current) * 0.10;
       const flightP = currentProgressRef.current;
 
       // Continuously sample platform anchor while at or near the platform
-      if (sourceEl && flightP <= 0.05) {
+      if (sourceEl && flightP <= 0.08) {
         const sr = sourceEl.getBoundingClientRect();
         if (sr.width > 20 && sr.top < vh + 300 && sr.bottom > -300) {
           takeoffPosRef.current = {
@@ -116,33 +90,47 @@ export default function ScrollFlightJet() {
         }
       }
 
-      // ── 1. STRICT SINGLE-PLANE VISIBILITY HANDOFF ──
-      // While parked on pedestal (flightP <= 0.005)
-      if (flightP <= 0.005) {
+      // Continuously record live turntable angle of platform aircraft while parked or taking off
+      if (typeof window !== "undefined" && flightP <= 0.04) {
+        const livePlatformYaw = (window as unknown as { __M1_PLATFORM_JET_YAW?: number }).__M1_PLATFORM_JET_YAW;
+        if (typeof livePlatformYaw === "number") {
+          initialPlatformYawRef.current = livePlatformYaw;
+        }
+      }
+
+      // ── 1. STRICT SINGLE-PLANE VISIBILITY HANDOFF WITH IMPERCEPTIBLE CROSSFADE ──
+      // While parked on pedestal (flightP <= 0.002)
+      if (flightP <= 0.002) {
         if (typeof window !== "undefined") {
           (window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE = false;
           (window as unknown as { __M1_SCROLL_JET_LANDING_P?: number }).__M1_SCROLL_JET_LANDING_P = 0;
+          delete (window as unknown as { __M1_SCROLL_JET_LANDING_YAW?: number }).__M1_SCROLL_JET_LANDING_YAW;
         }
         if (sourceEl) {
           sourceEl.style.opacity = "1";
           sourceEl.style.pointerEvents = "auto";
         }
-        // Continuously record live turntable angle of platform aircraft
-        const livePlatformYaw =
-          typeof window !== "undefined"
-            ? (window as unknown as { __M1_PLATFORM_JET_YAW?: number }).__M1_PLATFORM_JET_YAW
-            : undefined;
-        initialPlatformYawRef.current = typeof livePlatformYaw === "number" ? livePlatformYaw : 28;
 
         setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0, progress: 0 } : prev));
         animId = requestAnimationFrame(updateLoop);
         return;
       }
 
-      // Hide pedestal jet once liftoff begins so only 1 jet exists (instant clean handoff, no ghost duplicate)
+      // Active flight registered in window for synchronized components
+      if (typeof window !== "undefined") {
+        (window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE = true;
+      }
+
+      // Seamless crossfade between pedestal jet and flying jet (p in 0.00 -> 0.06)
       if (sourceEl) {
-        sourceEl.style.opacity = "0";
-        sourceEl.style.pointerEvents = "none";
+        if (flightP < 0.06) {
+          const fadeOut = Math.max(0, 1 - flightP / 0.06);
+          sourceEl.style.opacity = String(fadeOut);
+          sourceEl.style.pointerEvents = "none";
+        } else {
+          sourceEl.style.opacity = "0";
+          sourceEl.style.pointerEvents = "none";
+        }
       }
 
       // Once landed into Vision runway (flightP >= 0.98)
@@ -151,7 +139,7 @@ export default function ScrollFlightJet() {
           (window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE = false;
           (window as unknown as { __M1_SCROLL_JET_LANDING_P?: number }).__M1_SCROLL_JET_LANDING_P = 1.0;
         }
-        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0 } : prev));
+        setState((prev) => (prev.active ? { ...prev, active: false, opacity: 0, progress: 0 } : prev));
         animId = requestAnimationFrame(updateLoop);
         return;
       }
@@ -159,7 +147,6 @@ export default function ScrollFlightJet() {
       const pClamped = Math.max(0, Math.min(1, flightP));
 
       if (typeof window !== "undefined") {
-        (window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE = true;
         (window as unknown as { __M1_SCROLL_JET_LANDING_P?: number }).__M1_SCROLL_JET_LANDING_P = pClamped;
       }
 
@@ -187,7 +174,7 @@ export default function ScrollFlightJet() {
       const targetJetW = Math.max(540, Math.min(820, vw * 0.46));
       const landingScale = targetJetW / jetWidth;
 
-      // Waypoints for the multi-stage 3D flight maneuver:
+      // Waypoints for the multi-stage 3D flight maneuver
       const p1X = vw * 0.26;
       const p1Y = vh * 0.35;
 
@@ -206,35 +193,29 @@ export default function ScrollFlightJet() {
       // 1. Instantaneous heading of aircraft at the moment user initiated liftoff
       const rawPlatformYaw = initialPlatformYawRef.current ?? 28;
       const startYawNorm = ((rawPlatformYaw % 360) + 360) % 360;
-      const baseFlightYaw = 28;
-      let diff = (baseFlightYaw - startYawNorm) % 360;
+      // Target heading for climb towards left foreground (48 deg)
+      let diff = (48 - startYawNorm) % 360;
       if (diff > 180) diff -= 360;
       if (diff < -180) diff += 360;
 
-      // ── 3. DYNAMIC 3-PHASE FLIGHT TRAJECTORY (TURNS, TWISTS & BANKING) ──
-      // User Requirement: "previously this plane used to take some turns and twists during flight... restore the previous flying style"
-      if (pClamped <= 0.28) {
-        // Phase 1 (0.00 -> 0.28): Liftoff & Climb towards left foreground
-        const t1 = pClamped / 0.28;
+      // ── 3. DYNAMIC 3-PHASE FLIGHT TRAJECTORY (PURE BUTTERY FLOW) ──
+      if (pClamped <= 0.30) {
+        // Phase 1 (0.00 -> 0.30): Liftoff & Smooth Climb towards left foreground
+        const t1 = pClamped / 0.30;
         const ease1 = t1 * t1 * (3 - 2 * t1);
         curX = startX + (p1X - startX) * ease1;
         curY = startY + (p1Y - startY) * ease1;
 
-        // Smooth swivel along shortest path in initial liftoff segment
-        const turnT = Math.min(1, pClamped / 0.08);
-        const turnEase = turnT * turnT * (3 - 2 * turnT);
-        const headingAtLiftoff = startYawNorm + diff * turnEase;
-
-        const climbT = Math.max(0, (pClamped - 0.08) / 0.20);
-        const climbEase = climbT * climbT * (3 - 2 * climbT);
-        curYaw = headingAtLiftoff + (48 - 28) * climbEase;
+        // Smooth shortest-path rotation across entire liftoff phase:
+        // Starts AT startYawNorm when p=0, smoothly blending into 48 degrees!
+        curYaw = startYawNorm + diff * ease1;
 
         curPitch = 2 + (14 - 2) * ease1;
         curRoll = 0 + (-16 - 0) * ease1;
         curScale = 1.0 + (1.22 - 1.0) * ease1;
       } else if (pClamped <= 0.68) {
-        // Phase 2 (0.28 -> 0.68): Big Smooth Round Swoop & Bank Across Screen (Left to Right)
-        const t2 = (pClamped - 0.28) / 0.40;
+        // Phase 2 (0.30 -> 0.68): Big Smooth Round Swoop & Bank Across Screen (Left to Right)
+        const t2 = (pClamped - 0.30) / 0.38;
         const ease2 = t2 * t2 * (3 - 2 * t2);
 
         curX = p1X + (p2X - p1X) * ease2;
@@ -271,27 +252,18 @@ export default function ScrollFlightJet() {
         curScale = landingScale;
       }
 
-      // ── 4. CONTINUOUS AIR LINES EFFECT (STREAMING AIR DURING FLIGHT) ──
-      const showAirStreaks = pClamped > 0.04 && pClamped < 0.94;
-
-      // Instantaneous flight direction vector angle on screen
-      // Phase 1 (liftoff/climb): -28deg | Phase 2 (swoop): +32deg | Phase 3 (cavern dive in Image 2): +115deg | Phase 4: +90deg
-      let flightAngle = -28;
-      if (pClamped <= 0.28) {
-        flightAngle = -28;
-      } else if (pClamped <= 0.68) {
-        const t2 = (pClamped - 0.28) / 0.40;
-        flightAngle = -28 + (32 - (-28)) * t2;
-      } else if (pClamped <= 0.88) {
-        const t3 = (pClamped - 0.68) / 0.20;
-        flightAngle = 32 + (115 - 32) * t3;
-      } else {
-        const t4 = (pClamped - 0.88) / 0.12;
-        flightAngle = 115 + (90 - 115) * t4;
+      // Synchronize landing angle back to platform turntable for reverse scroll
+      if (typeof window !== "undefined" && pClamped <= 0.08) {
+        (window as unknown as { __M1_SCROLL_JET_LANDING_YAW?: number }).__M1_SCROLL_JET_LANDING_YAW = curYaw;
       }
 
-      // Opacity: solid throughout flight until touchdown (single-plane continuity, no double-plane ghosting)
-      const opacity = pClamped >= 0.98 ? 0 : 1;
+      // Opacity: smooth crossfade in at liftoff and solid throughout flight until touchdown
+      let opacity = 1;
+      if (pClamped < 0.04) {
+        opacity = Math.min(1, pClamped / 0.02);
+      } else if (pClamped >= 0.98) {
+        opacity = 0;
+      }
 
       setState({
         active: true,
@@ -304,8 +276,6 @@ export default function ScrollFlightJet() {
         pitch: curPitch,
         roll: curRoll,
         opacity,
-        flightAngle,
-        showAirStreaks,
         takeoffX: startX,
         takeoffY: startY,
       });
@@ -372,7 +342,7 @@ export default function ScrollFlightJet() {
         </div>
       )}
 
-      {/* ── 3D Aircraft in Fluid 60fps Flight: Sweeping elegantly across towards Runway ── */}
+      {/* ── 3D Aircraft in Fluid 60fps Flight: Constant Radiant Light Platinum Titanium Silver ── */}
       <div
         className="absolute top-0 left-0 will-change-transform z-15"
         style={{
@@ -384,51 +354,16 @@ export default function ScrollFlightJet() {
         }}
       >
         <div className="relative w-full h-full">
-          {/* ── Continuous Flight Air Lines Effect (Slipstream streaks flowing in true flight direction) ── */}
-          {state.showAirStreaks && (
-            <div
-              className="absolute inset-0 pointer-events-none overflow-visible z-25"
-              style={{
-                perspective: "1000px",
-                transformStyle: "preserve-3d",
-                transform: `rotate(${state.flightAngle}deg)`,
-                transformOrigin: "center center",
-                transition: "transform 0.08s linear",
-              }}
-            >
-              {AIR_STREAKS.map((s, i) => (
-                <div
-                  key={i}
-                  className="flight-dynamic-streak"
-                  style={
-                    {
-                      position: "absolute",
-                      top: s.top,
-                      left: s.left,
-                      width: s.width,
-                      height: s.h,
-                      background: `linear-gradient(to right, transparent 0%, rgba(255,255,255,${s.opacity}) 35%, rgba(186,230,253,${s.opacity * 0.7}) 70%, transparent 100%)`,
-                      boxShadow: "0 0 5px rgba(255,255,255,0.5)",
-                      filter: "blur(0.3px)",
-                      "--dur": s.duration,
-                      "--delay": s.delay,
-                    } as React.CSSProperties
-                  }
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Real-time 3D Bombardier Windjet 365 in Executive Light Platinum Titanium / Tunnel Blue */}
+          {/* Real-time 3D Bombardier Windjet 365: Consistently Light Platinum Titanium */}
           <Jet3DViewer
             yaw={state.yaw}
             pitch={state.pitch}
             roll={state.roll}
             modelScale={1.55}
-            lightIntensity={1.3}
+            lightIntensity={1.4}
             immediate={true}
-            customColors={state.progress >= 0.85 ? VISION_SHINY_BLUE_COLORS : undefined}
-            lightingTheme={state.progress >= 0.85 ? "tunnel" : "default"}
+            customColors={LIGHT_PLATINUM_TITANIUM_COLORS}
+            lightingTheme="default"
           />
         </div>
       </div>

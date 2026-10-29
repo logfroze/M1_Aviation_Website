@@ -91,6 +91,27 @@ export function applyJetColors(root: THREE.Object3D, config: JetColorConfig) {
   });
 }
 
+export const LIGHT_PLATINUM_TITANIUM_COLORS: JetColorConfig = {
+  fuselageColor: "#e6eaf0", // Pristine light luxury platinum titanium silver
+  accentColor: "#0ea5e9",   // Electric sapphire blue aerodynamic wing accents
+  trimMetalColor: "#d4af37",// 24K Champagne Gold leading edge trim
+  glassColor: "#050e18",    // Cockpit deep tinted aerospace glass
+};
+
+function cloneJetModelWithMaterials(root: THREE.Group): THREE.Group {
+  const clone = root.clone(true);
+  clone.traverse((child) => {
+    if (child instanceof THREE.Mesh && child.material) {
+      if (Array.isArray(child.material)) {
+        child.material = child.material.map((m) => m.clone());
+      } else {
+        child.material = child.material.clone();
+      }
+    }
+  });
+  return clone;
+}
+
 /**
  * Loads and preprocesses a 3D aircraft model.
  * - Centers the geometry pivot at the center of gravity.
@@ -101,18 +122,19 @@ export function getJetModel(
   colors?: JetColorConfig,
   modelPath: string = "/models/bombardier_windjet_365/scene.gltf"
 ): Promise<THREE.Group> {
+  const activeColors = colors || LIGHT_PLATINUM_TITANIUM_COLORS;
   const cached = cachedScenes.get(modelPath);
   if (cached) {
-    const clone = cached.clone(true);
-    if (colors) applyJetColors(clone, colors);
+    const clone = cloneJetModelWithMaterials(cached);
+    applyJetColors(clone, activeColors);
     return Promise.resolve(clone);
   }
 
   const existingPromise = loadPromises.get(modelPath);
   if (existingPromise) {
     return existingPromise.then((scene) => {
-      const clone = scene.clone(true);
-      if (colors) applyJetColors(clone, colors);
+      const clone = cloneJetModelWithMaterials(scene);
+      applyJetColors(clone, activeColors);
       return clone;
     });
   }
@@ -240,8 +262,8 @@ export function getJetModel(
               }
               // E. Main Airframe: Light Luxury Aerospace Platinum Titanium Silver
               else {
-                mat.color = new THREE.Color(0xc2cdda);
-                mat.metalness = 0.78;
+                mat.color = new THREE.Color(0xe6eaf0);
+                mat.metalness = 0.70;
                 mat.roughness = 0.18;
                 mat.envMapIntensity = 2.5;
                 mat.needsUpdate = true;
@@ -251,8 +273,8 @@ export function getJetModel(
         });
 
         cachedScenes.set(modelPath, pivot);
-        const result = pivot.clone(true);
-        if (colors) applyJetColors(result, colors);
+        const result = cloneJetModelWithMaterials(pivot);
+        applyJetColors(result, activeColors);
         resolve(result);
       },
       undefined,

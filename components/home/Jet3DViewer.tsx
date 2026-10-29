@@ -142,34 +142,39 @@ export default function Jet3DViewer({
     renderer.toneMappingExposure = (lightingTheme === "tunnel" ? 1.15 : 1.25) * lightIntensity;
     rendererRef.current = renderer;
 
-    // 4. Lighting setup tailored to theme
+    // 4. Lighting setup tailored to theme (full 360-degree illumination, no dark shadow silhouettes)
     if (lightingTheme === "tunnel") {
-      // Atmospheric deep petroleum teal ambient
-      const ambientLight = new THREE.AmbientLight(0x061822, 1.3);
+      // Atmospheric white ambient ensuring the light silver plane stays brilliant inside the cavern
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.7);
       scene.add(ambientLight);
 
+      // Key light from top
+      const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+      keyLight.position.set(0, 20, 10);
+      scene.add(keyLight);
+
+      // Rear fill light to illuminate engines and tail from behind
+      const rearLight = new THREE.DirectionalLight(0xffffff, 2.6);
+      rearLight.position.set(0, 10, -18);
+      scene.add(rearLight);
+
       // Cyan key rim light from left
-      const cyanRimL = new THREE.DirectionalLight(0x00e5ff, 3.4);
+      const cyanRimL = new THREE.DirectionalLight(0x00e5ff, 2.8);
       cyanRimL.position.set(-18, 8, 8);
       scene.add(cyanRimL);
 
       // Cyan key rim light from right
-      const cyanRimR = new THREE.DirectionalLight(0x00e5ff, 3.4);
+      const cyanRimR = new THREE.DirectionalLight(0x00e5ff, 2.8);
       cyanRimR.position.set(18, 8, 8);
       scene.add(cyanRimR);
 
       // Tunnel forward portal illumination (front nose glow from rings)
-      const tunnelForwardLight = new THREE.DirectionalLight(0x00e5ff, 2.2);
+      const tunnelForwardLight = new THREE.DirectionalLight(0x7dd3fc, 2.2);
       tunnelForwardLight.position.set(0, 4, -18);
       scene.add(tunnelForwardLight);
 
-      // Subtle top specular highlight
-      const topSpecular = new THREE.DirectionalLight(0xffffff, 1.5);
-      topSpecular.position.set(0, 18, 10);
-      scene.add(topSpecular);
-
       // Underbody road reflection light
-      const roadLight = new THREE.DirectionalLight(0x00e5ff, 1.4);
+      const roadLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
       roadLight.position.set(0, -10, 4);
       scene.add(roadLight);
 
@@ -178,17 +183,27 @@ export default function Jet3DViewer({
       exitBellyLight.position.set(6, -14, 18);
       scene.add(exitBellyLight);
     } else {
-      // Default lighting for Light Luxury Platinum Titanium Jet
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+      // Brilliant daylight lighting for Light Platinum Titanium Jet
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.7);
       scene.add(ambientLight);
 
       // Primary key sunlight from upper-right
-      const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
+      const keyLight = new THREE.DirectionalLight(0xffffff, 3.6);
       keyLight.position.set(12, 18, 14);
       scene.add(keyLight);
 
+      // Dedicated rear light: prevents tail and engines from ever being cast in shadow
+      const rearLight = new THREE.DirectionalLight(0xffffff, 2.5);
+      rearLight.position.set(0, 12, -18);
+      scene.add(rearLight);
+
+      // Front-left fill light
+      const frontLeftLight = new THREE.DirectionalLight(0xffffff, 2.0);
+      frontLeftLight.position.set(-14, 10, 12);
+      scene.add(frontLeftLight);
+
       // Subtle Electric / Sapphire Blue rim light
-      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
+      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 2.2);
       blueRimLight.position.set(-16, 10, 8);
       scene.add(blueRimLight);
 
@@ -198,7 +213,7 @@ export default function Jet3DViewer({
       scene.add(goldRimLight);
 
       // Subtle fill light from below
-      const fillLight = new THREE.DirectionalLight(0xe2e8f0, 1.5);
+      const fillLight = new THREE.DirectionalLight(0xe2e8f0, 1.6);
       fillLight.position.set(0, -10, 6);
       scene.add(fillLight);
     }
@@ -258,7 +273,22 @@ export default function Jet3DViewer({
 
         // Auto-rotation (showcase turntable rotation)
         if (target.autoRotate) {
-          autoYawRef.current = (autoYawRef.current + target.autoRotateSpeed * deltaSec) % 360;
+          const isFlightActive =
+            typeof window !== "undefined" &&
+            Boolean((window as unknown as Record<string, unknown>).__M1_SCROLL_JET_ACTIVE);
+
+          if (!isFlightActive) {
+            autoYawRef.current = (autoYawRef.current + target.autoRotateSpeed * deltaSec) % 360;
+          } else {
+            // While flight jet is airborne, keep turntable synchronized with landing heading
+            const syncYaw =
+              typeof window !== "undefined"
+                ? ((window as unknown as Record<string, unknown>).__M1_SCROLL_JET_LANDING_YAW as number | undefined)
+                : undefined;
+            if (typeof syncYaw === "number") {
+              autoYawRef.current = ((syncYaw - curRot.yaw - mouseTiltYaw) % 360 + 360) % 360;
+            }
+          }
         } else {
           autoYawRef.current = 0;
         }

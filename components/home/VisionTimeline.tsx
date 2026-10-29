@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Jet3DViewer from "./Jet3DViewer";
 import { VISION_MILESTONES } from "@/data/vision";
-import { JetColorConfig } from "./jetModelManager";
+import { JetColorConfig, LIGHT_PLATINUM_TITANIUM_COLORS } from "./jetModelManager";
 
 const TOTAL = VISION_MILESTONES.length; // Exactly 6 milestones
 
@@ -15,16 +15,6 @@ function clamp(v: number, lo: number, hi: number) {
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
-
-
-// Cyber-Luminous Electric Shiny Blue Paint Scheme
-// (User Requirement: matches the cyber-aeronautical road, rings, and tunnel theme)
-const VISION_SHINY_BLUE_COLORS: JetColorConfig = {
-  fuselageColor: "#0b253a", // Deep lustrous metallic sapphire blue airframe
-  accentColor: "#00e5ff",   // Electric cyan wingpods & aerodynamic accents
-  trimMetalColor: "#38bdf8",// Gleaming sky-cyan titanium & deicing trim
-  glassColor: "#020d18",    // Ultra-deep tinted aerospace cockpit glass
-};
 
 export default function VisionTimeline() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -55,9 +45,9 @@ export default function VisionTimeline() {
       const p = smoothRef.current;
       setProgress(p);
 
-      // Smoothly map active milestone index across the 6 milestones (p in [0.04, 0.82])
-      const roadmapSegment = clamp((p - 0.04) / 0.76, 0, 0.999);
-      const ni = clamp(Math.floor(roadmapSegment * TOTAL), 0, TOTAL - 1);
+      // Smoothly map active milestone index across the 6 milestones
+      const pContinuous = clamp(((p - 0.06) / 0.60) * 5.0, 0, 5.8);
+      const ni = clamp(Math.round(pContinuous), 0, TOTAL - 1);
       setActiveIndex(ni);
 
       // Strict single-plane handoff synchronized with ScrollFlightJet touchdown
@@ -106,7 +96,7 @@ export default function VisionTimeline() {
     const docTop = scrollY + rect.top;
     const scrollable = sectionRef.current.offsetHeight - window.innerHeight;
     // Map milestone index to its focal scroll position across roadmap
-    const targetP = 0.04 + (index / (TOTAL - 1)) * 0.76;
+    const targetP = 0.06 + (index / (TOTAL - 1)) * 0.60;
     window.scrollTo({
       top: docTop + targetP * scrollable,
       behavior: "smooth",
@@ -132,8 +122,8 @@ export default function VisionTimeline() {
   // User Requirement: "First of all bring the plane lower. Closer to the road. Reduce it's altitude."
   const baseJetBottom = 0.0; // Jet flies low, hugging closely down right above the road surface
 
-  // End of roadmap transition (progress 0.83 -> 1.00)
-  const exitProgress = clamp((progress - 0.83) / 0.14, 0, 1);
+  // End of roadmap transition (progress 0.78 -> 0.98)
+  const exitProgress = clamp((progress - 0.78) / 0.18, 0, 1);
   const exitEase = exitProgress * exitProgress * (3 - 2 * exitProgress);
 
   // Synchronized continuous forward motion of rocks and road platform with scroll
@@ -144,10 +134,11 @@ export default function VisionTimeline() {
   const envOpacity = clamp(1 - exitEase * 1.35, 0, 1);
 
   // Aerodynamic banking down the runway in True 3D (Refined, smooth flight flow)
-  // User Requirement: "reduce the turning little" and "move ahead correctly like a proper flow"
-  // User Requirement: "when the plane goes towards side of the road and tilts inside then the tip of the plane should also tilts inwards"
-  const roadmapSegment = clamp((progress - 0.04) / 0.76, 0, 1);
-  const bankWave = Math.sin(roadmapSegment * Math.PI * 3.5);
+  // Continuous milestone progress from 0.0 to 5.8:
+  // 0.0 to 5.0 represents milestones 0 to 5; > 5.0 ensures the 6th ring fully passes camera
+  const continuousMilestone = clamp(((progress - 0.06) / 0.60) * 5.0, 0, 5.8);
+  const cruiseProgress = clamp(continuousMilestone / 5.0, 0, 1);
+  const bankWave = Math.sin(cruiseProgress * Math.PI * 3.5);
   const cruisingDrift = bankWave * 36; // Subtle, controlled lateral drift
   const cruisingRoll3D = bankWave * 8.5; // Gentle inward banking (plane leans left when on right, leans right when on left)
   const cruisingYaw = -90 - bankWave * 5.5; // Natural steering cut: tip points subtly inwards without turning heavily sideways
@@ -177,18 +168,18 @@ export default function VisionTimeline() {
     : 0;
 
   // ── 2. MILESTONE CARD LOGIC (ALTERNATING SIDES, HIDDEN AT START & AT FINAL EXIT) ──
-  const showCards = progress >= 0.035 && progress <= 0.82;
+  const showCards = progress >= 0.035 && progress <= 0.74;
   const isLeftCard = activeIndex % 2 === 0;
   const currentMilestone = VISION_MILESTONES[activeIndex];
 
-  // Dynamic animated winding guide path along the road that leads the aircraft smoothly
+  // Dynamic animated winding guide path along the road locked to the aircraft center
   // User Requirement: "The line should follow the current plane path and movement. Like it should resembles that as plane is moving and following that line."
-  const pPlaneX = 600 + finalLateralX;
-  const pPlaneY = 805;
+  const screenWidth = typeof window !== "undefined" ? window.innerWidth : 1440;
+  const pPlaneX = 600 + finalLateralX * (1200 / screenWidth);
+  const pPlaneY = 745 - finalBottom * 5.0;
   const roadSplinePath = `M 600 482
-    C ${600 + finalLateralX * 0.18} 560, ${600 + finalLateralX * 0.50} 650, ${600 + finalLateralX * 0.82} 740
-    S ${pPlaneX} 785, ${pPlaneX} ${pPlaneY}
-    C ${pPlaneX} 835, ${600 + finalLateralX * 1.18} 868, ${600 + finalLateralX * 1.30} 900`;
+    C 600 560, ${pPlaneX} 650, ${pPlaneX} ${pPlaneY}
+    L ${pPlaneX} 900`;
 
   return (
     <section
@@ -196,7 +187,7 @@ export default function VisionTimeline() {
       id="vision"
       aria-label="The 10-Year Vision Roadmap"
       className="relative w-full select-none"
-      style={{ height: "1000vh" }}
+      style={{ height: "720vh" }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#01050a] flex items-center justify-center">
 
@@ -283,9 +274,9 @@ export default function VisionTimeline() {
             {/* User Requirement: "transition between rings is very fast and rigid. So make the transition between rings smoother." */}
             <g className="vision-conical-rings">
               {VISION_MILESTONES.map((milestone, i) => {
-                // Continuous milestone progress from 0.0 to 5.0 across the 6 milestones
-                const roadmapSegment = clamp((progress - 0.04) / 0.76, 0, 1);
-                const continuousMilestone = roadmapSegment * (TOTAL - 1);
+                // In the end of this road when the plane is about to fly again, ensure all rings have passed
+                if (exitProgress > 0) return null;
+
                 const ringDiff = continuousMilestone - i; // positive = passed/previous, negative = upcoming/next
 
                 // Silky continuous focus bell curve around ringDiff === 0
@@ -585,8 +576,7 @@ export default function VisionTimeline() {
                 }}
               />
 
-              {/* 3D Model: Electric Shiny Blue Aircraft in Tunnel Lighting Theme */}
-              {/* User Requirement: "Remove the plane thrusters. Those 2 shiny dots looking ones." */}
+              {/* 3D Model: Consistently Light Platinum Titanium Silver Aircraft */}
               <div className="w-full h-[320px] sm:h-[390px] relative pointer-events-none select-none">
                 <Jet3DViewer
                   yaw={finalYaw}
@@ -596,8 +586,8 @@ export default function VisionTimeline() {
                   modelScale={1.65}
                   engineThrust={0}
                   lightIntensity={1.4}
-                  customColors={VISION_SHINY_BLUE_COLORS}
-                  lightingTheme="tunnel"
+                  customColors={LIGHT_PLATINUM_TITANIUM_COLORS}
+                  lightingTheme="default"
                 />
               </div>
             </div>
@@ -607,7 +597,6 @@ export default function VisionTimeline() {
         {/* ── 6. LAYER 6: FROSTED GLASS VISION MILESTONE CARDS (SLIDING-APPEAR ANIMATION) ── */}
         {/* User Requirement: "add very basic sliding-appear animation to all cards so that they appears sliding-in from the sides with fade-in effect and disappears to the sides by fade-out." */}
         {VISION_MILESTONES.map((milestone, idx) => {
-          const continuousMilestone = roadmapSegment * (TOTAL - 1);
           const cardDiff = continuousMilestone - idx;
           const dist = Math.abs(cardDiff);
 

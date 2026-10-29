@@ -49,6 +49,9 @@ export default function Home() {
           <PartnerStrip />
         </div>
 
+        {/* Dedicated scroll corridor for cinematic 3D flight maneuver */}
+        <div id="flight-corridor" className="relative w-full h-[65vh] pointer-events-none" />
+
         {/* 5. 10-Year Vision Timeline */}
         <SectionFocusItem id="vision">
           <VisionTimeline />

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Jet3DViewer from "./Jet3DViewer";
+import { LIGHT_PLATINUM_TITANIUM_COLORS } from "./jetModelManager";
 
 
 interface EcosystemNode {
@@ -316,6 +317,7 @@ export default function OneLiner() {
               autoRotateSpeed={15}
               mouseOffset={mouseOffset}
               engineThrust={0}
+              customColors={LIGHT_PLATINUM_TITANIUM_COLORS}
             />
           </div>
         </div>
@@ -418,7 +420,7 @@ export default function OneLiner() {
                       {/* Header: Node & Glowing Beacon */}
                       <div className="flex items-center justify-between pb-2.5 border-b border-zinc-700/60">
                         <span className="text-[11px] font-mono font-bold tracking-[0.25em] text-cyan-300 uppercase">
-                          {n.number} // {n.title}
+                          {`${n.number} // ${n.title}`}
                         </span>
                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
                       </div>
@@ -499,7 +501,7 @@ export default function OneLiner() {
               >
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-700/60">
                   <span className="text-xs font-mono font-semibold tracking-wider text-cyan-300 uppercase">
-                    {n.number} // {n.title}
+                    {`${n.number} // ${n.title}`}
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
                 </div>
