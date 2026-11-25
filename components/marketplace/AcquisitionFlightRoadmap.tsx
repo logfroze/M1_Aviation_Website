@@ -119,7 +119,6 @@ const PHASE_THEMES = [
     activeBorder: "border-cyan-400",
     activeBg: "bg-[linear-gradient(135deg,#061726_0%,#0c2e47_45%,#13476e_70%,#081e33_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(6,182,212,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(103,232,249,0.5)]",
-    activeDot: "bg-cyan-400 shadow-[0_0_12px_#22d3ee]",
     accentText: "text-cyan-400",
     tagBg: "bg-cyan-500/15 border-cyan-500/40 text-cyan-300",
     deliverableColor: "text-cyan-200",
@@ -133,7 +132,6 @@ const PHASE_THEMES = [
     activeBorder: "border-purple-400",
     activeBg: "bg-[linear-gradient(135deg,#19092c_0%,#2e124d_45%,#471b75_70%,#1c0b32_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(168,85,247,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(216,180,254,0.5)]",
-    activeDot: "bg-purple-400 shadow-[0_0_12px_#c084fc]",
     accentText: "text-purple-400",
     tagBg: "bg-purple-500/15 border-purple-500/40 text-purple-300",
     deliverableColor: "text-purple-200",
@@ -147,7 +145,6 @@ const PHASE_THEMES = [
     activeBorder: "border-sky-400",
     activeBg: "bg-[linear-gradient(135deg,#081d33_0%,#0e3559_45%,#164f82_70%,#0a243e_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(56,189,248,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(186,230,253,0.5)]",
-    activeDot: "bg-sky-400 shadow-[0_0_12px_#38bdf8]",
     accentText: "text-sky-400",
     tagBg: "bg-sky-500/15 border-sky-500/40 text-sky-300",
     deliverableColor: "text-sky-200",
@@ -161,7 +158,7 @@ const PHASE_THEMES = [
     activeBorder: "border-emerald-400",
     activeBg: "bg-[linear-gradient(135deg,#051a14_0%,#0c3325_45%,#144e39_70%,#07241b_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(16,185,129,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(110,231,183,0.5)]",
-    activeDot: "bg-emerald-400 shadow-[0_0_12px_#34d399]",
+
     accentText: "text-emerald-400",
     tagBg: "bg-emerald-500/15 border-emerald-500/40 text-emerald-300",
     deliverableColor: "text-emerald-200",
@@ -175,7 +172,7 @@ const PHASE_THEMES = [
     activeBorder: "border-amber-400",
     activeBg: "bg-[linear-gradient(135deg,#241606_0%,#3d270c_45%,#5c3a12_70%,#271806_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(245,158,11,0.35),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(252,211,77,0.5)]",
-    activeDot: "bg-amber-400 shadow-[0_0_12px_#fbbf24]",
+
     accentText: "text-amber-400",
     tagBg: "bg-amber-500/15 border-amber-500/40 text-amber-300",
     deliverableColor: "text-amber-200",
@@ -189,7 +186,6 @@ const PHASE_THEMES = [
     activeBorder: "border-rose-400",
     activeBg: "bg-[linear-gradient(135deg,#240817_0%,#40102b_45%,#611842_70%,#29091b_100%)]",
     activeShadow: "shadow-[0_0_40px_rgba(244,63,94,0.35),0_20px_50px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(253,164,175,0.5)]",
-    activeDot: "bg-rose-400 shadow-[0_0_12px_#fb7185]",
     accentText: "text-rose-400",
     tagBg: "bg-rose-500/15 border-rose-500/40 text-rose-300",
     deliverableColor: "text-rose-200",
@@ -203,7 +199,6 @@ const PHASE_THEMES = [
     activeBorder: "border-white",
     activeBg: "bg-[linear-gradient(135deg,#171d26_0%,#283241_45%,#425066_70%,#1b222d_100%)]",
     activeShadow: "shadow-[0_0_45px_rgba(255,255,255,0.4),0_20px_45px_rgba(0,0,0,0.9),inset_0_1.5px_2px_rgba(255,255,255,0.6)]",
-    activeDot: "bg-white shadow-[0_0_14px_#ffffff]",
     accentText: "text-white",
     tagBg: "bg-white/15 border-white/40 text-white",
     deliverableColor: "text-white",
@@ -282,7 +277,7 @@ export default function AcquisitionFlightRoadmap() {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const bottomHold = window.innerHeight * 0.8;
+      const bottomHold = window.innerHeight * 1.5;
       const scrollableDistance = rect.height - window.innerHeight - bottomHold;
       if (scrollableDistance <= 0) return;
 
@@ -331,7 +326,7 @@ export default function AcquisitionFlightRoadmap() {
   const jumpToStep = (index: number) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const bottomHold = window.innerHeight * 0.8;
+    const bottomHold = window.innerHeight * 1.5;
     const scrollableDistance = rect.height - window.innerHeight - bottomHold;
     const targetProg = index / (STEPS.length - 1);
     const containerTop = window.scrollY + rect.top;
@@ -503,10 +498,10 @@ export default function AcquisitionFlightRoadmap() {
     // Camera centers horizontally on the flying jet during its entire flight path
     viewX = jetX - viewW / 2;
     // Camera centers vertically on the jet with ample headroom for enlarged stage card above & platform below
-    viewY = Math.max(-350, Math.min(4800 - viewH, jetY - viewH * 0.44));
+    viewY = Math.max(-350, Math.min(5200 - viewH, jetY - viewH * 0.38));
   } else {
-    // Desktop View: Original widescreen presentation
-    const cameraY = Math.max(0, Math.min(3400, jetY - 520));
+    // Desktop View: Original widescreen presentation with plenty of headroom for P01 and P07
+    const cameraY = Math.max(-60, Math.min(3650, jetY - 480));
     if (aspect >= 1920 / 1080) {
       viewW = 1080 * aspect;
       viewX = (1920 - viewW) / 2;
@@ -546,7 +541,7 @@ export default function AcquisitionFlightRoadmap() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[520vh] bg-black text-white select-none"
+      className="relative w-full h-[660vh] bg-black text-white select-none"
     >
       {/* ── Relative Section Heading: Scrolls Away Naturally as User Scrolls Down ── */}
       <div className="relative z-20 pt-20 sm:pt-24 pb-8 px-4 sm:px-6 max-w-4xl mx-auto text-center pointer-events-auto">
@@ -674,13 +669,14 @@ export default function AcquisitionFlightRoadmap() {
                 />
               </g>
             );
-          })}
+          })} 
+
 
           {/* ── Guide Line for Phase 01 (SOLID White/Silver between Card and Platform) ── */}
-          {(() => {
+          {/* {(() => {
             const isActive = activeStepIndex === 0;
             const p1 = STEPS[0];
-            const cardHeight = isMobile ? 420 : 250;
+            const cardHeight = isMobile ? 520 : 345;
             const cardTop = isMobile ? -20 : 65;
             const cardBottom = cardTop + cardHeight;
             const platformTop = p1.y - 78; // reduced platform top rim -> 442
@@ -713,7 +709,7 @@ export default function AcquisitionFlightRoadmap() {
             const isActive = activeStepIndex === actualIdx;
             const platformSize = 280;
             const cardWidth = isMobile ? 740 : 624;
-            const cardHeight = isMobile ? 420 : 250;
+            const cardHeight = isMobile ? 520 : 345;
 
             let lineX1 = 0;
             let lineY1 = step.y;
@@ -722,7 +718,7 @@ export default function AcquisitionFlightRoadmap() {
 
             if (isMobile) {
               // On mobile, card is centered directly above platform: draw vertical leader line
-              const cardBottom = (step.y - 600) + cardHeight; // step.y - 180
+              const cardBottom = (step.y - 700) + cardHeight; // step.y - 180
               const platformTop = step.y - 140; // top rim of square pad
               lineX1 = step.x;
               lineY1 = cardBottom;
@@ -768,14 +764,14 @@ export default function AcquisitionFlightRoadmap() {
                 />
               </g>
             );
-          })}
+          })} 
 
           {/* ── Guide Line for Phase 07 (SOLID White/Silver vertical connecting below Platform 07) ── */}
-          {(() => {
+          {/* {(() => {
             const isActive = activeStepIndex === 6;
             const p7 = STEPS[6];
             const platformBottom = p7.y + 78; // reduced platform bottom rim -> 4078
-            const cardTop = isMobile ? (p7.y + 130) : (p7.y + 200);
+            const cardTop = isMobile ? (p7.y + 80) : (p7.y + 110);
 
             return (
               <g
@@ -837,12 +833,12 @@ export default function AcquisitionFlightRoadmap() {
                   {/* Platform Phase Label */}
                   <text
                     x="0"
-                    y="-95"
+                    y="150"
                     textAnchor="middle"
                     fill={isCurrentLanded ? "#ffffff" : "#94a3b8"}
-                    className="font-mono text-xs font-bold tracking-widest uppercase select-none drop-shadow-md"
+                    className="font-mono text-[30px] font-bold tracking-widest uppercase select-none drop-shadow-md"
                   >
-                    PHASE {step.step} • {idx === 0 ? "CONCEPT INCEPTION" : "FLAGSHIP STAGE"}
+                    PHASE {step.step} - {idx === 0 ? "CONCEPT INCEPTION" : "FLAGSHIP STAGE"}
                   </text>
                 </g>
               );
@@ -894,7 +890,7 @@ export default function AcquisitionFlightRoadmap() {
                 />
 
                 {/* Subtle Minimalist Corner Tick Marks */}
-                {[-1, 1].map((cx) =>
+                {/* {[-1, 1].map((cx) =>
                   [-1, 1].map((cy) => (
                     <path
                       key={`bracket-${cx}-${cy}`}
@@ -904,7 +900,7 @@ export default function AcquisitionFlightRoadmap() {
                       strokeWidth="2"
                     />
                   ))
-                )}
+                )} */}
 
                 {/* Minimalist Center Crosshairs Indicator */}
                 <circle
@@ -922,7 +918,7 @@ export default function AcquisitionFlightRoadmap() {
                   y={-size / 2 - 18}
                   textAnchor="middle"
                   fill={isCurrentLanded ? "#ffffff" : "#94a3b8"}
-                  className="font-mono text-xs font-bold tracking-widest uppercase select-none drop-shadow-md"
+                  className="font-mono text-[30px] font-bold tracking-widest uppercase select-none drop-shadow-md"
                 >
                   PHASE {step.step}
                 </text>
@@ -936,7 +932,7 @@ export default function AcquisitionFlightRoadmap() {
             const theme = PHASE_THEMES[0];
             const isActive = activeStepIndex === 0;
             const cardWidth = isMobile ? 740 : 624;
-            const cardHeight = isMobile ? 420 : 250;
+            const cardHeight = isMobile ? 520 : 345;
             const cardTop = isMobile ? -20 : 65;
             const cardX = p1.x - cardWidth / 2;
 
@@ -953,7 +949,7 @@ export default function AcquisitionFlightRoadmap() {
                 <div
                   onClick={() => jumpToStep(0)}
                   className={`relative w-full h-full rounded-2xl border ${
-                    isMobile ? "p-8 sm:p-9" : "p-6 sm:p-7"
+                    isMobile ? "p-8 sm:p-9" : "p-7 sm:p-8"
                   } flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isActive
                       ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
@@ -982,13 +978,8 @@ export default function AcquisitionFlightRoadmap() {
                   <div className="relative z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`rounded-full transition-all duration-300 ${
-                          isMobile ? "w-4 h-4" : "w-2.5 h-2.5"
-                        } ${isActive ? theme.activeDot : "bg-zinc-500"}`}
-                      />
-                      <span
-                        className={`rounded-md font-mono font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
-                          isMobile ? "px-4 py-1.5 text-[20px]" : "px-2.5 py-0.5 text-xs"
+                        className={`rounded-md font-mono font-bold tracking-[0.22em] uppercase border transition-all duration-300 ${
+                          isMobile ? "px-4.5 py-1.5 text-[25px]" : "px-3 py-1 text-[13px]"
                         } ${
                           isActive
                             ? `${theme.tagBg} shadow-sm`
@@ -999,27 +990,27 @@ export default function AcquisitionFlightRoadmap() {
                       </span>
                     </div>
                     <span className={`font-mono font-semibold ${
-                      isMobile ? "text-[22px] font-bold text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                      isMobile ? "text-[24px] font-bold text-zinc-200" : "text-sm sm:text-[15px] font-mono font-semibold text-zinc-300"
                     }`}>
                       {p1.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-1.5"}`}>
+                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-2.5"}`}>
                     <h3
                       className={`tracking-tight transition-colors line-clamp-1 ${
                         isMobile
-                          ? "text-[38px] font-semibold text-white leading-tight"
-                          : `text-xl sm:text-2xl font-light ${isActive ? "text-white font-normal" : "text-zinc-200"}`
+                          ? "text-[42px] font-semibold text-white leading-tight"
+                          : `text-2xl sm:text-[26px] font-light ${isActive ? "text-white font-normal" : "text-zinc-200"}`
                       }`}
                     >
                       {p1.title}
                     </h3>
                     <p className={`leading-relaxed text-zinc-300 ${
                       isMobile
-                        ? "text-[23px] text-zinc-200 font-normal leading-[1.48] line-clamp-3"
-                        : "text-xs sm:text-sm font-light line-clamp-2"
+                        ? "text-[25px] text-zinc-200 font-normal leading-[1.5] line-clamp-4"
+                        : "text-sm sm:text-[15px] font-light line-clamp-3 leading-relaxed"
                     }`}>
                       {p1.description}
                     </p>
@@ -1027,14 +1018,14 @@ export default function AcquisitionFlightRoadmap() {
 
                   {/* Deliverable Footer */}
                   <div className={`relative z-10 pt-4 border-t border-white/10 flex items-center justify-between font-mono ${
-                    isMobile ? "text-[22px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                    isMobile ? "text-[24px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400 font-medium"
                   }`}>
                     <span>Deliverable:</span>
                     <span
                       className={`font-semibold truncate rounded border transition-colors ${
                         isMobile
-                          ? "max-w-[480px] px-4 py-1.5 text-[22px] font-bold"
-                          : "max-w-[340px] px-2 py-0.5 text-xs sm:text-sm"
+                          ? "max-w-[500px] px-4.5 py-1.5 text-[24px] font-bold"
+                          : "max-w-[380px] px-2.5 py-1 text-xs sm:text-sm font-semibold"
                       } ${
                         isActive
                           ? `${theme.deliverableColor} ${theme.tagBg}`
@@ -1056,8 +1047,8 @@ export default function AcquisitionFlightRoadmap() {
             const isCurrentActive = activeStepIndex === actualIdx;
             const isPast = activeStepIndex > actualIdx;
             const cardWidth = isMobile ? 740 : 624;
-            const cardHeight = isMobile ? 420 : 250;
-            const cardTop = isMobile ? (step.y - 600) : (step.y - cardHeight / 2);
+            const cardHeight = isMobile ? 520 : 345;
+            const cardTop = isMobile ? (step.y - 700) : (step.y - cardHeight / 2);
             const cardX = isMobile ? (step.x - cardWidth / 2) : step.cardX;
 
             return (
@@ -1073,7 +1064,7 @@ export default function AcquisitionFlightRoadmap() {
                 <div
                   onClick={() => jumpToStep(actualIdx)}
                   className={`relative w-full h-full rounded-2xl border ${
-                    isMobile ? "p-8 sm:p-9" : "p-6 sm:p-7"
+                    isMobile ? "p-8 sm:p-9" : "p-7 sm:p-8"
                   } flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isCurrentActive
                       ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
@@ -1104,19 +1095,8 @@ export default function AcquisitionFlightRoadmap() {
                   <div className="relative z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`rounded-full transition-all duration-300 ${
-                          isMobile ? "w-4 h-4" : "w-2.5 h-2.5"
-                        } ${
-                          isCurrentActive
-                            ? theme.activeDot
-                            : isPast
-                            ? "bg-slate-400"
-                            : "bg-zinc-600"
-                        }`}
-                      />
-                      <span
-                        className={`rounded-md font-mono font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
-                          isMobile ? "px-4 py-1.5 text-[20px]" : "px-2.5 py-0.5 text-xs"
+                        className={`rounded-md font-mono font-bold tracking-[0.22em] uppercase border transition-all duration-300 ${
+                          isMobile ? "px-4.5 py-1.5 text-[22px]" : "px-3 py-1 text-[13px]"
                         } ${
                           isCurrentActive
                             ? `${theme.tagBg} shadow-sm`
@@ -1128,27 +1108,27 @@ export default function AcquisitionFlightRoadmap() {
                     </div>
 
                     <span className={`font-mono font-semibold ${
-                      isMobile ? "text-[22px] font-bold text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                      isMobile ? "text-[24px] font-bold text-zinc-200" : "text-sm sm:text-[15px] font-mono font-semibold text-zinc-300"
                     }`}>
                       {step.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-1.5"}`}>
+                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-2.5"}`}>
                     <h3
                       className={`tracking-tight transition-colors line-clamp-1 ${
                         isMobile
-                          ? "text-[38px] font-semibold text-white leading-tight"
-                          : `text-xl sm:text-2xl font-light ${isCurrentActive ? "text-white font-normal" : "text-zinc-200"}`
+                          ? "text-[42px] font-semibold text-white leading-tight"
+                          : `text-2xl sm:text-[26px] font-light ${isCurrentActive ? "text-white font-normal" : "text-zinc-200"}`
                       }`}
                     >
                       {step.title}
                     </h3>
                     <p className={`leading-relaxed text-zinc-300 ${
                       isMobile
-                        ? "text-[23px] text-zinc-200 font-normal leading-[1.48] line-clamp-3"
-                        : "text-xs sm:text-sm font-light line-clamp-2"
+                        ? "text-[25px] text-zinc-200 font-normal leading-[1.5] line-clamp-4"
+                        : "text-sm sm:text-[15px] font-light line-clamp-3 leading-relaxed"
                     }`}>
                       {step.description}
                     </p>
@@ -1156,14 +1136,14 @@ export default function AcquisitionFlightRoadmap() {
 
                   {/* Minimalist Deliverable Footer */}
                   <div className={`relative z-10 pt-4 border-t border-white/10 flex items-center justify-between font-mono ${
-                    isMobile ? "text-[22px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                    isMobile ? "text-[24px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400 font-medium"
                   }`}>
                     <span>Deliverable:</span>
                     <span
                       className={`font-semibold truncate rounded border transition-colors ${
                         isMobile
-                          ? "max-w-[480px] px-4 py-1.5 text-[22px] font-bold"
-                          : "max-w-[340px] px-2 py-0.5 text-xs sm:text-sm"
+                          ? "max-w-[500px] px-4.5 py-1.5 text-[24px] font-bold"
+                          : "max-w-[380px] px-2.5 py-1 text-xs sm:text-sm font-semibold"
                       } ${
                         isCurrentActive
                           ? `${theme.deliverableColor} ${theme.tagBg}`
@@ -1184,9 +1164,9 @@ export default function AcquisitionFlightRoadmap() {
             const theme = PHASE_THEMES[6];
             const isActive = activeStepIndex === 6;
             const cardWidth = isMobile ? 740 : 624;
-            const cardHeight = isMobile ? 420 : 250;
+            const cardHeight = isMobile ? 520 : 345;
             const cardX = p7.x - cardWidth / 2;
-            const cardTop = isMobile ? (p7.y + 130) : (p7.y + 190);
+            const cardTop = isMobile ? (p7.y + 80) : (p7.y + 110);
 
             return (
               <foreignObject
@@ -1201,7 +1181,7 @@ export default function AcquisitionFlightRoadmap() {
                 <div
                   onClick={() => jumpToStep(6)}
                   className={`relative w-full h-full rounded-2xl border ${
-                    isMobile ? "p-8 sm:p-9" : "p-6 sm:p-7"
+                    isMobile ? "p-8 sm:p-9" : "p-7 sm:p-8"
                   } flex flex-col justify-between cursor-pointer transition-all duration-300 select-none overflow-hidden backdrop-blur-md ${
                     isActive
                       ? `${theme.activeBorder} ${theme.activeBg} ${theme.activeShadow} scale-[1.02]`
@@ -1230,13 +1210,8 @@ export default function AcquisitionFlightRoadmap() {
                   <div className="relative z-10 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span
-                        className={`rounded-full transition-all duration-300 ${
-                          isMobile ? "w-4 h-4" : "w-2.5 h-2.5"
-                        } ${isActive ? theme.activeDot : "bg-slate-400"}`}
-                      />
-                      <span
-                        className={`rounded-md font-mono font-bold tracking-[0.2em] uppercase border transition-all duration-300 ${
-                          isMobile ? "px-4 py-1.5 text-[20px]" : "px-2.5 py-0.5 text-xs"
+                        className={`rounded-md font-mono font-bold tracking-[0.22em] uppercase border transition-all duration-300 ${
+                          isMobile ? "px-4.5 py-1.5 text-[22px]" : "px-3 py-1 text-[13px]"
                         } ${
                           isActive
                             ? `${theme.tagBg} shadow-sm`
@@ -1247,27 +1222,27 @@ export default function AcquisitionFlightRoadmap() {
                       </span>
                     </div>
                     <span className={`font-mono font-semibold ${
-                      isMobile ? "text-[22px] font-bold text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                      isMobile ? "text-[24px] font-bold text-zinc-200" : "text-sm sm:text-[15px] font-mono font-semibold text-zinc-300"
                     }`}>
                       {p7.altitude}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-1.5"}`}>
+                  <div className={`relative z-10 my-auto ${isMobile ? "space-y-3" : "space-y-2.5"}`}>
                     <h3
                       className={`tracking-tight transition-colors line-clamp-1 ${
                         isMobile
-                          ? "text-[38px] font-semibold text-white leading-tight"
-                          : `text-xl sm:text-2xl font-light ${isActive ? "text-white font-normal" : "text-zinc-200"}`
+                          ? "text-[42px] font-semibold text-white leading-tight"
+                          : `text-2xl sm:text-[26px] font-light ${isActive ? "text-white font-normal" : "text-zinc-200"}`
                       }`}
                     >
                       {p7.title}
                     </h3>
                     <p className={`leading-relaxed text-zinc-300 ${
                       isMobile
-                        ? "text-[23px] text-zinc-200 font-normal leading-[1.48] line-clamp-3"
-                        : "text-xs sm:text-sm font-light line-clamp-2"
+                        ? "text-[25px] text-zinc-200 font-normal leading-[1.5] line-clamp-4"
+                        : "text-sm sm:text-[15px] font-light line-clamp-3 leading-relaxed"
                     }`}>
                       {p7.description}
                     </p>
@@ -1275,14 +1250,14 @@ export default function AcquisitionFlightRoadmap() {
 
                   {/* Deliverable Footer */}
                   <div className={`relative z-10 pt-4 border-t border-white/10 flex items-center justify-between font-mono ${
-                    isMobile ? "text-[22px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400"
+                    isMobile ? "text-[24px] text-zinc-300" : "text-xs sm:text-sm text-zinc-400 font-medium"
                   }`}>
                     <span>Deliverable:</span>
                     <span
                       className={`font-semibold truncate rounded border transition-colors ${
                         isMobile
-                          ? "max-w-[480px] px-4 py-1.5 text-[22px] font-bold"
-                          : "max-w-[340px] px-2 py-0.5 text-xs sm:text-sm"
+                          ? "max-w-[500px] px-4.5 py-1.5 text-[24px] font-bold"
+                          : "max-w-[380px] px-2.5 py-1 text-xs sm:text-sm font-semibold"
                       } ${
                         isActive
                           ? `${theme.deliverableColor} ${theme.tagBg}`

@@ -415,13 +415,13 @@ export default function FullArticlePage() {
                   </p>
                 </div>
                 <a
-                  href="mailto:team@rsinternational.net"
+                  href="mailto:Team@m1.rsistudio.net"
                   className="px-7 py-3.5 bg-white text-black font-mono text-xs uppercase tracking-wider font-semibold hover:bg-zinc-200 transition-colors shrink-0 cursor-pointer shadow-md"
                   style={{
                     clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
                   }}
                 >
-                  team@rsinternational.net
+                  Team@m1.rsistudio.net
                 </a>
               </div>
             </div>

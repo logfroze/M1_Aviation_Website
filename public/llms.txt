@@ -4,10 +4,26 @@
 
 ## Core Platform & Solutions
 
-- [M1 Marketplace](https://m1.rsinternational.net/marketplace): Premier private jet marketplace offering verified listings, market intelligence, transparent escrow, and the proprietary 7-Step Assisted Acquisition process for buyers and sellers.
-- [SIOS - Super Intelligent Operating System](https://m1.rsinternational.net/saios): AI-driven operating intelligence system that unifies aircraft telemetry, maintenance provenance, regulatory compliance, and operational decision-making into an autonomous digital layer.
-- [Industry Partner Alliance](https://m1.rsinternational.net/industry-partner): Global network of accredited aviation brokers, maintenance facilities, and charter operators (including BN Aviation, Velari Jets, and 7IVS) providing verified transactional execution and preferred operational benefits.
+- [M1 Marketplace](https://m1.rsinternational.net/marketplace): Premier private jet marketplace offering 100% verified listings, market intelligence, institutional escrow, and the proprietary 7-Step Assisted Acquisition process for buyers and sellers.
+- [SIOS - Super Intelligent Operating System](https://m1.rsinternational.net/saios): AI-driven autonomous operating intelligence system that unifies aircraft telemetry, maintenance provenance, regulatory compliance, 6 core avionics functions, and a Top 30 Unified Aviation Tools Matrix into an autonomous digital layer.
+- [Industry Partner Alliance](https://m1.rsinternational.net/industry-partner): Global network of accredited aviation brokers, Part 145 MRO facilities, and charter operators (including BN Aviation, ATM Jets, Velari Jets, and 7IVS) providing verified transactional execution and preferred operational benefits.
 - [AVI Times](https://m1.rsinternational.net/aviation-times): Authority research and market intelligence publication covering aerospace supply chains, VC investment trends in Avi-Tech, and autonomous aviation futures.
+
+## Leadership & Founder's Vision
+
+- **Founder, M1 Aviation & SIOS**: Areez Rao
+  > "Our Vision with SIOS is to create SuperIntelligences so strong that it ends up knowing the aircraft; they're connected with more than any human naturally is capable of. We need to induce extreme efficiency in aviation and avoid being afraid of emerging technologies, in order to keep with the human curiosity and need to fly and explore the earth and beyond."
+- **Co-Founder & CEO**: Rayyan Shuja
+
+## SIOS: 6 Core Avionics Functions & Top 30 Unified Tools Matrix
+
+1. **Extreme Compute Density**: Real-time flight envelope telemetry ingestion and avionics bus interfacing.
+2. **Autonomous Decision Heuristics**: Fleet-wide algorithmic optimization and routing.
+3. **Ultra-Low-Latency Avionics Core**: Direct connection to onboard bus telemetry.
+4. **Connected Global Grid**: Unifying aircraft, flight crews, dispatchers, and Part 145 MRO repair stations.
+5. **Immutable Digital Provenance**: Eliminating paper logbooks with tamper-proof maintenance records.
+6. **Proactive Airworthiness Compliance**: Automated FAA, EASA, and ICAO Airworthiness Directives (ADs) and Service Bulletins (SBs) tracking.
+- **Top 30 Unified Tools**: Integrates and bridges legacy silos across Flight Planning (ForeFlight, Jeppesen, Garmin Pilot), MRO Maintenance (CAMP Systems, Flightdocs, Veryon, TRAX, AMOS), Operations & Dispatch (Avianis, FL3XX, FOS), Charter (Avinode), and Live Telemetry (FlightAware, ADS-B Exchange).
 
 ## Key Publications & Market Research
 
@@ -19,7 +35,6 @@
 
 - **Company Name**: M1 Aviation (M1 Aviation Inc.)
 - **Category**: Business Aviation Digital Ecosystem, Aircraft Marketplace, Aerospace Operating Intelligence
-- **Founder & CEO**: Rayyan Shuja
 - **Global Headquarters**: Brock Road, Pickering, Ontario, L1V 2P8, Canada
 - **Technology & Research Center**: 2nd Floor, Hall No. 2, WWIC, UOS, University Road, Sargodha, Punjab, Pakistan
 - **Hours of Operation**: 24/7/365 Global Aviation Advisory & Escrow Settlement
@@ -31,7 +46,7 @@
 - **LinkedIn**: https://linkedin.com/company/m1-aviation
 - **X (Twitter)**: https://x.com/m1_aviation
 - **Instagram**: https://instagram.com/m1_aviation
-- **Direct Competitor Positioning**: Modern AI-driven successor to legacy MRO software (Flightdocs, TRAX, Ramco, Swiss-AS) and unverified listing classifieds (Controller, Trade-A-Plane).
+- **Direct Competitor Positioning**: Modern AI-driven successor to legacy MRO software (Flightdocs, TRAX, Ramco, Swiss-AS, CAMP) and unverified listing classifieds (Controller, Trade-A-Plane, JetNet).
 
 ## AI & Agent Resources
 

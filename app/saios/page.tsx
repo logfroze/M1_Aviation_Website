@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import PlayYourRoleCTA from "@/components/ui/PlayYourRoleCTA";
 import EnergyGrid from "@/components/home/EnergyGrid";
+import SiosToolsMatrix from "@/components/sios/SiosToolsMatrix";
 
 const ACRONYM_ITEMS = [
   { letter: "S", word: "Super", desc: "Extreme compute density for flight envelope telemetry" },
@@ -146,6 +147,12 @@ export default function SaiosPage() {
           >
             SIOS
           </h1>
+          <span className="sr-only">
+            SIOS (Super Intelligent Operating System) – Autonomous Business Aviation Operating Intelligence by M1 Aviation
+          </span>
+          <p className="sr-only">
+            SIOS connects flight envelope telemetry, 6 core avionics functions, 30+ unified aviation tools, predictive MRO maintenance, and immutable digital airframe provenance. Founded by Areez Rao.
+          </p>
         </div>
       </section>
 
@@ -160,8 +167,8 @@ export default function SaiosPage() {
           </h2>
         </div>
 
-        {/* Semi-transparent Grey Motherboard Background Container */}
-        <div className="relative rounded-2xl sm:rounded-3xl border border-zinc-800 bg-zinc-950/75 backdrop-blur-xl p-4 sm:p-10 md:p-16 overflow-hidden shadow-2xl">
+        {/* Semi-transparent Navy Motherboard Background Container */}
+        <div className="relative rounded-2xl sm:rounded-3xl border border-[#1b355e] bg-[#071325]/85 backdrop-blur-xl p-4 sm:p-10 md:p-16 overflow-hidden shadow-2xl">
           {/* Motherboard Circuit Trace SVG Graphic Background */}
           <div className="absolute inset-0 pointer-events-none opacity-20">
             <svg className="w-full h-full" viewBox="0 0 1000 600" fill="none" stroke="#a1a1aa" strokeWidth="1">
@@ -216,17 +223,17 @@ export default function SaiosPage() {
             {ACRONYM_ITEMS.map((item, idx) => (
               <div
                 key={idx}
-                className="group relative cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 rounded-2xl border border-zinc-800/90 bg-[#0c0d12]/90 backdrop-blur-md hover:-translate-y-2.5 hover:scale-[1.018] hover:border-zinc-300 hover:shadow-[0_24px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(255,255,255,0.12),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all duration-300 ease-out will-change-transform gap-4 overflow-hidden"
+                className="group relative cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between p-5 sm:p-6 rounded-2xl border border-[#1b3868]/80 bg-[#09162e]/90 backdrop-blur-md hover:-translate-y-2.5 hover:scale-[1.018] hover:border-sky-400/70 hover:bg-[#0c1f3d] hover:shadow-[0_24px_60px_rgba(2,12,32,0.95),0_0_35px_rgba(56,189,248,0.2),inset_0_1px_1px_rgba(56,189,248,0.3)] transition-all duration-300 ease-out will-change-transform gap-4 overflow-hidden"
               >
                 {/* Ambient Glass Hover Shine */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/[0.06] via-transparent to-white/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-sky-400/[0.08] via-transparent to-sky-400/[0.04] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                 <div className="flex items-center gap-5 relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center font-mono text-2xl font-bold text-white shadow-inner group-hover:bg-white group-hover:text-black group-hover:border-white group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] transition-all duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-[#061022] border border-[#23457e] flex items-center justify-center font-mono text-2xl font-bold text-sky-200 shadow-inner group-hover:bg-sky-400 group-hover:text-slate-950 group-hover:border-sky-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(56,189,248,0.7)] transition-all duration-300">
                     {item.letter}
                   </div>
                   <div>
-                    <span className="text-lg sm:text-xl font-light text-zinc-100 group-hover:text-white group-hover:drop-shadow-[0_0_16px_rgba(255,255,255,0.45)] tracking-wide transition-all duration-300">
+                    <span className="text-lg sm:text-xl font-light text-slate-100 group-hover:text-white group-hover:drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] tracking-wide transition-all duration-300">
                       {item.word}
                     </span>
                   </div>
@@ -234,8 +241,8 @@ export default function SaiosPage() {
 
                 <div className="flex items-center gap-4 relative z-10">
                   {/* Subtle Callout Pointer Line */}
-                  <div className="hidden md:block w-16 group-hover:w-24 h-[1.5px] bg-gradient-to-r from-transparent to-zinc-600 group-hover:to-white transition-all duration-300" />
-                  <p className="text-xs font-mono text-zinc-400 group-hover:text-zinc-200 sm:text-right max-w-md transition-colors duration-300">
+                  <div className="hidden md:block w-16 group-hover:w-24 h-[1.5px] bg-gradient-to-r from-transparent to-sky-700 group-hover:to-sky-400 transition-all duration-300" />
+                  <p className="text-xs font-mono text-slate-400 group-hover:text-sky-100 sm:text-right max-w-md transition-colors duration-300">
                     {item.desc}
                   </p>
                 </div>
@@ -246,10 +253,10 @@ export default function SaiosPage() {
       </section>
 
       {/* ── 4. Founder Directive Section ─────────────────────────────────── */}
-      <section className="relative z-10 py-24 sm:py-32 px-6 md:px-12 max-w-5xl mx-auto w-full border-t border-zinc-900/80">
+      <section className="relative z-10 py-24 sm:py-32 px-6 md:px-12 max-w-5xl mx-auto w-full border-t border-slate-800/80">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
           {/* Left Card: Internal Directive Quote */}
-          <div className="md:col-span-7 bg-[#0c0c0e]/95 border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col justify-between relative shadow-2xl backdrop-blur-md overflow-hidden min-h-[440px]">
+          <div className="md:col-span-7 bg-[#081324]/95 border border-[#1b3664]/80 rounded-[32px] p-8 sm:p-12 flex flex-col justify-between relative shadow-2xl backdrop-blur-md overflow-hidden h-full min-h-[460px]">
             {/* Ambient Watermark Quote Icon */}
             <div className="absolute -top-6 left-6 text-[120px] font-serif text-white/[0.03] select-none pointer-events-none leading-none">
               “
@@ -257,39 +264,39 @@ export default function SaiosPage() {
 
             {/* Directive Pill Tag - Silver/White aesthetic */}
             <div className="flex items-center gap-2 mb-6 relative z-10">
-              <span className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-              <span className="text-[11px] font-mono tracking-[0.25em] text-zinc-400 uppercase font-medium">
+              {/* <span className="w-2 h-2 bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" /> */}
+              <span className="text-[11px] bold font-mono tracking-[0.25em] text-sky-200 uppercase font-medium">
                 FOUNDER&apos;S MESSAGE
               </span>
             </div>
 
             {/* Main Quote - From SIOS Page copy writing.pdf */}
-            <blockquote className="text-lg sm:text-xl md:text-[22px] font-light text-zinc-100 tracking-tight leading-[1.6] relative z-10 my-auto">
+            <blockquote className="text-lg sm:text-xl md:text-[22px] font-light text-slate-100 tracking-tight leading-[1.6] relative z-10 my-auto">
               &ldquo;Our Vision with SIOS is to create{" "}
-              <span className="text-white italic font-serif underline decoration-white/40 underline-offset-8">
+              <span className="text-white italic font-serif underline decoration-sky-400/40 underline-offset-8">
                 SuperIntelligences
               </span>{" "}
               so strong that it ends up knowing the aircraft; they&apos;re connected with more than any human naturally is capable of. We need to induce extreme efficiency in aviation and avoid being afraid of emerging technologies, in order to keep with the human curiosity and need to fly and explore the earth and beyond.&rdquo;
             </blockquote>
 
             {/* Founder Footer Row */}
-            <div className="flex items-end justify-between border-t border-white/5 pt-6 mt-6 relative z-10">
+            <div className="flex items-end justify-between border-t border-white/10 pt-6 mt-6 relative z-10">
               <div>
                 <div className="text-base sm:text-lg font-bold text-white tracking-wide">Areez Rao</div>
-                <div className="text-[10px] sm:text-[11px] font-mono tracking-widest text-zinc-400 uppercase mt-0.5 font-medium">
+                <div className="text-[10px] sm:text-[11px] font-mono tracking-widest text-sky-300/80 uppercase mt-0.5 font-medium">
                   FOUNDER, M1 AVIATION & SIOS
                 </div>
               </div>
               <div className="flex items-center gap-1.5 pb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-600" />
               </div>
             </div>
           </div>
 
-          {/* Right Card: Studio Founder Portrait */}
-          <div className="group md:col-span-5 relative rounded-[32px] overflow-hidden border border-white/10 bg-[#0c0c0e] shadow-2xl min-h-[380px] sm:min-h-[440px] md:min-h-[480px] cursor-pointer transition-all duration-500 hover:border-white/30">
+          {/* Right Card: Studio Founder Portrait (Locked to exact same height as left card) */}
+          <div className="group md:col-span-5 relative rounded-[32px] overflow-hidden border border-[#1b3664]/80 bg-[#081324] shadow-2xl h-full min-h-[460px] flex cursor-pointer transition-all duration-500 hover:border-sky-400/50">
             <Image
               src="/founder.jpg"
               alt="Areez Rao – Founder, M1 Aviation & SIOS"
@@ -299,7 +306,7 @@ export default function SaiosPage() {
               priority
             />
             {/* Subtle cinematic gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none opacity-80 group-hover:opacity-40 transition-opacity duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#040a14]/80 via-transparent to-transparent pointer-events-none opacity-80 group-hover:opacity-40 transition-opacity duration-700" />
           </div>
         </div>
       </section>
@@ -308,6 +315,9 @@ export default function SaiosPage() {
       <div className="relative z-10 w-full">
         <PlayYourRoleCTA />
       </div>
+
+      {/* ── 6. Top 30 Unified Aviation Tools Curved Matrix ─────────────────── */}
+      <SiosToolsMatrix />
     </div>
   );
 }

@@ -57,6 +57,7 @@ const DECK_CARDS: DeckCard[] = [
     descColor: "text-blue-50/90 text-xs font-normal",
     featureColor: "text-white font-mono text-[11px] font-medium",
   },
+  /* ── AviGram card commented out — restore when ready ──
   {
     id: "avigram",
     tag: "Product 3",
@@ -76,6 +77,8 @@ const DECK_CARDS: DeckCard[] = [
     descColor: "text-zinc-200 text-xs font-normal",
     featureColor: "text-white font-mono text-[11px] font-medium",
   },
+  ── end AviGram ── */
+  /* ── Ecosystem card commented out — restore when ready ──
   {
     id: "ecosystem",
     tag: "Net Effect",
@@ -94,6 +97,7 @@ const DECK_CARDS: DeckCard[] = [
     descColor: "text-black text-xs font-medium",
     featureColor: "text-black font-mono text-[11px] font-medium",
   },
+  ── end Ecosystem ── */
 ];
 
 export default function FullStackDeck() {
@@ -117,16 +121,14 @@ export default function FullStackDeck() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fanned deck transforms matching Image 1
+  // V-spread: both cards fan out from a shared center-bottom touch point
+  // inner-bottom corners meet at screen center — Marketplace right-bottom ≈ SIOS left-bottom
+  // Math: translateX = ±(cardHalfWidth × cos(rotation°)) → ±(220 × cos20°) ≈ ±170
   const deckTransforms = [
-    // Card 0 (Marketplace) — tilted left
-    { rotate: -13, translateX: -240, translateY: 22, scale: 0.95, zIndex: 10 },
-    // Card 1 (SAIOS) — tilted slight left
-    { rotate: -5, translateX: -80, translateY: 10, scale: 0.98, zIndex: 11 },
-    // Card 2 (AviGram) — tilted slight right
-    { rotate: 3, translateX: 80, translateY: 4, scale: 1.00, zIndex: 12 },
-    // Card 3 (Ecosystem) — tilted right in front
-    { rotate: 11, translateX: 240, translateY: 16, scale: 1.02, zIndex: 13 },
+    // Card 0 (Marketplace) — fans left, right-bottom corner at screen center
+    { rotate: -20, translateX: -170, translateY: 30, scale: 1.0, zIndex: 10 },
+    // Card 1 (SIOS) — fans right, left-bottom corner at screen center (mirror image)
+    { rotate: 20, translateX: 170, translateY: 30, scale: 1.0, zIndex: 11 },
   ];
 
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -154,11 +156,20 @@ export default function FullStackDeck() {
             THE FULL STACK
           </span>
           <h3 className="text-3xl sm:text-5xl md:text-6xl font-light tracking-tight text-white">
-            Four Products. One Ecosystem.
+            Two Products. One Ecosystem.
           </h3>
         </div>
 
-        {/* Symmetrical fanned deck (matching Image 1 exactly) */}
+        {/* Symmetrical fanned deck */}
+        {/* Floating keyframes injected here — no extra CSS file needed */}
+        <style>{`
+          @keyframes floatDeckCard {
+            0%   { transform: translateY(0px);  }
+            50%  { transform: translateY(-9px); }
+            100% { transform: translateY(0px);  }
+          }
+        `}</style>
+
         <div
           className="relative w-full max-w-5xl h-[420px] sm:h-[460px] flex items-center justify-center mb-6"
           style={{ perspective: "1500px" }}
@@ -167,69 +178,83 @@ export default function FullStackDeck() {
             const t = deckTransforms[index];
             const isHovered = hoveredCard === card.id;
 
-            // Fanned out as in Image 1, responsive to scroll and hover
-            const rotate = isHovered ? 0 : t.rotate;
-            const tx = isHovered ? t.translateX * 1.08 : t.translateX;
+            // On hover: lift the card and reduce lean to half, keep x position
+            const rotate = isHovered ? t.rotate * 0.5 : t.rotate;
+            const tx = isHovered ? t.translateX : t.translateX;
             const ty = isHovered ? t.translateY - 24 : t.translateY;
-            const sc = isHovered ? 1.05 : t.scale;
+            const sc = isHovered ? 1.04 : t.scale;
             const zIdx = isHovered ? 40 : t.zIndex;
 
             return (
+              /* Outer div: fan positioning + hover transitions */
               <div
                 key={card.id}
                 onMouseEnter={() => setHoveredCard(card.id)}
                 onMouseLeave={() => setHoveredCard(null)}
-                className={`absolute rounded-3xl border p-6 sm:p-8 w-[86vw] max-w-[440px] h-[340px] sm:h-[370px] flex flex-col justify-between shadow-[0_25px_65px_rgba(0,0,0,0.92)] cursor-pointer transition-all duration-300 ease-out will-change-transform overflow-hidden ${card.cardStyle}`}
+                className="absolute cursor-pointer transition-all duration-300 ease-out will-change-transform"
                 style={{
                   zIndex: zIdx,
                   transform: `translateX(${tx}px) translateY(${ty}px) rotate(${rotate}deg) scale(${sc})`,
                   transformOrigin: "center bottom",
                 }}
               >
-                {/* Diagonal Specular Silver Gloss Sheen */}
-                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.24)_0%,rgba(255,255,255,0.06)_25%,rgba(203,213,225,0.20)_46%,transparent_64%,rgba(255,255,255,0.14)_100%)] pointer-events-none" />
+                {/* Float wrapper: gentle continuous air floating — independent of fan transform */}
+                <div
+                  style={{
+                    animation: `floatDeckCard ${3.4 + index * 0.5}s ease-in-out infinite`,
+                    animationDelay: `${index * -1.6}s`,
+                  }}
+                >
+                  {/* Card visual shell */}
+                  <div
+                    className={`rounded-3xl border p-6 sm:p-8 w-[86vw] max-w-[440px] h-[340px] sm:h-[370px] flex flex-col justify-between shadow-[0_25px_65px_rgba(0,0,0,0.92)] overflow-hidden ${card.cardStyle}`}
+                  >
+                    {/* Diagonal Specular Silver Gloss Sheen */}
+                    <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.24)_0%,rgba(255,255,255,0.06)_25%,rgba(203,213,225,0.20)_46%,transparent_64%,rgba(255,255,255,0.14)_100%)] pointer-events-none" />
 
-                <div className="relative z-10">
-                  {/* Badge */}
-                  <div className="flex items-center justify-between mb-3.5">
-                    <div className={`-skew-x-12 inline-flex items-center px-3.5 py-1 border text-[10px] font-mono font-bold tracking-widest uppercase shadow-sm ${card.badgeStyle}`}>
-                      <span className="skew-x-12">{card.tag}</span>
+                    <div className="relative z-10">
+                      {/* Badge */}
+                      <div className="flex items-center justify-between mb-3.5">
+                        <div className={`-skew-x-12 inline-flex items-center px-3.5 py-1 border text-[10px] font-mono font-bold tracking-widest uppercase shadow-sm ${card.badgeStyle}`}>
+                          <span className="skew-x-12">{card.tag}</span>
+                        </div>
+
+                        {/* Jet Cursor on Ecosystem Card (matching Image 1) */}
+                        {card.id === "ecosystem" && (
+                          <div className="flex items-center gap-1 opacity-90 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
+                            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Title & Subtitle */}
+                      <h4 className={`text-2xl sm:text-3xl tracking-tight leading-tight ${card.titleColor}`}>
+                        {card.title}
+                      </h4>
+                      <p className={`mt-1 font-mono ${card.subtitleColor}`}>
+                        {card.subtitle}
+                      </p>
+
+                      {/* Short Description */}
+                      <p className={`mt-3 leading-relaxed text-xs line-clamp-2 ${card.descColor}`}>
+                        {card.description}
+                      </p>
                     </div>
 
-                    {/* Jet Cursor on Ecosystem Card (matching Image 1) */}
-                    {card.id === "ecosystem" && (
-                      <div className="flex items-center gap-1 opacity-90 drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]">
-                        <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
-                        </svg>
-                      </div>
-                    )}
+                    {/* Features List */}
+                    <div className="relative z-10 pt-3 border-t border-black/20">
+                      <ul className={`space-y-1.5 ${card.featureColor}`}>
+                        {card.features.slice(0, 3).map((f, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="opacity-80 text-xs font-bold text-black">›</span>
+                            <span className="truncate">{f}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-
-                  {/* Title & Subtitle */}
-                  <h4 className={`text-2xl sm:text-3xl tracking-tight leading-tight ${card.titleColor}`}>
-                    {card.title}
-                  </h4>
-                  <p className={`mt-1 font-mono ${card.subtitleColor}`}>
-                    {card.subtitle}
-                  </p>
-
-                  {/* Short Description */}
-                  <p className={`mt-3 leading-relaxed text-xs line-clamp-2 ${card.descColor}`}>
-                    {card.description}
-                  </p>
-                </div>
-
-                {/* Features List */}
-                <div className="relative z-10 pt-3 border-t border-black/20">
-                  <ul className={`space-y-1.5 ${card.featureColor}`}>
-                    {card.features.slice(0, 3).map((f, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <span className="opacity-80 text-xs font-bold text-black">›</span>
-                        <span className="truncate">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             );

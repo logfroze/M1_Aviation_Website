@@ -1,7 +1,7 @@
 /**
- * Solid Mechanical Dock Sound Synthesizer (Web Audio API)
- * Generates an authoritative, deep mechanical latch / heavy solid dock sound
- * with sub-bass impact, crisp latch transient, and dampened acoustic resonance.
+ * Luxury Aviation Audio Synthesizer (Web Audio API)
+ * Synthesizes authentic cockpit avionic switch toggles, executive cabin chimes,
+ * tactile relays, and solid dock latches with zero external asset latency.
  */
 
 let sharedAudioCtx: AudioContext | null = null;
@@ -21,6 +21,140 @@ export function getSharedAudioContext(): AudioContext | null {
   return sharedAudioCtx;
 }
 
+/**
+ * 1. Cockpit Avionics Switch Snap / Heavy Aircraft Toggle
+ * Authentic dual-transient mechanical switch toggle (Audible, crisp, satisfying)
+ */
+export function playCockpitSwitchSound(isOff = false) {
+  try {
+    const ctx = getSharedAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+    const now = ctx.currentTime;
+    const baseFreq = isOff ? 1650 : 2100;
+
+    // Transient noise click (contact mechanical snap)
+    const bufferSize = Math.floor(ctx.sampleRate * 0.016);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = "bandpass";
+    noiseFilter.frequency.setValueAtTime(baseFreq, now);
+    noiseFilter.Q.setValueAtTime(4.2, now);
+
+    const noiseGain = ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.35, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    noise.start(now);
+
+    // Metallic lever detent ping
+    const detentOsc = ctx.createOscillator();
+    const detentGain = ctx.createGain();
+    detentOsc.type = "sine";
+    detentOsc.frequency.setValueAtTime(baseFreq * 0.65, now);
+    detentOsc.frequency.exponentialRampToValueAtTime(320, now + 0.04);
+
+    detentGain.gain.setValueAtTime(0.22, now);
+    detentGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+
+    detentOsc.connect(detentGain);
+    detentGain.connect(ctx.destination);
+    detentOsc.start(now);
+    detentOsc.stop(now + 0.05);
+  } catch {
+    // Autoplay policy fallback
+  }
+}
+
+/**
+ * 2. Executive Luxury Cabin Chime (Pressurized Gulfstream/Global 7500 Cabin Note)
+ * Pure harmonic two-tone sine chime (784Hz [G5] to 1046Hz [C6])
+ */
+export function playCabinChimeSound() {
+  try {
+    const ctx = getSharedAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+    const now = ctx.currentTime;
+
+    // Tone 1: High fundamental
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(1046.5, now); // C6
+
+    gain1.gain.setValueAtTime(0.001, now);
+    gain1.gain.linearRampToValueAtTime(0.22, now + 0.012);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 1.25);
+
+    // Tone 2: Warm fifth harmonic support
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(783.99, now); // G5
+
+    gain2.gain.setValueAtTime(0.001, now);
+    gain2.gain.linearRampToValueAtTime(0.18, now + 0.015);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now);
+    osc2.stop(now + 1.45);
+  } catch {
+    // Graceful fallback
+  }
+}
+
+/**
+ * 3. Tactile Avionic Interface Click (Micro-Relay)
+ */
+export function playTactileClickSound() {
+  try {
+    const ctx = getSharedAudioContext();
+    if (!ctx) return;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(2400, now);
+    osc.frequency.exponentialRampToValueAtTime(450, now + 0.018);
+
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.022);
+  } catch {
+    // Fallback
+  }
+}
+
+/**
+ * 4. Solid Heavy Mechanical Dock Synthesizer
+ */
 export function playSolidDockSound(cardIndex = 0) {
   try {
     const ctx = getSharedAudioContext();
@@ -31,7 +165,6 @@ export function playSolidDockSound(cardIndex = 0) {
 
     const now = ctx.currentTime;
 
-    // Master Output Stage with safety limiter
     const masterGain = ctx.createGain();
     masterGain.gain.setValueAtTime(0.92, now);
     masterGain.connect(ctx.destination);
@@ -44,8 +177,8 @@ export function playSolidDockSound(cardIndex = 0) {
     comp.release.setValueAtTime(0.09, now);
     comp.connect(masterGain);
 
-    // 1. Crisp Mechanical Latch Click & Snap (Audible on any speaker)
-    const bufferSize = Math.floor(ctx.sampleRate * 0.024); // 24ms crisp burst
+    // 1. Crisp Mechanical Latch Click
+    const bufferSize = Math.floor(ctx.sampleRate * 0.024);
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
@@ -69,7 +202,7 @@ export function playSolidDockSound(cardIndex = 0) {
     clickGain.connect(comp);
     clickSource.start(now);
 
-    // 2. Secondary Latch Tongue Clack (Mid-range mechanical impact)
+    // 2. Secondary Latch Tongue Clack
     const clackOsc = ctx.createOscillator();
     const clackGain = ctx.createGain();
     const clackFilter = ctx.createBiquadFilter();
@@ -92,7 +225,7 @@ export function playSolidDockSound(cardIndex = 0) {
     clackOsc.start(now);
     clackOsc.stop(now + 0.06);
 
-    // 3. Audible Metallic Body Thud (Punchy mid-bass that cuts through laptop speakers)
+    // 3. Metallic Body Thud
     const bodyOsc = ctx.createOscillator();
     const bodyGain = ctx.createGain();
     const bodyFilter = ctx.createBiquadFilter();
@@ -116,7 +249,7 @@ export function playSolidDockSound(cardIndex = 0) {
     bodyOsc.start(now);
     bodyOsc.stop(now + 0.17);
 
-    // 4. Solid Sub-Bass Foundation (Physical weight and heft)
+    // 4. Solid Sub-Bass Foundation
     const subOsc = ctx.createOscillator();
     const subGain = ctx.createGain();
 

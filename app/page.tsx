@@ -5,14 +5,13 @@ import Hero from "@/components/home/Hero";
 import SectionFocusItem from "@/components/home/SectionFocusItem";
 import SectionDivider from "@/components/home/SectionDivider";
 
-// ── Below-the-fold components dynamically code-split for sub-second initial load & reduced JS payload ──
+// ── Below-the-fold components dynamically code-split for sub-second initial load with full SSR text for AI crawlers ──
 const OurLineup = dynamic(() => import("@/components/home/OurLineup"));
-const FullStackDeck = dynamic(() => import("@/components/home/FullStackDeck"), { ssr: false });
-const MarketIntelligenceSection = dynamic(() => import("@/components/home/MarketIntelligenceSection"), { ssr: false });
-const ScrollFlightJet = dynamic(() => import("@/components/home/ScrollFlightJet"), { ssr: false });
-const OneLiner = dynamic(() => import("@/components/home/OneLiner"), { ssr: false });
+const FullStackDeck = dynamic(() => import("@/components/home/FullStackDeck"));
+const MarketIntelligenceSection = dynamic(() => import("@/components/home/MarketIntelligenceSection"));
+const OneLiner = dynamic(() => import("@/components/home/OneLiner"));
 const PartnerStrip = dynamic(() => import("@/components/home/PartnerStrip"));
-const VisionTimeline = dynamic(() => import("@/components/home/VisionTimeline"), { ssr: false });
+const VisionTimeline = dynamic(() => import("@/components/home/VisionTimeline"));
 const ContactSection = dynamic(() => import("@/components/home/ContactSection"));
 
 export default function Home() {
@@ -40,25 +39,17 @@ export default function Home() {
 
         <SectionDivider />
 
-        {/* 3D Flying Jet connecting Ecosystem -> Logos -> Vision Timeline (Desktop only to prevent mobile clutter/slowdown) */}
-        <div className="hidden lg:block">
-          <ScrollFlightJet />
-        </div>
-
-        {/* 3. M1 One-Liner Statement */}
+        {/* 3. M1 One-Liner Statement (Ecosystem with 3D Jet stationed on platform) */}
         <div id="philosophy" className="relative z-20 w-full">
           <OneLiner />
         </div>
 
-        {/* 4. Industry Partner Logo Strip (Crisp, fully legible, z-30 in front of flying jet) */}
+        {/* 4. Industry Partner Logo Strip */}
         <div id="partners" className="relative z-30 w-full">
           <PartnerStrip />
         </div>
 
-        {/* Dedicated scroll corridor for cinematic 3D flight maneuver (Desktop only) */}
-        <div id="flight-corridor" className="hidden lg:block relative w-full h-[65vh] pointer-events-none" />
-
-        {/* 5. 10-Year Vision Timeline */}
+        {/* 5. 10-Year Vision Timeline (With dedicated 3D Jet starting on the road) */}
         <SectionFocusItem id="vision">
           <VisionTimeline />
         </SectionFocusItem>

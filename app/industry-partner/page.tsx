@@ -7,57 +7,90 @@ import PlayYourRoleCTA from "@/components/ui/PlayYourRoleCTA";
 import { ALL_LOGOS } from "@/components/home/PartnerStrip";
 import PartnerEngagementCarousel from "@/components/industry/PartnerEngagementCarousel";
 
-const ENGAGEMENT_CARDS = [
+const INDUSTRY_PARTNER_CARDS = [
   {
-    id: "geneva",
-    tag: "Protocol 01",
-    title: "Geneva Executive Aviation Summit",
-    location: "Geneva, Switzerland",
-    date: "Q2 2026",
-    summary:
-      "Strategic roundtable with tier-1 jet operators aligning SAIOS autonomous airframe diagnostics with European business aviation workflows.",
-    category: "Symposium & Protocol",
-    image: "/images/article-1.jpg",
-    stats: "48 Operators • 340 Aircraft Managed",
-    ctaLabel: "Review Delegation Protocol",
-    cardStyle:
-      "bg-[#1c232d] border-slate-300/65 shadow-[0_28px_65px_rgba(0,0,0,0.7)]",
-    badgeStyle: "bg-slate-950 text-slate-100 border-slate-500/50",
-    buttonVariant: "silver" as const,
+    id: "reza-naqvi",
+    name: "Reza Naqvi",
+    currentPosition: "Director of Charter Sales",
+    company: "Flyme Aviation / RezaNaqvi Advisory",
+    m1Role: "Charter Aviation Consultant & Emerging Markets Partner",
+    remarks:
+      "I believe M1 should focus on developing aviation markets like India, China, and South Africa, starting their expansion from these regions rather than mainland aviation. New frontiers are welcoming new innovators to replace legacy tools.",
+    image: "/images/partners/user-reza-naqvi.jpeg",
+    linkedinUrl: "https://rezanaqvi.com",
+    cardStyle: "bg-gradient-to-br from-[#121c2d] via-[#091527] to-[#030914] border-blue-400/40 shadow-[0_28px_65px_rgba(2,10,25,0.85)]",
+    badgeStyle: "bg-blue-950 text-blue-200 border-blue-400/50",
+    imagePosition: "center 22%",
   },
   {
-    id: "north-america",
-    tag: "Trial 02",
-    title: "North American Fleet Efficiency Trials",
-    location: "Dallas / Fort Worth, TX",
-    date: "Q3 2026",
-    summary:
-      "Field trials verifying automated flight telemetry capture and FAA digital airworthiness synchronization across 40 corporate jet airframes.",
-    category: "Operational Trial",
-    image: "/images/article-2.jpg",
-    stats: "99.8% Telemetry Accuracy • Zero AOG Incidents",
-    ctaLabel: "Examine Trial Telemetry",
-    cardStyle:
-      "bg-[#0d2847] border-sky-400/65 shadow-[0_28px_65px_rgba(6,32,70,0.75)]",
-    badgeStyle: "bg-[#07182e] text-sky-300 border-sky-400/45",
-    buttonVariant: "silver" as const,
+    id: "andrei-melentev",
+    name: "Andrei Melentev",
+    currentPosition: "Aviation Sales Specialist",
+    company: "ATM Jets",
+    m1Role: "Industry Partner & Data Sets Advisor",
+    remarks:
+      "Traditional systems like CAMP, JetNet and others charge unreasonably a lot to brokers and brokerage firms, while their software shows little innovation. I would switch to M1 when they launch with more comprehensive aircraft datasets at much more reasonable rates.",
+    image: "/images/partners/user-andrei-melentev.png",
+    linkedinUrl: "https://www.linkedin.com/search/results/all/?keywords=Andrei%20Melentev%20ATM%20Jets",
+    cardStyle: "bg-gradient-to-br from-[#0c1b33] via-[#091528] to-[#040b17] border-sky-500/40 shadow-[0_28px_65px_rgba(2,12,30,0.85)]",
+    badgeStyle: "bg-sky-950 text-sky-200 border-sky-400/50",
+    imagePosition: "center 38%",
   },
   {
-    id: "transatlantic",
-    tag: "Alliance 03",
-    title: "Transatlantic MRO Digital Protocol",
-    location: "London Luton Airport, UK",
-    date: "Q4 2026",
-    summary:
-      "Ratifying interoperability standards with leading MROs for streamlined avionics component replacement and direct escrow clearance.",
-    category: "MRO Alliance",
-    image: "/images/article-3.jpg",
-    stats: "12 Certified Repair Facilities • Instant Escrow",
-    ctaLabel: "Access MRO Framework",
-    cardStyle:
-      "bg-[#2b1745] border-violet-400/65 shadow-[0_28px_65px_rgba(40,14,72,0.75)]",
-    badgeStyle: "bg-[#1a0d2b] text-violet-200 border-violet-400/45",
-    buttonVariant: "silver" as const,
+    id: "nolan-kiely",
+    name: "Nolan Kiely",
+    currentPosition: "Aerospace Analyst & Founder",
+    company: "Crimson Air Services / Skies Mag",
+    m1Role: "General Aviation Consultant & Strategic Advisor",
+    remarks:
+      "I am very happy to see young people at M1 coming into aviation from an outside tech perspective and innovating. It's not easy to build in aviation. A broader perspective on efficiency is much needed—veterans naturally think inside the box. I am excited to consult on niche aviation for M1.",
+    image: "/images/partners/user-nolan-kiely.png",
+    linkedinUrl: "https://www.linkedin.com/search/results/all/?keywords=Nolan%20Kiely%20Crimson%20Air%20Services",
+    cardStyle: "bg-gradient-to-br from-[#0e1d35] via-[#081529] to-[#040c1a] border-cyan-400/40 shadow-[0_28px_65px_rgba(2,14,35,0.85)]",
+    badgeStyle: "bg-cyan-950 text-cyan-200 border-cyan-400/50",
+    imagePosition: "center 25%",
+  },
+  {
+    id: "rumi-hammed",
+    name: "Rumi Hammed",
+    currentPosition: "Venture Associate & Web3 Lead",
+    company: "Drypowder VC",
+    m1Role: "Web3 & DePIN Consultant, Early Board",
+    remarks:
+      "I am very interested in seeing how M1 is going to introduce DePIN to the aviation industry, helping aviation reposition for new socio-economic systems. I am proud to be part of their early board and journey.",
+    image: "/images/partners/user-rumi-hammed.png",
+    linkedinUrl: "https://www.linkedin.com/search/results/all/?keywords=Rumi%20Hammed%20Drypowder%20VC",
+    cardStyle: "bg-gradient-to-br from-[#171630] via-[#0b1226] to-[#040817] border-indigo-400/40 shadow-[0_28px_65px_rgba(8,8,30,0.85)]",
+    badgeStyle: "bg-indigo-950 text-indigo-200 border-indigo-400/50",
+    imagePosition: "center 42%",
+  },
+  {
+    id: "fortress-jide",
+    name: "Fortress Jide",
+    currentPosition: "Aviation Systems Director",
+    company: "Avionics Global",
+    m1Role: "M1 Consumer & Industry Scaling Partner",
+    remarks:
+      "I believe M1 is building something truly visionary. M1's direction is evolution—they are thinking far ahead beyond just an aircraft marketplace.",
+    image: "/images/partners/user-fortress-jide.png",
+    linkedinUrl: "https://www.linkedin.com/search/results/all/?keywords=Fortress%20Jide%20Aviation",
+    cardStyle: "bg-gradient-to-br from-[#141d2d] via-[#091527] to-[#030914] border-slate-400/40 shadow-[0_28px_65px_rgba(2,10,25,0.85)]",
+    badgeStyle: "bg-slate-900 text-slate-200 border-slate-400/50",
+    imagePosition: "center 25%",
+  },
+  {
+    id: "nicola-nobile",
+    name: "Nicola Nobile",
+    currentPosition: "Founder & CEO",
+    company: "BN Aviation",
+    m1Role: "Helicopter Brokerage Consultant & Industry Partner",
+    remarks:
+      "I really like what the team is achieving at M1. I would love to support their growth and see how I can contribute directly to the platform's development.",
+    image: "/images/partners/user-nicola-nobile.jpeg",
+    linkedinUrl: "https://www.linkedin.com/search/results/all/?keywords=Nicola%20Nobile%20BN%20Aviation",
+    cardStyle: "bg-gradient-to-br from-[#0c1f36] via-[#081529] to-[#030a16] border-amber-500/40 shadow-[0_28px_65px_rgba(2,12,30,0.85)]",
+    badgeStyle: "bg-amber-950 text-amber-200 border-amber-400/50",
+    imagePosition: "center 38%",
   },
 ];
 
@@ -165,8 +198,8 @@ export default function IndustryPartnerPage() {
         </div>
       </section>
 
-      {/* ── 2. Partner Engagement Showcase: 3D Center-Peek Glide Carousel ── */}
-      <PartnerEngagementCarousel cards={ENGAGEMENT_CARDS} />
+      {/* ── 2. Partner Engagement Showcase: 3D Center-Peek Glide Carousel (6 VIP Industry Partners) ── */}
+      <PartnerEngagementCarousel cards={INDUSTRY_PARTNER_CARDS} />
 
       {/* ── 3. Industry Partner Benefits Section (Alliance Program) ── */}
       <section className="relative z-10 py-24 sm:py-32 px-6 md:px-12 max-w-6xl mx-auto w-full border-t border-zinc-900/80">

@@ -114,7 +114,7 @@ const jsonLdData = {
       "description":
         "M1 Aviation is the unified digital ecosystem for business aviation: verified aircraft marketplace with 7-step assisted acquisition, SIOS autonomous operating intelligence, and global industry partner alliance.",
       "telephone": "+1-800-612-3760",
-      "email": "contact@m-1.tech",
+      "email": "Team@m1.rsistudio.net",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Brock Road",
@@ -172,7 +172,7 @@ const jsonLdData = {
             "longitude": -79.0868
           },
           "telephone": "+1-800-612-3760",
-          "email": "contact@m-1.tech"
+          "email": "Team@m1.rsistudio.net"
         },
         {
           "@type": ["LocalBusiness", "ResearchOrganization"],
@@ -191,15 +191,22 @@ const jsonLdData = {
             "longitude": 72.6861
           },
           "telephone": "+1-800-612-3760",
-          "email": "contact@m-1.tech"
+          "email": "Team@m1.rsistudio.net"
         }
       ],
       "foundingDate": "2026",
-      "founder": {
-        "@type": "Person",
-        "name": "Rayyan Shuja",
-        "jobTitle": "Founder & CEO"
-      },
+      "founders": [
+        {
+          "@type": "Person",
+          "name": "Areez Rao",
+          "jobTitle": "Founder, M1 Aviation & SIOS"
+        },
+        {
+          "@type": "Person",
+          "name": "Rayyan Shuja",
+          "jobTitle": "Co-Founder & CEO"
+        }
+      ],
       "sameAs": [
         "https://linkedin.com/company/m1-aviation",
         "https://x.com/m1_aviation",
@@ -210,14 +217,14 @@ const jsonLdData = {
         {
           "@type": "ContactPoint",
           "telephone": "+1-800-612-3760",
-          "email": "contact@m-1.tech",
+          "email": "Team@m1.rsistudio.net",
           "contactType": "Customer Support & Aircraft Brokerage Inquiries",
           "areaServed": "Worldwide",
           "availableLanguage": ["English"]
         },
         {
           "@type": "ContactPoint",
-          "email": "contact@m-1.tech",
+          "email": "Team@m1.rsistudio.net",
           "contactType": "Executive Consultation & Flight Operations",
           "url": "https://cal.com/m1-aviation"
         }
@@ -349,7 +356,34 @@ const jsonLdData = {
           "acceptedAnswer": {
             "@type": "Answer",
             "text":
-              "SIOS stands for Super Intelligent Operating System. It is an autonomous software intelligence layer for business jets that automatically captures flight telemetry, forecasts predictive maintenance, monitors FAA/EASA airworthiness directives, and maintains an immutable digital airframe provenance."
+              "SIOS stands for Super Intelligent Operating System. Founded by Areez Rao at M1 Aviation, it is an autonomous software intelligence layer for business jets that automatically captures flight telemetry, forecasts predictive maintenance, monitors FAA/EASA airworthiness directives, and maintains an immutable digital airframe provenance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the 6 core functions of SIOS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "SIOS architecture is structured into 6 core functions: 1. Extreme Compute Density (flight envelope telemetry ingestion), 2. Autonomous Decision Heuristics (fleet-wide routing and performance optimization), 3. Ultra-Low-Latency Avionics Bus Interfacing, 4. Global Connected Grid (unifying aircraft, flight crews, and Part 145 MROs), 5. Immutable Digital Provenance (tamper-proof airframe logbooks), and 6. Proactive Airworthiness Compliance (automated FAA/EASA AD & SB tracking)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Top 30 Unified Aviation Tools Matrix in SIOS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "SIOS unifies 30 leading aviation software and avionics systems into a single curved telemetry dashboard, bridging flight planning (ForeFlight, Jeppesen FliteDeck, Garmin Pilot), MRO maintenance tracking (CAMP Systems, Flightdocs, Veryon, TRAX, AMOS), operations & dispatch (Avianis, FL3XX, FOS), charter quoting (Avinode), and real-time transponder telemetry (FlightAware Firehose, ADS-B Exchange)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does M1 protect private jet buyers from ghost listings and scam deposits?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text":
+              "M1 Marketplace eliminates phantom listings through mandatory serial number and logbook provenance audits prior to listing, neutral third-party attorney escrow accounts for deposit security, and independent Part 145 repair station pre-purchase inspections before any purchase funds can be disbursed."
           }
         },
         {
@@ -376,7 +410,7 @@ const jsonLdData = {
           "acceptedAnswer": {
             "@type": "Answer",
             "text":
-              "M1 Aviation operates globally with headquarters on Brock Road in Pickering, Ontario, Canada, and a Technology & Research Center in Sargodha, Pakistan. Flight advisory and transaction escrow support operate 24/7 globally via contact@m-1.tech and cal.com/m1-aviation."
+              "M1 Aviation operates globally with headquarters on Brock Road in Pickering, Ontario, Canada, and a Technology & Research Center in Sargodha, Pakistan. Flight advisory and transaction escrow support operate 24/7 globally via Team@m1.rsistudio.net and cal.com/m1-aviation."
           }
         },
         {

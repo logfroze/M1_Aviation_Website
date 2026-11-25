@@ -24,8 +24,8 @@ export default function VisionTimeline() {
 
   const [progress, setProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [landingProgress, setLandingProgress] = useState(0);
-  const [isLandedAtRunway, setIsLandedAtRunway] = useState(false);
+  const [landingProgress, setLandingProgress] = useState(1.0);
+  const [isLandedAtRunway, setIsLandedAtRunway] = useState(true);
 
   // Mobile progressive reveal: Milestone 0 (Phase 01) is visible initially, next ones reveal on scroll
   const [visibleMilestones, setVisibleMilestones] = useState<number[]>([0]);
@@ -84,36 +84,14 @@ export default function VisionTimeline() {
         const p = smoothRef.current;
         setProgress(p);
 
-        // Smoothly map active milestone index across the 6 milestones
-        const pContinuous = clamp(((p - 0.06) / 0.60) * 5.0, 0, 5.8);
+        // Smoothly map active milestone index across the 6 milestones (extended duration ~2s per milestone)
+        const pContinuous = clamp(((p - 0.04) / 0.82) * 5.0, 0, 5.8);
         const ni = clamp(Math.round(pContinuous), 0, TOTAL - 1);
         setActiveIndex(ni);
 
-        // Strict single-plane handoff synchronized with ScrollFlightJet touchdown
-        const isFlightActive =
-          typeof window !== "undefined" &&
-          !!(window as unknown as { __M1_SCROLL_JET_ACTIVE?: boolean }).__M1_SCROLL_JET_ACTIVE;
-        const flightLandingP =
-          typeof window !== "undefined"
-            ? (window as unknown as { __M1_SCROLL_JET_LANDING_P?: number }).__M1_SCROLL_JET_LANDING_P ?? 1.0
-            : 1.0;
-
-        if (isFlightActive) {
-          // While flight jet is approaching, keep runway jet hidden.
-          // The instant flight jet touches down (flightLandingP >= 0.98), activate runway jet with zero double-plane ghosting
-          const isLanded = flightLandingP >= 0.98;
-          setLandingProgress(isLanded ? 1.0 : 0.0);
-          setIsLandedAtRunway(isLanded || p > 0);
-        } else {
-          // Fallback when scrolled directly into vision or flight completed
-          if (sectionRef.current) {
-            const rect = sectionRef.current.getBoundingClientRect();
-            setIsLandedAtRunway(rect.top <= 20 || p > 0);
-          } else {
-            setIsLandedAtRunway(true);
-          }
-          setLandingProgress(1.0);
-        }
+        // Dedicated 3D Jet starts immediately at the runway road start and glides smoothly along the road
+        setIsLandedAtRunway(true);
+        setLandingProgress(1.0);
       }
 
       rafRef.current = requestAnimationFrame(loop);
@@ -137,7 +115,7 @@ export default function VisionTimeline() {
     const docTop = scrollY + rect.top;
     const scrollable = sectionRef.current.offsetHeight - window.innerHeight;
     // Map milestone index to its focal scroll position across roadmap
-    const targetP = 0.06 + (index / (TOTAL - 1)) * 0.60;
+    const targetP = 0.04 + (index / (TOTAL - 1)) * 0.82;
     window.scrollTo({
       top: docTop + targetP * scrollable,
       behavior: "smooth",
@@ -164,8 +142,8 @@ export default function VisionTimeline() {
   // User Requirement: "First of all bring the plane lower. Closer to the road. Reduce it's altitude."
   const baseJetBottom = 0.0; // Jet flies low, hugging closely down right above the road surface
 
-  // End of roadmap transition (progress 0.78 -> 0.98)
-  const exitProgress = clamp((progress - 0.78) / 0.18, 0, 1);
+  // End of roadmap transition (progress 0.88 -> 0.99)
+  const exitProgress = clamp((progress - 0.88) / 0.11, 0, 1);
   const exitEase = exitProgress * exitProgress * (3 - 2 * exitProgress);
 
   // Synchronized continuous forward motion of rocks and road platform with scroll
@@ -177,8 +155,8 @@ export default function VisionTimeline() {
 
   // Aerodynamic banking down the runway in True 3D (Refined, smooth flight flow)
   // Continuous milestone progress from 0.0 to 5.8:
-  // 0.0 to 5.0 represents milestones 0 to 5; > 5.0 ensures the 6th ring fully passes camera
-  const continuousMilestone = clamp(((progress - 0.06) / 0.60) * 5.0, 0, 5.8);
+  // Extended timeline gives ~2s per milestone in perfect sync with the rings
+  const continuousMilestone = clamp(((progress - 0.04) / 0.82) * 5.0, 0, 5.8);
   const cruiseProgress = clamp(continuousMilestone / 5.0, 0, 1);
   const bankWave = Math.sin(cruiseProgress * Math.PI * 3.5);
   const cruisingDrift = bankWave * 36; // Subtle, controlled lateral drift
@@ -210,7 +188,7 @@ export default function VisionTimeline() {
     : 0;
 
   // ── 2. MILESTONE CARD LOGIC (ALTERNATING SIDES, HIDDEN AT START & AT FINAL EXIT) ──
-  const showCards = progress >= 0.035 && progress <= 0.74;
+  const showCards = progress >= 0.025 && progress <= 0.88;
   const isLeftCard = activeIndex % 2 === 0;
   const currentMilestone = VISION_MILESTONES[activeIndex];
 
@@ -229,11 +207,11 @@ export default function VisionTimeline() {
       aria-label="The 10-Year Vision Roadmap"
       className="relative w-full select-none"
     >
-      {/* ── DESKTOP: 720vh Interactive 3D Concentric Tunnel (Untouched PC View) ── */}
+      {/* ── DESKTOP: 1350vh Interactive 3D Concentric Tunnel (Extended ~2s Duration Pacing) ── */}
       <div
         ref={sectionRef}
         className="hidden lg:block relative w-full"
-        style={{ height: "720vh" }}
+        style={{ height: "1350vh" }}
       >
         <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#01050a] flex items-center justify-center">
 

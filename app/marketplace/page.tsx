@@ -64,7 +64,7 @@ const HERO_CARD_ROW_1: HeroCarouselCard[] = [
     year: "2020",
     location: "Miami, FL",
     badge: "FEATURED",
-    image: "/images/article-3.jpg",
+    image: "/images/jet-g700-flight.jpg",
   },
   {
     model: "Pilatus PC-24",
@@ -103,7 +103,7 @@ const HERO_CARD_ROW_2: HeroCarouselCard[] = [
     year: "2021",
     location: "Worldwide",
     badge: "VERIFIED",
-    image: "/images/article-5.jpg",
+    image: "/images/card-g650er.jpg",
   },
   {
     model: "Gulfstream G650ER",
@@ -130,7 +130,7 @@ const HERO_CARD_ROW_2: HeroCarouselCard[] = [
     year: "2022",
     location: "Los Angeles, CA",
     badge: "VERIFIED",
-    image: "/images/marketplace-card.jpg",
+    image: "/images/card-falcon-2000s.jpg",
   },
   {
     model: "Boeing Business Jet 2",
@@ -139,7 +139,7 @@ const HERO_CARD_ROW_2: HeroCarouselCard[] = [
     year: "2019",
     location: "Washington, DC",
     badge: "VERIFIED",
-    image: "/images/summit-engagement.jpg",
+    image: "/images/jet-g700-flight.jpg",
   },
   {
     model: "Airbus ACJ319neo",
@@ -160,7 +160,7 @@ const HERO_CARD_ROW_3: HeroCarouselCard[] = [
     year: "2023",
     location: "Denver, CO",
     badge: "FEATURED",
-    image: "/images/article-1.jpg",
+    image: "/images/card-hondajet-elite.jpg",
   },
   {
     model: "Beechcraft King Air 360",
@@ -169,7 +169,7 @@ const HERO_CARD_ROW_3: HeroCarouselCard[] = [
     year: "2022",
     location: "Dallas, TX",
     badge: "VERIFIED",
-    image: "/images/article-2.jpg",
+    image: "/images/card-citation-latitude.jpg",
   },
   {
     model: "AgustaWestland AW139",
@@ -178,7 +178,7 @@ const HERO_CARD_ROW_3: HeroCarouselCard[] = [
     year: "2021",
     location: "Milan, IT",
     badge: "FEATURED",
-    image: "/images/article-4.jpg",
+    image: "/images/card-phenom-300e.jpg",
   },
   {
     model: "Sikorsky S-92 VIP",
@@ -187,7 +187,7 @@ const HERO_CARD_ROW_3: HeroCarouselCard[] = [
     year: "2020",
     location: "London, UK",
     badge: "VERIFIED",
-    image: "/images/footer-jet.jpg",
+    image: "/images/jet-global7500-tarmac.jpg",
   },
   {
     model: "Embraer Praetor 600",
@@ -274,94 +274,6 @@ function MarketplaceHeroCardView({ card }: { card: HeroCarouselCard }) {
     </div>
   );
 }
-
-// ── Marketplace Version 2.0 Specifications & Features ──
-const V2_LAWS = [
-  {
-    number: "01",
-    shortTitle: "Market Intelligence",
-    title: "Market Intelligence",
-    law: "Global Airframe Opportunity Index",
-    summary:
-      "Discover aircraft opportunities, monitor listing status, and explore a database of more than 300,000 aircraft models.",
-    metric: "300,000+ Aircraft Models",
-    detail: "Real-time Listing Status & Opportunity Monitoring",
-    theme: {
-      cardBg: "bg-[linear-gradient(145deg,#061422_0%,#0c2236_35%,#123654_65%,#08192a_100%)]",
-      borderColor: "border-cyan-500/35 hover:border-cyan-400/50",
-      glowShadow: "shadow-[0_25px_60px_rgba(6,182,212,0.14),inset_0_1px_2px_rgba(103,232,249,0.25)]",
-      accentText: "text-cyan-400",
-      badgeClass: "bg-cyan-950/70 border-cyan-500/35 text-cyan-300",
-      metricColor: "text-cyan-300",
-      barColor: "bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.6)]",
-      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(34,211,238,0.12)_0%,rgba(6,182,212,0.03)_40%,transparent_75%)]",
-      tabActive: "bg-cyan-950/80 text-cyan-300 border-cyan-400/60 shadow-[0_0_15px_rgba(34,211,238,0.25)]",
-    },
-  },
-  {
-    number: "02",
-    shortTitle: "Industry Partner",
-    title: "Industry Partner",
-    law: "Exclusive Operator Network Protocol",
-    summary:
-      "Join the exclusive Industry Partner circle. Share off-market acquisition opportunities. Keep an eye on industry news about emerging opportunities.",
-    metric: "Exclusive Partner Circle",
-    detail: "Off-Market Acquisition & Industry News",
-    theme: {
-      cardBg: "bg-[linear-gradient(145deg,#150a24_0%,#221038_35%,#33184e_65%,#160a26_100%)]",
-      borderColor: "border-purple-500/35 hover:border-purple-400/50",
-      glowShadow: "shadow-[0_25px_60px_rgba(168,85,247,0.14),inset_0_1px_2px_rgba(216,180,254,0.25)]",
-      accentText: "text-purple-400",
-      badgeClass: "bg-purple-950/70 border-purple-500/35 text-purple-300",
-      metricColor: "text-purple-300",
-      barColor: "bg-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.6)]",
-      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(192,132,252,0.12)_0%,rgba(168,85,247,0.03)_40%,transparent_75%)]",
-      tabActive: "bg-purple-950/80 text-purple-300 border-purple-400/60 shadow-[0_0_15px_rgba(192,132,252,0.25)]",
-    },
-  },
-  {
-    number: "03",
-    shortTitle: "Assisted Acquisition",
-    title: "7-step Assisted Acquisition",
-    law: "Transparent Acquisition Corridor",
-    summary:
-      "The whole acquisition process made easy by M1 Marketplace. Acquisition process based on transparency, built for efficiency.",
-    metric: "7-Step Assisted Framework",
-    detail: "End-to-End Transparency & Operational Efficiency",
-    theme: {
-      cardBg: "bg-[linear-gradient(145deg,#1a0f05_0%,#2a1909_35%,#3d250f_65%,#1c1005_100%)]",
-      borderColor: "border-amber-500/35 hover:border-amber-400/50",
-      glowShadow: "shadow-[0_25px_60px_rgba(245,158,11,0.14),inset_0_1px_2px_rgba(252,211,77,0.25)]",
-      accentText: "text-amber-400",
-      badgeClass: "bg-amber-950/70 border-amber-500/35 text-amber-300",
-      metricColor: "text-amber-300",
-      barColor: "bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.6)]",
-      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(251,191,36,0.12)_0%,rgba(245,158,11,0.03)_40%,transparent_75%)]",
-      tabActive: "bg-amber-950/80 text-amber-300 border-amber-400/60 shadow-[0_0_15px_rgba(251,191,36,0.25)]",
-    },
-  },
-  {
-    number: "04",
-    shortTitle: "Verified Listing",
-    title: "Verified Listing",
-    law: "Multi-Tier Verification Standard",
-    summary:
-      "Listings that complete M1's verification process receive a distinct verified status, helping buyers identify listings that have undergone additional checks. Verified listings are 9.7x more trustworthy.",
-    metric: "9.7x More Trustworthy",
-    detail: "Distinct Status Following Rigorous Verification",
-    theme: {
-      cardBg: "bg-[linear-gradient(145deg,#051912_0%,#0a281e_35%,#0f3d2e_65%,#061a13_100%)]",
-      borderColor: "border-emerald-500/35 hover:border-emerald-400/50",
-      glowShadow: "shadow-[0_25px_60px_rgba(16,185,129,0.14),inset_0_1px_2px_rgba(110,231,183,0.25)]",
-      accentText: "text-emerald-400",
-      badgeClass: "bg-emerald-950/70 border-emerald-500/35 text-emerald-300",
-      metricColor: "text-emerald-300",
-      barColor: "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.6)]",
-      radialGlow: "bg-[radial-gradient(ellipse_at_top_right,rgba(52,211,153,0.12)_0%,rgba(16,185,129,0.03)_40%,transparent_75%)]",
-      tabActive: "bg-emerald-950/80 text-emerald-300 border-emerald-400/60 shadow-[0_0_15px_rgba(52,211,153,0.25)]",
-    },
-  },
-];
 
 // ── Highlighted Aircraft Listings ──
 const HIGHLIGHT_LISTINGS = [
@@ -537,38 +449,9 @@ const MARKETPLACE_STATS = [
 
 export default function MarketplacePage() {
   const [activeCategory, setActiveCategory] = useState("ALL");
-  const [activeLawIndex, setActiveLawIndex] = useState(0);
-  const [isLawPaused, setIsLawPaused] = useState(false);
-  const [lawProgress, setLawProgress] = useState(0);
   const bottomBlurRef = useRef<HTMLDivElement>(null);
   const bottomGradientRef = useRef<HTMLDivElement>(null);
   const heroOverlayRef = useRef<HTMLDivElement>(null);
-
-  // ── Auto-movement carousel for Marketplace Version 2.0 (12 seconds per feature) ──
-  useEffect(() => {
-    if (isLawPaused) return;
-
-    const intervalMs = 60;
-    const step = (intervalMs / 12000) * 100;
-
-    const timer = setInterval(() => {
-      setLawProgress((prev) => {
-        if (prev >= 100) {
-          setActiveLawIndex((curr) => (curr + 1) % V2_LAWS.length);
-          return 0;
-        }
-        return prev + step;
-      });
-    }, intervalMs);
-
-    return () => clearInterval(timer);
-  }, [isLawPaused]);
-
-  const handleSelectLaw = (index: number) => {
-    setActiveLawIndex(index);
-    setLawProgress(0);
-    playSolidDockSound(1);
-  };
 
   // ── Scroll-reactive bottom blur & dissolve to black (matching main website hero) ──
   useEffect(() => {
@@ -707,6 +590,12 @@ export default function MarketplacePage() {
             <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-tight text-white uppercase whitespace-nowrap drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)]">
               MARKETPLACE
             </h1>
+            <span className="sr-only">
+              – Verified Pre-Owned Business Jet Acquisition, Market Intelligence & Escrow Platform by M1 Aviation
+            </span>
+            <p className="sr-only">
+              Browse verified private jets for sale, historical flight cycle valuations, and the proprietary 7-step assisted acquisition process with Part 145 inspection oversight and institutional escrow.
+            </p>
           </div>
         </div>
 
@@ -732,130 +621,7 @@ export default function MarketplacePage() {
         </div>
       </section>
 
-      {/* ── 2. Version 2.0 Specifications & Laws Section (Balanced Feature Presentation) ── */}
-      <section id="v2" className="relative z-20 w-full max-w-5xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
-        <div className="text-center mb-10 sm:mb-12 space-y-3">
-          {/* <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-800 bg-zinc-950 text-[10px] font-mono tracking-[0.25em] text-zinc-400 uppercase">
-            Protocol Architecture
-          </div> */}
-          <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white">
-            Marketplace Version 2.0
-          </h2>
-          <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto font-light">
-            Aircraft discovery, market intelligence, and a more transparent acquisition process in one marketplace.
-          </p>
-        </div>
-
-        {/* Feature Navigation Tabs with Tilted Sharp Parallelograms (Matching CTA style) */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
-          {V2_LAWS.map((l, i) => (
-            <button
-              key={l.number}
-              onClick={() => handleSelectLaw(i)}
-              className={`px-4 sm:px-6 py-2.5 -skew-x-6 sm:-skew-x-12 text-xs font-mono tracking-wider uppercase transition-all duration-300 border select-none ${
-                i === activeLawIndex
-                  ? l.theme.tabActive
-                  : "bg-zinc-950/80 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
-              }`}
-            >
-              <span className="inline-block skew-x-6 sm:skew-x-12">{l.shortTitle}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Central Feature Card with Tilted Sharp Parallelogram Shape */}
-        {(() => {
-          const currentLaw = V2_LAWS[activeLawIndex];
-          const t = currentLaw.theme;
-
-          return (
-            <div
-              className="relative w-full max-w-3xl mx-auto px-2 sm:px-4"
-              onMouseEnter={() => setIsLawPaused(true)}
-              onMouseLeave={() => setIsLawPaused(false)}
-            >
-              {/* Tilted Parallelogram Card Container (sharp-edged, no rounded corners, tilted like CTA buttons) */}
-              <div
-                className={`relative -skew-x-6 sm:-skew-x-12 border ${t.borderColor} p-7 sm:p-11 flex flex-col justify-between overflow-hidden ${t.cardBg} ${t.glowShadow} transition-all duration-500 select-none shadow-2xl`}
-              >
-                {/* Subtle Top Progress Line following the slanted edge */}
-                <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-white/10 overflow-hidden">
-                  <div
-                    className={`h-full ${t.barColor} transition-[width] duration-100 ease-linear`}
-                    style={{ width: `${lawProgress}%` }}
-                  />
-                </div>
-
-                {/* Diffused Ambient Glow */}
-                <div className={`absolute inset-0 ${t.radialGlow} pointer-events-none`} />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_50%,rgba(0,0,0,0.4)_100%)] pointer-events-none" />
-
-                {/* Inner Content (un-skewed so text and layout remain perfectly upright) */}
-                <div className="relative z-10 skew-x-6 sm:skew-x-12 space-y-4 sm:space-y-5">
-                  {/* Top Bar: Law Badge & Autonomous Protocol indicator */}
-                  <div className="flex items-center justify-between">
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-widest uppercase ${t.accentText}`}>
-                      LAW {currentLaw.number}
-                    </span>
-
-                    {/* <div className={`flex items-center gap-2 px-3 py-1 -skew-x-6 sm:-skew-x-12 border text-[10px] font-mono tracking-wider ${t.badgeClass} backdrop-blur-sm`}>
-                      <span className="inline-flex items-center gap-2 skew-x-6 sm:skew-x-12">
-                        <span className={`w-1.5 h-1.5 rounded-full ${t.barColor} animate-pulse`} />
-                        <span>Autonomous Protocol</span>
-                      </span>
-                    </div> */}
-                  </div>
-
-                  {/* Title & Law Subtitle */}
-                  <div className="space-y-1">
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-light text-white tracking-tight leading-tight">
-                      {currentLaw.title}
-                    </h3>
-                    <div className={`text-xs font-mono tracking-widest uppercase font-medium ${t.accentText}`}>
-                      {currentLaw.law}
-                    </div>
-                  </div>
-
-                  {/* Body description */}
-                  <p className="text-sm sm:text-base text-zinc-200/90 font-light leading-relaxed">
-                    {currentLaw.summary}
-                  </p>
-
-                  {/* Bottom Metric & Specification Detail */}
-                  <div className="pt-5 mt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-xs sm:text-sm font-mono font-semibold tracking-wide ${t.metricColor}`}>
-                        ◆ {currentLaw.metric}
-                      </span>
-                    </div>
-                    <span className="text-xs font-mono text-zinc-400">
-                      {currentLaw.detail}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Subtle Tilted Pagination Indicators */}
-              <div className="flex items-center justify-center gap-2.5 mt-6">
-                {V2_LAWS.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleSelectLaw(i)}
-                    aria-label={`Jump to feature ${i + 1}`}
-                    className={`h-1.5 -skew-x-6 sm:-skew-x-12 transition-all duration-300 ${
-                      i === activeLawIndex
-                        ? `w-8 ${t.barColor}`
-                        : "w-3 bg-zinc-800 hover:bg-zinc-600"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })()}
-      </section>
-
-      {/* ── 3. HIGHLIGHTED LISTINGS: Continuous Smooth Moving Carousel (Right to Left) ── */}
+      {/* ── 2. HIGHLIGHTED LISTINGS: Continuous Smooth Moving Carousel (Right to Left) ── */}
       <section id="highlights" className="relative z-20 w-full py-20 sm:py-28 overflow-hidden bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
@@ -975,10 +741,10 @@ export default function MarketplacePage() {
       {/* ── 5. STATS Section Showcasing Active Telemetry & Network Scale (Moving Marquee Carousel) ── */}
       <section className="relative z-20 w-full py-16 sm:py-24 border-t border-zinc-900 overflow-hidden">
         <div className="text-center mb-10 space-y-2 px-4 max-w-6xl mx-auto">
-          <div className="text-[10px] font-mono tracking-[0.25em] text-zinc-500 uppercase">
+          <div className="text-[15px] font-mono tracking-[0.25em] text-zinc-500 uppercase">
             Network Telemetry
           </div>
-          <h2 className="text-2xl sm:text-4xl font-light tracking-tight text-white">
+          <h2 className="text-2xl sm:text-6xl font-light tracking-tight text-white">
             Active Marketplace Scale
           </h2>
         </div>
@@ -1003,15 +769,15 @@ export default function MarketplacePage() {
               {Array.from({ length: 8 }, () => MARKETPLACE_STATS).flat().map((stat, i) => (
                 <div
                   key={`stat-carousel-${i}`}
-                  className="w-64 sm:w-72 p-6 rounded-2xl border border-white/15 bg-[linear-gradient(135deg,#0c0e12_0%,#181d26_50%,#283241_75%,#0d1015_100%)] backdrop-blur-xl flex flex-col justify-between space-y-3 text-center shrink-0 hover:border-white/60 hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] transition-all duration-300"
+                  className="w-64 sm:w-72 p-6 rounded-2xl border border-[#1d3d70]/80 bg-[linear-gradient(135deg,#071224_0%,#0c2142_50%,#13376b_75%,#071429_100%)] backdrop-blur-xl flex flex-col justify-between space-y-3 text-center shrink-0 hover:border-sky-400/80 hover:shadow-[0_12px_35px_rgba(2,12,32,0.8),0_0_25px_rgba(56,189,248,0.25)] transition-all duration-300"
                 >
-                  <div className="text-3xl sm:text-4xl font-mono font-bold text-white tracking-tight">
+                  <div className="text-3xl sm:text-4xl font-mono font-bold text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {stat.value}
                   </div>
-                  <div className="text-xs font-semibold text-zinc-200 tracking-wider uppercase">
+                  <div className="text-xs font-semibold text-sky-300 tracking-wider uppercase">
                     {stat.label}
                   </div>
-                  <div className="text-[11px] font-mono text-zinc-400 leading-snug">
+                  <div className="text-[11px] font-mono text-slate-300 leading-snug">
                     {stat.desc}
                   </div>
                 </div>
@@ -1021,9 +787,9 @@ export default function MarketplacePage() {
         </div>
 
         {/* Live Broadcast Telemetry Footer */}
-        <div className="mt-8 flex justify-center items-center gap-2 text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>M1 Global Aviation Trading Grid Active • Telemetry Synced</span>
+        <div className="mt-8 flex justify-center items-center gap-2 text-[18px] font-mono text-zinc-400 uppercase tracking-widest">
+          {/* <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> */}
+          <span>M1 Global Aviation Trading Grid Active</span>
         </div>
       </section>
 

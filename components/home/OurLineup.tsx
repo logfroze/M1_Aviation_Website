@@ -77,6 +77,7 @@ const PRODUCTS: ProductCard[] = [
     descColor: "text-blue-50/90",
     featureColor: "text-white",
   },
+  /* ── AviGram card commented out — restore when ready ──
   {
     id: "avigram",
     tag: "Product 3",
@@ -103,6 +104,8 @@ const PRODUCTS: ProductCard[] = [
     descColor: "text-zinc-200",
     featureColor: "text-white",
   },
+  ── end AviGram ── */
+  /* ── Ecosystem card commented out — restore when ready ──
   {
     id: "ecosystem",
     tag: "Net Effect",
@@ -127,6 +130,7 @@ const PRODUCTS: ProductCard[] = [
     descColor: "text-zinc-200",
     featureColor: "text-white",
   },
+  ── end Ecosystem ── */
 ];
 
 // Tab spacing for each stacked card in pixels (matching Cards stacking reference.png)
@@ -231,23 +235,13 @@ export default function OurLineup() {
       }
 
       // Sound triggers on downward touchdown landing with rate limiting
-      if (p >= 0.275 && !dockedCards.current.has(1)) {
+      if (p >= 0.49 && !dockedCards.current.has(1)) {
         dockedCards.current.add(1);
         playDebouncedSound(1);
       }
-      if (p >= 0.525 && !dockedCards.current.has(2)) {
-        dockedCards.current.add(2);
-        playDebouncedSound(2);
-      }
-      if (p >= 0.775 && !dockedCards.current.has(3)) {
-        dockedCards.current.add(3);
-        playDebouncedSound(3);
-      }
 
       // Hysteresis re-arm when scrolling backward
-      if (p < 0.22) dockedCards.current.delete(1);
-      if (p < 0.47) dockedCards.current.delete(2);
-      if (p < 0.72) dockedCards.current.delete(3);
+      if (p < 0.42) dockedCards.current.delete(1);
 
       animId = requestAnimationFrame(updateLoop);
     };
@@ -268,12 +262,12 @@ export default function OurLineup() {
   const getCardDynamics = (index: number): CardDynamics => {
     const p = smoothProgress;
 
-    // Card 0: Resting base card with micro-compression when Card 1 lands
+    // Card 0: Resting base card with micro-compression when Card 1 lands (pEnd = 0.55)
     if (index === 0) {
       let cushion = 0;
       let scale = 1.0;
-      if (p >= 0.23 && p <= 0.31) {
-        const norm = (p - 0.23) / 0.08;
+      if (p >= 0.51 && p <= 0.59) {
+        const norm = (p - 0.51) / 0.08;
         cushion = Math.sin(norm * Math.PI) * 2.5;
         scale = 1.0 - 0.003 * Math.sin(norm * Math.PI);
       }
@@ -291,14 +285,8 @@ export default function OurLineup() {
     let pEnd = 0;
 
     if (index === 1) {
-      pStart = 0.05;
-      pEnd = 0.28;
-    } else if (index === 2) {
-      pStart = 0.30;
-      pEnd = 0.53;
-    } else if (index === 3) {
-      pStart = 0.55;
-      pEnd = 0.78;
+      pStart = 0.10;
+      pEnd = 0.55;
     }
 
     // Card hasn't entered yet
@@ -318,7 +306,8 @@ export default function OurLineup() {
       // Cushion compression when the next card lands on this card
       let cushion = 0;
       let scale = 1.0;
-      const nextLandStart = index === 1 ? 0.48 : index === 2 ? 0.73 : 999;
+      // No next card for index 1 (last active card), so nextLandStart is never reached
+      const nextLandStart = 999;
       const nextLandEnd = nextLandStart + 0.08;
 
       if (p >= nextLandStart && p <= nextLandEnd) {
@@ -375,11 +364,11 @@ export default function OurLineup() {
   };
 
   return (
-    // Outer scroll runway (320vh for smooth, natural docking intervals and ample hold on Card 4)
+    // Outer scroll runway — 180vh is comfortable for 2 cards with smooth docking intervals
     <div
       ref={trackRef}
       className="relative w-full"
-      style={{ height: "320vh" }}
+      style={{ height: "180vh" }}
     >
       {/* Sticky Viewport Stage: Pinned in view while the runway scrolls */}
       <div className="sticky top-6 sm:top-8 w-full flex flex-col items-center justify-start overflow-visible pt-1 px-3 sm:px-6 pb-20 sm:pb-28">
@@ -394,9 +383,9 @@ export default function OurLineup() {
           </p>
         </div>
 
-        {/* Stack Stage: Holds all 4 cards in an absolute stack with millimeter-equal tab reveals */}
+        {/* Stack Stage: Holds both cards in an absolute stack with tab reveal */}
         <div
-          className="relative w-full max-w-5xl xl:max-w-6xl h-[600px] sm:h-[630px] md:h-[660px]"
+          className="relative w-full max-w-5xl xl:max-w-6xl h-[560px] sm:h-[590px] md:h-[610px]"
           style={{ perspective: "1200px" }}
         >
           {PRODUCTS.map((prod, index) => {

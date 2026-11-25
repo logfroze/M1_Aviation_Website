@@ -172,18 +172,18 @@ export default function EnergyGrid() {
           <div
             key={func.num}
             ref={el => { cardRefs.current[i] = el; }}
-            className="group p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl border border-zinc-800/90 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-zinc-500/60 transition-all duration-300 shadow-lg relative overflow-hidden"
+            className="group p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl border border-[#1b3664]/80 bg-[#0a1832]/85 hover:bg-[#0e2246] hover:border-sky-400/60 transition-all duration-300 shadow-[0_14px_35px_rgba(4,16,42,0.65)] hover:shadow-[0_20px_45px_rgba(4,20,55,0.85),0_0_25px_rgba(56,189,248,0.15)] relative overflow-hidden"
           >
             <div className="flex items-center mb-2.5 sm:mb-5">
               {/* Tilted sharp-edge parallelogram badge */}
-              <div className="-skew-x-12 inline-flex items-center px-3 py-1 sm:px-4 sm:py-1.5 bg-zinc-950 border border-zinc-600 shadow-[inset_0_0_8px_rgba(255,255,255,0.05)]">
-                <span className="skew-x-12 text-[10px] sm:text-[11px] font-black font-mono tracking-[0.22em] uppercase text-zinc-200">
+              <div className="-skew-x-12 inline-flex items-center px-3 py-1 sm:px-4 sm:py-1.5 bg-[#050e1d] border border-sky-500/40 shadow-[inset_0_0_8px_rgba(56,189,248,0.15)]">
+                <span className="skew-x-12 text-[10px] sm:text-[11px] font-black font-mono tracking-[0.22em] uppercase text-sky-200">
                   S-{func.num}
                 </span>
               </div>
             </div>
-            <h3 className="text-base sm:text-xl font-medium text-white mb-1.5 sm:mb-2.5">{func.title}</h3>
-            <p className="text-[11px] sm:text-xs text-zinc-400 leading-relaxed">{func.desc}</p>
+            <h3 className="text-base sm:text-xl font-medium text-white mb-1.5 sm:mb-2.5 group-hover:text-sky-200 transition-colors">{func.title}</h3>
+            <p className="text-[11px] sm:text-xs text-slate-300/80 leading-relaxed">{func.desc}</p>
           </div>
         ))}
       </div>
@@ -222,18 +222,18 @@ export default function EnergyGrid() {
           <div
             key={func.num}
             ref={el => { cardRefs.current[i + 3] = el; }}
-            className="group p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl border border-zinc-800/90 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-zinc-500/60 transition-all duration-300 shadow-lg relative overflow-hidden"
+            className="group p-4 sm:p-5 md:p-7 rounded-xl sm:rounded-2xl border border-[#1b3664]/80 bg-[#0a1832]/85 hover:bg-[#0e2246] hover:border-sky-400/60 transition-all duration-300 shadow-[0_14px_35px_rgba(4,16,42,0.65)] hover:shadow-[0_20px_45px_rgba(4,20,55,0.85),0_0_25px_rgba(56,189,248,0.15)] relative overflow-hidden"
           >
             <div className="flex items-center mb-2.5 sm:mb-5">
               {/* Tilted sharp-edge parallelogram badge */}
-              <div className="-skew-x-12 inline-flex items-center px-3 py-1 sm:px-4 sm:py-1.5 bg-zinc-950 border border-zinc-600 shadow-[inset_0_0_8px_rgba(255,255,255,0.05)]">
-                <span className="skew-x-12 text-[10px] sm:text-[11px] font-black font-mono tracking-[0.22em] uppercase text-zinc-200">
+              <div className="-skew-x-12 inline-flex items-center px-3 py-1 sm:px-4 sm:py-1.5 bg-[#050e1d] border border-sky-500/40 shadow-[inset_0_0_8px_rgba(56,189,248,0.15)]">
+                <span className="skew-x-12 text-[10px] sm:text-[11px] font-black font-mono tracking-[0.22em] uppercase text-sky-200">
                   S-{func.num}
                 </span>
               </div>
             </div>
-            <h3 className="text-base sm:text-xl font-medium text-white mb-1.5 sm:mb-2.5">{func.title}</h3>
-            <p className="text-[11px] sm:text-xs text-zinc-400 leading-relaxed">{func.desc}</p>
+            <h3 className="text-base sm:text-xl font-medium text-white mb-1.5 sm:mb-2.5 group-hover:text-sky-200 transition-colors">{func.title}</h3>
+            <p className="text-[11px] sm:text-xs text-slate-300/80 leading-relaxed">{func.desc}</p>
           </div>
         ))}
       </div>

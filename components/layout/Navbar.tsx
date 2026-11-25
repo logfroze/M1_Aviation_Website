@@ -6,16 +6,18 @@ import { usePathname } from "next/navigation";
 import M1Logo from "@/components/ui/M1Logo";
 
 const PRIMARY_NAV_LINKS = [
-  { href: "/aviation-times", label: "AVI Times", sub: "Journal" },
   { href: "/marketplace", label: "Marketplace", sub: "Exchange" },
-  { href: "/avigram", label: "Avigram", sub: "Community" },
   { href: "/industry-partner", label: "Industry Partner", sub: "Alliance" },
   { href: "/saios", label: "SIOS", sub: "Flight OS" },
 ] as const;
 
 const DRAWER_NAV_LINKS = [
   { href: "/", label: "Home", sub: "Overview" },
-  ...PRIMARY_NAV_LINKS,
+  { href: "/aviation-times", label: "AVI Times", sub: "Journal" },
+  { href: "/avigram", label: "Avigram", sub: "Community" },
+  { href: "/marketplace", label: "Marketplace", sub: "Exchange" },
+  { href: "/industry-partner", label: "Industry Partner", sub: "Alliance" },
+  { href: "/saios", label: "SIOS", sub: "Flight OS" },
   { href: "/#contact", label: "Contact", sub: "Dispatch" },
 ] as const;
 

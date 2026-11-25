@@ -159,7 +159,7 @@ export const SAMPLE_ARTICLES: Article[] = [
     editionNumber: 1,
     title: "Future of Private Aviation: \"Man will not be managing planes in the next decade manually.\"",
     summary:
-      "We just published our article on \"Future of Aviation.\" This is perhaps the best summary of where the whole industry is moving, and it paints a perfect picture of the future we are heading towards. It highlights how the tech shift—AI and DePIN—is about to change aviation in the long term! Read it below and send your thoughts about this edition to: team@rsinternational.net!",
+      "We just published our article on \"Future of Aviation.\" This is perhaps the best summary of where the whole industry is moving, and it paints a perfect picture of the future we are heading towards. It highlights how the tech shift—AI and DePIN—is about to change aviation in the long term! Read it below and send your thoughts about this edition to: Team@m1.rsistudio.net!",
     category: "AI & Autonomous Aviation",
     date: "Jun 02, 2026",
     accentColor: "border-emerald-600/50 bg-gradient-to-br from-emerald-950/40 via-zinc-950 to-black hover:border-emerald-500",

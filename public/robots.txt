@@ -1,14 +1,27 @@
-# Robots.txt for M1 Aviation
-# Allow all major search engines and AI agents (ChatGPT, Claude, Gemini, Perplexity, DeepSeek)
+# Robots.txt for M1 Aviation (https://m1.rsinternational.net)
+# Comprehensive crawler permissions for Search Engines, Generative AI Engines, and Answer Engines (AEO/GEO)
 
 User-agent: *
 Allow: /
 
-# OpenAI Crawlers (ChatGPT & SearchGPT)
+# Microsoft Bing & Search Index (Powers ChatGPT Search & Copilot)
+User-agent: Bingbot
+Allow: /
+
+User-agent: msnbot
+Allow: /
+
+User-agent: BingPreview
+Allow: /
+
+# OpenAI Crawlers (ChatGPT, SearchGPT, GPTBot)
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 # Anthropic Claude Crawlers
@@ -18,15 +31,15 @@ Allow: /
 User-agent: anthropic-ai
 Allow: /
 
-# Perplexity AI Crawler
+# Perplexity AI Crawlers
 User-agent: PerplexityBot
 Allow: /
 
-# Google Gemini & AI Training Crawlers
-User-agent: Google-Extended
+# Google Search & Gemini Extended Crawlers
+User-agent: Googlebot
 Allow: /
 
-User-agent: Googlebot
+User-agent: Google-Extended
 Allow: /
 
 # Apple Intelligence
@@ -36,7 +49,10 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# Other Leading AI Agents & Open Crawlers
+# Knowledge Graph & AI Extraction Bots
+User-agent: Diffbot
+Allow: /
+
 User-agent: CCBot
 Allow: /
 
@@ -46,16 +62,20 @@ Allow: /
 User-agent: DeepSeekBot
 Allow: /
 
+User-agent: Bytespider
+Allow: /
+
 User-agent: Omgilibot
 Allow: /
 
 User-agent: FacebookBot
 Allow: /
 
-# Sitemaps and AI Context Directives
+# Canonical Host & Sitemaps
+Host: https://m1.rsinternational.net
 Sitemap: https://m1.rsinternational.net/sitemap.xml
 
-# LLM & AI Agent Context Files (GEO - Generative Engine Optimization)
-# Full site context: https://m1.rsinternational.net/llms.txt
-# Deep context pack: https://m1.rsinternational.net/llms-full.txt
-# Agent instructions: https://m1.rsinternational.net/agents.md
+# LLM Direct Context Directives (GEO standard)
+# Context Pack: https://m1.rsinternational.net/llms.txt
+# Deep Context: https://m1.rsinternational.net/llms-full.txt
+# Agent Directives: https://m1.rsinternational.net/agents.md

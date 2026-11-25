@@ -118,12 +118,12 @@ export default function Hero({ paused = false }: { paused?: boolean }) {
       />
 
       {/* ── Centered M1 Logo — Transparent for the Hero Page ─────────────── */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6">
-        <h1 className="sr-only">M1 Aviation</h1>
+      <div className="relative z-10 flex flex-col items-center justify-center px-6 text-center">
+        <h1 className="sr-only">M1 Aviation – Business Aviation Digital Ecosystem & Private Jet Marketplace</h1>
         <div className="w-[280px] sm:w-[420px] md:w-[560px] lg:w-[680px] max-w-[90vw] transition-all duration-700 hover:scale-[1.02]">
           <Image
             src="/m1-logo.png"
-            alt="M1 Logo"
+            alt="M1 Aviation – Premier Business Aviation Digital Ecosystem, Private Jet Marketplace & SIOS Operating Intelligence"
             width={1302}
             height={461}
             priority
@@ -131,6 +131,12 @@ export default function Hero({ paused = false }: { paused?: boolean }) {
             className="w-full h-auto object-contain opacity-90 hover:opacity-100 transition-opacity drop-shadow-[0_0_50px_rgba(255,255,255,0.18)]"
           />
         </div>
+        <h2 className="sr-only">
+          Unifying pre-owned business jet acquisition, SIOS autonomous operating intelligence, and accredited industry partner deal rooms.
+        </h2>
+        <p className="sr-only">
+          M1 Aviation replaces fragmented aviation workflows with a modern digital ecosystem: 100% verified aircraft listings, 7-step assisted acquisition, Part 145 inspection oversight, real-time market intelligence, and predictive maintenance telemetry.
+        </p>
       </div>
 
     </section>
