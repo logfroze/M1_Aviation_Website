@@ -70,10 +70,10 @@ const PRODUCTS: ProductCard[] = [
     ctaHref: "/saios",
     ctaVariant: "white",
     cardStyle:
-      "bg-[linear-gradient(135deg,#020d20_0%,#082048_18%,#12438c_36%,#38bdf8_50%,#93c5fd_62%,#1d4ed8_78%,#04122b_100%)] border-sky-400/70 shadow-[inset_0_2px_4px_rgba(56,189,248,0.6),inset_0_-2px_4px_rgba(29,78,216,0.35)]",
-    badgeStyle: "bg-[#09224f] text-[#38bdf8] border-[#0284c7]/70",
+      "bg-[linear-gradient(135deg,#020a17_0%,#061a38_20%,#0a2d5f_42%,#124388_60%,#0a2856_80%,#030915_100%)] border-sky-400/50 shadow-[inset_0_2px_4px_rgba(56,189,248,0.35),inset_0_-2px_4px_rgba(10,38,84,0.4)]",
+    badgeStyle: "bg-[#061838] text-[#38bdf8] border-[#0284c7]/70",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#38bdf8]",
+    subtitleColor: "text-sky-200 font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]",
     descColor: "text-blue-50/90",
     featureColor: "text-white",
   },
@@ -101,11 +101,10 @@ const PRODUCTS: ProductCard[] = [
     badgeStyle: "bg-[#380b42] text-[#f472b6] border-[#db2777]/60",
     titleColor: "text-white font-light",
     subtitleColor: "text-[#f472b6]",
-    descColor: "text-zinc-200",
+    descColor: "text-zinc-300",
     featureColor: "text-white",
   },
   ── end AviGram ── */
-  /* ── Ecosystem card commented out — restore when ready ──
   {
     id: "ecosystem",
     tag: "Net Effect",
@@ -123,14 +122,13 @@ const PRODUCTS: ProductCard[] = [
     ctaHref: "#philosophy",
     ctaVariant: "black",
     cardStyle:
-      "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
+      "bg-[linear-gradient(135deg,#0a0c10_0%,#141720_20%,#202532_42%,#2f3647_60%,#1b1f29_80%,#080a0e_100%)] border-slate-500/50 shadow-[inset_0_2px_4px_rgba(255,255,255,0.18),inset_0_-2px_4px_rgba(0,0,0,0.6)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
     titleColor: "text-white font-light",
-    subtitleColor: "text-zinc-300",
-    descColor: "text-zinc-200",
+    subtitleColor: "text-zinc-200 font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
+    descColor: "text-zinc-300",
     featureColor: "text-white",
   },
-  ── end Ecosystem ── */
 ];
 
 // Tab spacing for each stacked card in pixels (matching Cards stacking reference.png)
@@ -235,13 +233,18 @@ export default function OurLineup() {
       }
 
       // Sound triggers on downward touchdown landing with rate limiting
-      if (p >= 0.49 && !dockedCards.current.has(1)) {
+      if (p >= 0.36 && !dockedCards.current.has(1)) {
         dockedCards.current.add(1);
         playDebouncedSound(1);
       }
+      if (p >= 0.72 && !dockedCards.current.has(2)) {
+        dockedCards.current.add(2);
+        playDebouncedSound(2);
+      }
 
       // Hysteresis re-arm when scrolling backward
-      if (p < 0.42) dockedCards.current.delete(1);
+      if (p < 0.30) dockedCards.current.delete(1);
+      if (p < 0.66) dockedCards.current.delete(2);
 
       animId = requestAnimationFrame(updateLoop);
     };
@@ -262,12 +265,12 @@ export default function OurLineup() {
   const getCardDynamics = (index: number): CardDynamics => {
     const p = smoothProgress;
 
-    // Card 0: Resting base card with micro-compression when Card 1 lands (pEnd = 0.55)
+    // Card 0: Resting base card with micro-compression when Card 1 lands
     if (index === 0) {
       let cushion = 0;
       let scale = 1.0;
-      if (p >= 0.51 && p <= 0.59) {
-        const norm = (p - 0.51) / 0.08;
+      if (p >= 0.36 && p <= 0.44) {
+        const norm = (p - 0.36) / 0.08;
         cushion = Math.sin(norm * Math.PI) * 2.5;
         scale = 1.0 - 0.003 * Math.sin(norm * Math.PI);
       }
@@ -285,8 +288,11 @@ export default function OurLineup() {
     let pEnd = 0;
 
     if (index === 1) {
-      pStart = 0.10;
-      pEnd = 0.55;
+      pStart = 0.08;
+      pEnd = 0.40;
+    } else if (index === 2) {
+      pStart = 0.44;
+      pEnd = 0.76;
     }
 
     // Card hasn't entered yet
@@ -306,8 +312,7 @@ export default function OurLineup() {
       // Cushion compression when the next card lands on this card
       let cushion = 0;
       let scale = 1.0;
-      // No next card for index 1 (last active card), so nextLandStart is never reached
-      const nextLandStart = 999;
+      const nextLandStart = index === 1 ? 0.72 : 999;
       const nextLandEnd = nextLandStart + 0.08;
 
       if (p >= nextLandStart && p <= nextLandEnd) {
@@ -364,11 +369,11 @@ export default function OurLineup() {
   };
 
   return (
-    // Outer scroll runway — 180vh is comfortable for 2 cards with smooth docking intervals
+    // Outer scroll runway (250vh for 3 cards with smooth, natural docking intervals)
     <div
       ref={trackRef}
       className="relative w-full"
-      style={{ height: "180vh" }}
+      style={{ height: "250vh" }}
     >
       {/* Sticky Viewport Stage: Pinned in view while the runway scrolls */}
       <div className="sticky top-6 sm:top-8 w-full flex flex-col items-center justify-start overflow-visible pt-1 px-3 sm:px-6 pb-20 sm:pb-28">
@@ -383,9 +388,9 @@ export default function OurLineup() {
           </p>
         </div>
 
-        {/* Stack Stage: Holds both cards in an absolute stack with tab reveal */}
+        {/* Stack Stage: Holds 3 cards in an absolute stack with tab reveal */}
         <div
-          className="relative w-full max-w-5xl xl:max-w-6xl h-[560px] sm:h-[590px] md:h-[610px]"
+          className="relative w-full max-w-5xl xl:max-w-6xl h-[580px] sm:h-[610px] md:h-[630px]"
           style={{ perspective: "1200px" }}
         >
           {PRODUCTS.map((prod, index) => {
@@ -405,7 +410,7 @@ export default function OurLineup() {
                 }}
               >
                 {/* Diagonal Specular Silver Gloss Sheen */}
-                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.26)_0%,rgba(255,255,255,0.08)_24%,rgba(203,213,225,0.22)_46%,transparent_64%,rgba(255,255,255,0.16)_100%)] pointer-events-none" />
+                <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.04)_20%,transparent_40%,transparent_75%,rgba(255,255,255,0.08)_100%)] pointer-events-none" />
 
                 {/* Two Column Layout: Text on Left, Product Image on Right */}
                 <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 xl:gap-10">

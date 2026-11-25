@@ -50,10 +50,10 @@ const DECK_CARDS: DeckCard[] = [
       "Predictive maintenance",
       "Multidomain data connectivity.",
     ],
-    cardStyle: "bg-[linear-gradient(135deg,#020d20_0%,#082048_18%,#12438c_36%,#38bdf8_50%,#93c5fd_62%,#1d4ed8_78%,#04122b_100%)] border-sky-400/70 shadow-[inset_0_2px_4px_rgba(56,189,248,0.6),inset_0_-2px_4px_rgba(29,78,216,0.35)]",
+    cardStyle: "bg-[linear-gradient(135deg,#020a17_0%,#061a38_20%,#0a2d5f_42%,#124388_60%,#0a2856_80%,#030915_100%)] border-sky-400/50 shadow-[inset_0_2px_4px_rgba(56,189,248,0.35),inset_0_-2px_4px_rgba(10,38,84,0.4)]",
     badgeStyle: "bg-[#09224f] text-[#38bdf8] border-[#0284c7]/70",
     titleColor: "text-white font-light",
-    subtitleColor: "text-[#38bdf8] font-mono text-xs",
+    subtitleColor: "text-sky-200 font-mono text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]",
     descColor: "text-blue-50/90 text-xs font-normal",
     featureColor: "text-white font-mono text-[11px] font-medium",
   },
@@ -78,7 +78,6 @@ const DECK_CARDS: DeckCard[] = [
     featureColor: "text-white font-mono text-[11px] font-medium",
   },
   ── end AviGram ── */
-  /* ── Ecosystem card commented out — restore when ready ──
   {
     id: "ecosystem",
     tag: "Net Effect",
@@ -90,14 +89,13 @@ const DECK_CARDS: DeckCard[] = [
       "Efficient & Cost-Effective Operations",
       "AI Handled Ground Record-Keeping",
     ],
-    cardStyle: "bg-[linear-gradient(135deg,#13161c_0%,#1f242d_18%,#475569_36%,#cbd5e1_50%,#f1f5f9_62%,#64748b_78%,#1a1e24_100%)] border-slate-300/85 shadow-[inset_0_2px_4px_rgba(255,255,255,0.75),inset_0_-2px_4px_rgba(148,163,184,0.35)]",
+    cardStyle: "bg-[linear-gradient(135deg,#0a0c10_0%,#141720_20%,#202532_42%,#2f3647_60%,#1b1f29_80%,#080a0e_100%)] border-slate-500/50 shadow-[inset_0_2px_4px_rgba(255,255,255,0.18),inset_0_-2px_4px_rgba(0,0,0,0.6)]",
     badgeStyle: "bg-zinc-800 text-zinc-100 border-zinc-600",
     titleColor: "text-white font-light",
-    subtitleColor: "text-zinc-300 font-mono text-xs",
-    descColor: "text-black text-xs font-medium",
-    featureColor: "text-black font-mono text-[11px] font-medium",
+    subtitleColor: "text-zinc-200 font-mono text-xs font-semibold tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
+    descColor: "text-zinc-300 text-xs font-normal leading-relaxed",
+    featureColor: "text-zinc-200 font-mono text-[11px] font-medium",
   },
-  ── end Ecosystem ── */
 ];
 
 export default function FullStackDeck() {
@@ -125,10 +123,12 @@ export default function FullStackDeck() {
   // inner-bottom corners meet at screen center — Marketplace right-bottom ≈ SIOS left-bottom
   // Math: translateX = ±(cardHalfWidth × cos(rotation°)) → ±(220 × cos20°) ≈ ±170
   const deckTransforms = [
-    // Card 0 (Marketplace) — fans left, right-bottom corner at screen center
-    { rotate: -20, translateX: -170, translateY: 30, scale: 1.0, zIndex: 10 },
-    // Card 1 (SIOS) — fans right, left-bottom corner at screen center (mirror image)
-    { rotate: 20, translateX: 170, translateY: 30, scale: 1.0, zIndex: 11 },
+    // Card 0 (Marketplace) — tilted left
+    { rotate: -11, translateX: -190, translateY: 18, scale: 0.96, zIndex: 10 },
+    // Card 1 (SIOS) — center card
+    { rotate: 0, translateX: 0, translateY: 6, scale: 0.99, zIndex: 11 },
+    // Card 2 (Ecosystem) — tilted right in front
+    { rotate: 12, translateX: 200, translateY: 40, scale: 1.02, zIndex: 12 },
   ];
 
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -179,10 +179,10 @@ export default function FullStackDeck() {
             const isHovered = hoveredCard === card.id;
 
             // On hover: lift the card and reduce lean to half, keep x position
-            const rotate = isHovered ? t.rotate * 0.5 : t.rotate;
-            const tx = isHovered ? t.translateX : t.translateX;
+            const rotate = isHovered ? 0 : t.rotate;
+            const tx = isHovered ? t.translateX * 1.05 : t.translateX;
             const ty = isHovered ? t.translateY - 24 : t.translateY;
-            const sc = isHovered ? 1.04 : t.scale;
+            const sc = isHovered ? 1.05 : t.scale;
             const zIdx = isHovered ? 40 : t.zIndex;
 
             return (
@@ -210,7 +210,7 @@ export default function FullStackDeck() {
                     className={`rounded-3xl border p-6 sm:p-8 w-[86vw] max-w-[440px] h-[340px] sm:h-[370px] flex flex-col justify-between shadow-[0_25px_65px_rgba(0,0,0,0.92)] overflow-hidden ${card.cardStyle}`}
                   >
                     {/* Diagonal Specular Silver Gloss Sheen */}
-                    <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.24)_0%,rgba(255,255,255,0.06)_25%,rgba(203,213,225,0.20)_46%,transparent_64%,rgba(255,255,255,0.14)_100%)] pointer-events-none" />
+                    <div className="absolute inset-0 rounded-3xl bg-[linear-gradient(125deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.04)_20%,transparent_40%,transparent_75%,rgba(255,255,255,0.08)_100%)] pointer-events-none" />
 
                     <div className="relative z-10">
                       {/* Badge */}
@@ -244,11 +244,11 @@ export default function FullStackDeck() {
                     </div>
 
                     {/* Features List */}
-                    <div className="relative z-10 pt-3 border-t border-black/20">
+                    <div className="relative z-10 pt-3 border-t border-current/15">
                       <ul className={`space-y-1.5 ${card.featureColor}`}>
                         {card.features.slice(0, 3).map((f, i) => (
                           <li key={i} className="flex items-center gap-2">
-                            <span className="opacity-80 text-xs font-bold text-black">›</span>
+                            <span className="opacity-80 text-xs font-bold text-current">›</span>
                             <span className="truncate">{f}</span>
                           </li>
                         ))}
