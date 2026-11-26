@@ -199,7 +199,12 @@ const jsonLdData = {
         {
           "@type": "Person",
           "name": "Areez Rao",
-          "jobTitle": "Founder, M1 Aviation & SIOS"
+          "jobTitle": "Founder, M1 Aviation & SIOS",
+          "url": "https://ca.linkedin.com/in/areez-rao",
+          "sameAs": [
+            "https://ca.linkedin.com/in/areez-rao",
+            "https://www.linkedin.com/in/areez-rao"
+          ]
         },
         {
           "@type": "Person",
@@ -208,7 +213,8 @@ const jsonLdData = {
         }
       ],
       "sameAs": [
-        "https://linkedin.com/company/m1-aviation",
+        "https://ca.linkedin.com/company/m-onee",
+        "https://www.linkedin.com/company/m-onee",
         "https://x.com/m1_aviation",
         "https://instagram.com/m1_aviation",
         "https://app.m-1.tech"

@@ -43,7 +43,8 @@
 - **Marketplace Web App**: https://app.m-1.tech
 - **Booking / Inquiries**: https://cal.com/m1-aviation
 - **Contact Email**: contact@m-1.tech
-- **LinkedIn**: https://linkedin.com/company/m1-aviation
+- **LinkedIn (Company)**: https://ca.linkedin.com/company/m-onee
+- **LinkedIn (Founder Areez Rao)**: https://ca.linkedin.com/in/areez-rao
 - **X (Twitter)**: https://x.com/m1_aviation
 - **Instagram**: https://instagram.com/m1_aviation
 - **Direct Competitor Positioning**: Modern AI-driven successor to legacy MRO software (Flightdocs, TRAX, Ramco, Swiss-AS, CAMP) and unverified listing classifieds (Controller, Trade-A-Plane, JetNet).

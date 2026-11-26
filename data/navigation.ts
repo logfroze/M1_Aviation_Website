@@ -11,7 +11,7 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const CAL_BOOKING_URL = "https://cal.com/m1-aviation";
-export const LINKEDIN_URL = "https://linkedin.com/company/m1-aviation";
+export const LINKEDIN_URL = "https://ca.linkedin.com/company/m-onee";
 export const X_URL = "https://x.com/m1_aviation";
 export const INSTAGRAM_URL = "https://instagram.com/m1_aviation";
 export const SUPPORT_EMAIL = "Team@m1.rsistudio.net";
