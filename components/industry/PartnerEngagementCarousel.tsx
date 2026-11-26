@@ -49,14 +49,11 @@ const FLIGHT_DURATION_MS = 800;
 // 0.00s to 5.55s = White curtain smoothly lifts upward from floor until 100% hidden behind top red valance
 // 5.55s to 11.70s = Stage 100% open (white curtain completely hidden, red velvet curtains gently flutter with air)
 // Zone 1 (0.00-0.20): Scroll-driven lift (0.00 → 5.55)
-// Zones 2-4 (0.20-0.80): Continuous natural playback looping within 5.55 → 11.70
-// Zone 5 (0.80-1.00): Scroll-driven lower back down to floor (5.55 → 0.00)
+// Zones 2-4 (0.20-1.00): Continuous natural playback looping within 5.55 → 11.70 (curtains stay open)
 const T_LIFT_START  = 0.00;
 const T_LIFT_END    = 5.55;
 const T_OPEN_START  = 5.55;
 const T_OPEN_END    = 11.70;
-const T_LOWER_START = 5.55;
-const T_LOWER_END   = 0.00;
 
 function easeInOutCubic(p: number): number {
   return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
@@ -147,6 +144,7 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
   // Instant 60fps bidirectional scroll-scrubbing refs
   const targetTimeRef = useRef<number>(T_LIFT_START);
   const currentTimeRef = useRef<number>(T_LIFT_START);
+  const lastRenderedVideoTimeRef = useRef<number>(-1);
   // 'scrub' = scroll-driven seek (zones 1 & 5), 'play' = natural forward playback (zones 2-4)
   const videoModeRef = useRef<'scrub' | 'play'>('scrub');
 
@@ -455,7 +453,7 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
     return () => cancelAnimationFrame(rafId);
   }, [count]);
 
-  // Set initial curtain resting frame on load
+  // Set initial curtain resting frame on load & preload into memory Blob for zero-latency seeking
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -469,14 +467,36 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
     } else {
       video.addEventListener("loadedmetadata", setInit, { once: true });
     }
+
+    let isMounted = true;
+    // Preload video into memory Blob for instant zero-latency seeks on live hosting
+    fetch("/videos/curtains-2-scrub.mp4")
+      .then((res) => {
+        if (!res.ok) throw new Error("Fetch failed");
+        return res.blob();
+      })
+      .then((blob) => {
+        if (!isMounted || !videoRef.current) return;
+        const blobUrl = URL.createObjectURL(blob);
+        const v = videoRef.current;
+        const prevTime = v.currentTime;
+        const wasPaused = v.paused;
+        v.src = blobUrl;
+        v.currentTime = prevTime;
+        if (!wasPaused) v.play().catch(() => {});
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Choreographed Scroll Progression:
   // Zone 1 (0.00-0.20): White Austrian curtain lifts upward matching scroll, revealing Heading in DEAD CENTER
   // Zone 2 (0.20-0.35): Grand Heading presentation pause (red velvet curtains gently wave with air, white curtain 100% hidden)
   // Zone 3 (0.35-0.55): Heading glides UP while cards simultaneously elevate from below into center
-  // Zone 4 (0.55-0.80): Interactive 3-card carousel stage (air waves continue, 3s auto-swipe)
-  // Zone 5 (0.80-1.00): White curtain gracefully lowers back down matching scroll, closing stage
+  // Zone 4 (0.55-1.00): Interactive 3-card carousel stage (curtains stay 100% open; does NOT pull down on exit)
   useEffect(() => {
     let scrollRafId = 0;
 
@@ -550,9 +570,10 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
         // Enable hover & auto-swap as soon as cards are visible (not just at 90%)
         setCurtainsOpen(pCards > 0.30);
       }
-      // Zone 4: Interactive 3-Card Carousel Stage (0.55 to 0.80)
+      // Zone 4: Interactive 3-Card Carousel Stage (0.55 to 1.00)
       // Fully interactive carousel; red velvet air waves continue; white curtain stays 100% hidden
-      else if (progress <= 0.80) {
+      // The white curtain does NOT pull down at section end; it only closes if user scrolls back up into Zone 1 (<0.20)
+      else {
         videoModeRef.current = 'play';
 
         setStageOpacity(1);
@@ -563,25 +584,21 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
         setCurtainsOpen(true);
         cardsEntranceRef.current = 1.0;
       }
-      // Zone 5: Curtain Lowers Back Down on Exit Matching Scroll (0.80 to 1.00)
-      // Keep hover & auto-swap active while curtain is falling so user can still interact
-      else {
-        const pLower = Math.max(0, Math.min(1, (progress - 0.80) / 0.20));
-        targetTimeRef.current = T_LOWER_START + pLower * (T_LOWER_END - T_LOWER_START);
-        videoModeRef.current = 'scrub';
+    };
 
-        setStageOpacity(1);
-        setHeadingOpacity(0);
-        setHeadingY(-280);
-        setCarouselOpacity(1);
-        setCarouselY(-35);
-        setCurtainsOpen(true);   // keep hover active while curtain lowers
-        cardsEntranceRef.current = 1.0;
+    let scrollScheduled = false;
+    const onScroll = () => {
+      if (!scrollScheduled) {
+        scrollScheduled = true;
+        requestAnimationFrame(() => {
+          scrollScheduled = false;
+          handleScroll();
+        });
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     handleScroll();
 
     // Theatrical Video Loop: Mode-based scrub or play
@@ -597,20 +614,25 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
           const targetTime = targetTimeRef.current;
           const diff = targetTime - currentTimeRef.current;
 
+          // Snappy, responsive tracking factor (0.55 instead of sluggish 0.28)
           if (Math.abs(diff) > 0.003) {
-            // Large jump (mode switch from play→scrub): snap immediately
-            if (Math.abs(diff) > 2.0) {
+            if (Math.abs(diff) > 1.5) {
               currentTimeRef.current = targetTime;
             } else {
-              currentTimeRef.current += diff * 0.28;
+              currentTimeRef.current += diff * 0.55;
             }
           } else {
             currentTimeRef.current = targetTime;
           }
 
-          // Always sync video element once active seek completes so fast scrolls never leave it short of t=0
+          // Sync video element: prefer fastSeek if supported for hardware zero-stall decoding
           if (!video.seeking && Math.abs(video.currentTime - currentTimeRef.current) > 0.008) {
-            video.currentTime = currentTimeRef.current;
+            const vAny = video as HTMLVideoElement & { fastSeek?: (t: number) => void };
+            if (typeof vAny.fastSeek === 'function') {
+              vAny.fastSeek(currentTimeRef.current);
+            } else {
+              video.currentTime = currentTimeRef.current;
+            }
           }
         } else {
           // Play mode: let video run forward naturally; loop within the open stage range
@@ -626,7 +648,11 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
         }
 
         // Render the current video frame into the WebGL canvas
-        if (glRef.current && videoTextureRef.current) {
+        // Only upload texture when playing or when the video frame has actually updated
+        const isPlaying = mode === 'play' && !video.paused;
+        const timeDiff = Math.abs(video.currentTime - lastRenderedVideoTimeRef.current);
+        if (glRef.current && videoTextureRef.current && (isPlaying || timeDiff > 0.004)) {
+          lastRenderedVideoTimeRef.current = video.currentTime;
           const gl = glRef.current;
           gl.clear(gl.COLOR_BUFFER_BIT);
           gl.activeTexture(gl.TEXTURE0);
@@ -642,8 +668,8 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
     scrollRafId = requestAnimationFrame(videoLoop);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(scrollRafId);
     };
   }, []);
@@ -927,10 +953,9 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
                       backfaceVisibility: isCenter ? "visible" : "hidden",
                       WebkitBackfaceVisibility: isCenter ? "visible" : "hidden",
                       transformStyle: isCenter ? "flat" : "preserve-3d",
-                      WebkitFontSmoothing: "antialiased",
                     }}
-                    className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform ${
-                      !isCenter ? "cursor-pointer" : "cursor-pointer sm:cursor-default"
+                    className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
+                      !isCenter ? "will-change-transform cursor-pointer" : "cursor-pointer sm:cursor-default"
                     }`}
                   >
                     {/* VIP Card Layout - Clean Architectural Frame */}
@@ -943,8 +968,6 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
                           : "w-[260px] sm:w-[290px] md:w-[320px] lg:w-[340px] xl:w-[350px] h-[390px] sm:h-[400px] md:h-[415px] lg:h-[425px] gap-0 border border-slate-800/70 bg-[#060a10]/85 shadow-[0_20px_50px_rgba(0,0,0,0.85)] filter blur-[2.5px] opacity-60 brightness-[0.70] group/side"
                       }`}
                       style={{
-                        WebkitFontSmoothing: "antialiased",
-                        MozOsxFontSmoothing: "grayscale",
                         textRendering: "optimizeLegibility",
                         imageRendering: "-webkit-optimize-contrast",
                       }}
@@ -986,15 +1009,15 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
                           <div className="w-[280px] sm:w-[310px] md:w-[380px] lg:w-[450px] xl:w-[500px] flex flex-col justify-between h-full min-h-0 gap-2.5">
                             {/* 2. Name & 3. Role */}
                             <div className="pt-0.5">
-                              <h3 className="text-xl sm:text-2xl lg:text-[28px] font-light tracking-tight text-white leading-tight">
+                              <h3 className="text-2xl sm:text-3xl lg:text-[32px] font-semibold tracking-tight text-white leading-tight">
                                 {partner.name}
                               </h3>
-                              <p className="text-xs sm:text-sm lg:text-[14px] font-normal text-slate-300 flex flex-wrap items-baseline gap-1.5 mt-1">
-                                <span className="text-sky-400 font-medium tracking-wide">
+                              <p className="text-sm sm:text-base lg:text-[15px] font-normal text-slate-200 flex flex-wrap items-center gap-2 mt-1.5">
+                                <span className="text-sky-300 font-semibold tracking-wide">
                                   {partner.currentPosition}
                                 </span>
-                                <span className="text-slate-500">•</span>
-                                <span className="text-slate-200 font-normal">
+                                <span className="text-slate-500 font-bold">•</span>
+                                <span className="text-white font-medium">
                                   {partner.company}
                                 </span>
                               </p>
@@ -1002,18 +1025,18 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
 
                             {/* 4. M1 Role */}
                             <div>
-                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md border border-sky-400/30 bg-sky-950/40 select-none">
-                                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-                                <span className="text-[11px] sm:text-xs font-mono tracking-wider uppercase text-sky-200 font-medium">
-                                  <span className="text-sky-400/70 mr-1.5 font-normal">M1 ROLE:</span>
+                              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg border border-sky-400/40 bg-sky-950/60 select-none shadow-sm">
+                                <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0 shadow-[0_0_8px_rgba(56,189,248,0.9)]" />
+                                <span className="text-xs sm:text-[13px] font-sans tracking-wide uppercase text-sky-100 font-semibold">
+                                  <span className="text-sky-300 font-bold mr-2">M1 ROLE:</span>
                                   {partner.m1Role}
                                 </span>
                               </div>
                             </div>
 
                             {/* 5. Remarks */}
-                            <div className="relative pl-3.5 border-l-2 border-sky-400/50 my-auto py-0.5">
-                              <blockquote className="text-xs sm:text-sm lg:text-[13.5px] leading-relaxed text-slate-100 font-light tracking-wide line-clamp-5 italic">
+                            <div className="relative pl-4 border-l-[3px] border-sky-400 my-auto py-1">
+                              <blockquote className="text-sm sm:text-[15px] lg:text-[16px] leading-[1.7] text-zinc-100 font-normal tracking-normal line-clamp-5 not-italic">
                                 &ldquo;{partner.remarks}&rdquo;
                               </blockquote>
                             </div>
@@ -1025,11 +1048,11 @@ export default function PartnerEngagementCarousel({ cards }: PartnerEngagementCa
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={`View ${partner.name} LinkedIn Profile`}
-                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-400/40 bg-sky-500/10 hover:bg-sky-400 hover:text-black hover:border-sky-400 text-sky-300 text-xs font-mono tracking-wider uppercase transition-all duration-300 cursor-pointer group/link shadow-md"
+                                className="inline-flex items-center gap-2 px-4.5 py-2 rounded-full border border-sky-400/50 bg-sky-500/15 hover:bg-sky-400 hover:text-black hover:border-sky-400 text-sky-200 text-xs sm:text-[13px] font-sans font-semibold tracking-wider uppercase transition-all duration-300 cursor-pointer group/link shadow-md"
                               >
                                 <span>Connect</span>
                                 <svg
-                                  className="w-3.5 h-3.5 text-current group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
+                                  className="w-4 h-4 text-current group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform"
                                   fill="currentColor"
                                   viewBox="0 0 24 24"
                                 >
